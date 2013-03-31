@@ -20,17 +20,14 @@
 
 \section{Overview}
 We propose a simple  game based the short play \textit{Act Without Words I}, by Samuel Becket.   
-The setting for the game is sandy dessert under on blazing .  In the middle of this dessert scene stands a palm tree, and a pile of perfect spheres.  The premise of the game is to launch these spheres off into the distance using the palm tree as an impromptu catapult.   When the sphere hits the ground, something or nothing happens. 
-
-\section{Game design}
-% talk about the game
+The setting for the game is sandy dessert under on blazing .  In the middle of this dessert  stands a palm tree, and a pile of perfect spheres.  The premise of the game is to launch these spheres off into the distance using the palm tree as an impromptu catapult.  See Figure 1.
 
 \section{Technical Components}
-The main challenge for our game is how we create a real time physical interactive object such as our palm tree. We would like to experiment how the tree skeleton mesh interacts with different kinds of forces. In order to this, we are going to explore a third party physical engine. Other tasks includes how we can build the mesh for the tree model procedurally according to the skeleton mesh.\\
+The primary technical component of our game is the generation, animation, and rendering vegetation, specifically a  palm tree.  We will focus in particular on the procedural generation and accurate physical simulation.  Procedural generation begins with constructing a skeleton.  In the case of the palm tree, the skeleton is particularly simple. This skeleton provides a natural structure for simulating the physics of the tree.  (The hard work of the simulation will be left to a third party physics engine, such as jbullet.)  From the skeleton, we can generate a simple mesh for the tree using bone system methadology.  If time allows, we will implement normal or relief mapping for the bark on the trunk.
 
-Another challenge is to make the tree look plausible. We would like to explore the hair optimization method described in [1] and use it to simulate the tree leaves and fronds. In this way, we make our tree model more efficient.\\
+It may  be prohibitively slow to simulate the physics of every leaf.  To address this problem we follow the simulation optimization methodology described in [1].  That is,  we will only perform the simulation using a select number of leaves, and then interpolate to get the remaining leaf geometry.  
 
-We also plan to implement other techniques if time allowed. For example, we can implement a normal/relief mapping for the bark on the trunk. We would also want to explore the wind model described in [2] so that we can see how the palm tree interacts with the wind.
+Finally, we will apply wind to our tree.  Many methods exist to create this effect, ranging from simple height-based vertex transformations, to more physically plausible procedural methods as in [2], to actually solving the full fluid equations.    The second one seems most interesting, but time constraints may force a simpler approach. 
 
 %\begin{enumerate}
 \section{Tentative Schedule}
@@ -92,7 +89,6 @@ We also plan to implement other techniques if time allowed. For example, we can 
 \caption{\textbf{Abstract Scene}}
 \end{figure}
 
-\section{Citations}
 \begin{thebibliography}{11}
 
 \bibitem{1}
