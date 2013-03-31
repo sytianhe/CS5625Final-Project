@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009) (format=pdflatex 2009.11.7)  31 MAR 2013 18:26
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009) (format=pdflatex 2009.11.7)  31 MAR 2013 18:29
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -364,12 +364,12 @@ Extension to Epic and LaTeX. Version 1.1e - Released Dec 21, 1999
 \@tempdimc=\dimen122
 \maxovaldiam=\dimen123
 \@filltype=\box31
-)
-No file Report.aux.
+) (./Report.aux)
 \openout1 = `Report.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/pxmi/m/it on input line 13.
 LaTeX Font Info:    Try loading font information for OML+pxmi on input line 13.
+
 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/pxfonts/omlpxmi.fd
 File: omlpxmi.fd 2000/12/14 v1.0
@@ -450,32 +450,28 @@ LaTeX Font Info:    Font shape `OMS/pxr/m/n' in size <10.95> not available
 
 
 
-{/usr/local/texlive/2009/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-<AbstractScene.JPG, id=9, 642.4pt x 481.8pt>
-File: AbstractScene.JPG Graphic file (type jpg)
- <use AbstractScene.JPG> [2]
+{/usr/local/texlive/2009/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2]
 Missing character: There is no ¿ in font pxr!
 
-[3 <./AbstractScene.JPG>] (./Report.aux)
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- ) 
+<AbstractScene-2.JPG, id=13, 642.4pt x 481.8pt>
+File: AbstractScene-2.JPG Graphic file (type jpg)
+ <use AbstractScene-2.JPG>
+[3 <./AbstractScene-2.JPG>] (./Report.aux) ) 
 Here is how much of TeX's memory you used:
- 3303 strings out of 493848
- 42276 string characters out of 3149207
- 95893 words of memory out of 3000000
+ 3305 strings out of 493848
+ 42308 string characters out of 3149207
+ 95911 words of memory out of 3000000
  6478 multiletter control sequences out of 15000+200000
  21455 words of font info for 64 fonts, out of 3000000 for 9000
  714 hyphenation exceptions out of 8191
- 41i,6n,26p,721b,223s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/local/texlive/2009/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
-exlive/2009/texmf-dist/fonts/type1/public/pxfonts/pxsy.pfb></usr/local/texlive/
-2009/texmf-dist/fonts/type1/public/pxfonts/rpxr.pfb></usr/local/texlive/2009/te
-xmf-dist/fonts/type1/urw/palatino/uplb8a.pfb></usr/local/texlive/2009/texmf-dis
-t/fonts/type1/urw/palatino/uplr8a.pfb></usr/local/texlive/2009/texmf-dist/fonts
-/type1/urw/palatino/uplri8a.pfb>
-Output written on Report.pdf (3 pages, 139961 bytes).
+ 41i,6n,26p,721b,311s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/usr/local/texlive/2009/texmf-dist
+/fonts/enc/dvips/base/8r.enc}</usr/local/texlive/2009/texmf-dist/fonts/type1/pu
+blic/pxfonts/pxsy.pfb></usr/local/texlive/2009/texmf-dist/fonts/type1/public/px
+fonts/rpxr.pfb></usr/local/texlive/2009/texmf-dist/fonts/type1/urw/palatino/upl
+b8a.pfb></usr/local/texlive/2009/texmf-dist/fonts/type1/urw/palatino/uplr8a.pfb
+></usr/local/texlive/2009/texmf-dist/fonts/type1/urw/palatino/uplri8a.pfb>
+Output written on Report.pdf (3 pages, 175204 bytes).
 PDF statistics:
  34 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
