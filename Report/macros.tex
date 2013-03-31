@@ -1,0 +1,231 @@
+\usepackage[parfill]{parskip}
+\usepackage{amsmath}   
+\usepackage{amsthm}
+\usepackage{amssymb} 
+\usepackage{calc}
+\usepackage{centernot}
+\usepackage{ifthen}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage[mathscr]{eucal}
+
+
+
+%MATH FORMATTING
+\renewcommand\bf[1]{\ensuremath{\mathbf{#1}}}
+\renewcommand\cal[1]{\ensuremath{\mathcal{#1}}}
+\newcommand\bb[1]{\ensuremath{\mathbb{#1}}}
+\newcommand\call{\stackrel{\text{\tiny call}}{=}}
+\newcommand\thru[2]{\ensuremath{#1,\ldots,#2}}
+\newcommand\rank[1]{\ensuremath{\text{Rank}(#1)}}
+\newcommand\tboxed[1]{\boxed{\text{#1}}}
+%\renewcommand\and{\ensuremath{\;\;\;\;\;\;\text{and}\;\;\;\;\;\;} }
+\newcommand\where{\ensuremath{\;\;\;\text{where}\;\;\;}}
+\newcommand\suchthat{\ensuremath{\;\;\;\text{s.t.}\;\;\;}}
+\newcommand\nn{\nonumber}
+\newcommand\mcal[1]{\ensuremath{\mathcal{#1}}}
+\newcommand\from[1]{\ensuremath{_{#1}}}
+\renewcommand\to[1]{\ensuremath{^{#1}}}
+\renewcommand\eqref[1]{Eq. (\ref{#1})}
+\newcommand\pref[1]{(\ref{#1})}
+\newcommand\upa{\ensuremath{\uparrow}}
+\newcommand\dna{\ensuremath{\downarrow}}
+\renewcommand\deg{\ensuremath{^\circ}}
+
+
+%GREEK
+\newcommand\bs[1]{\boldsymbol{#1}}
+\newcommand\Om{\ensuremath{\Omega} }
+\newcommand\om{\ensuremath{\omega}}
+\newcommand\ep{\epsilon}
+\newcommand\g{\gamma}
+\newcommand\G{\Gamma}
+\newcommand\D{\Delta}
+\renewcommand\r{\rho}
+\newcommand\m{\mu}
+\newcommand\al{\alpha}
+\newcommand\la{\ensuremath{\lambda} }
+
+
+%FUNCTIONS
+ \newcommand\csch{\text{csch}}
+ \newcommand\inv[1]{\ensuremath{#1^{-1}}}
+ \newcommand\vol[1]{\text{vol}(#1)} 
+ \newcommand\ceiling[1]{\ensuremath{\left  \lceil #1 \right \rceil}}
+ \newcommand\ceil[1]{\ensuremath{\left  \lceil #1 \right \rceil}}
+ \newcommand\floor[1]{\ensuremath{ \left \lfloor #1 \right \rfloor}}
+  \newcommand\sign[1]{\ensuremath{\text{sign}(#1)}}
+ 
+ %LOGIC
+ \newcommand\notimplies{\centernot\implies}
+
+%%SET THEORY%%
+\newcommand\seq{\ensuremath{\subseteq}}
+\newcommand\nin{\ensuremath{\notin}}
+\newcommand\union{\ensuremath{\cup}}
+\newcommand\Union{\ensuremath{\bigcup}}
+\newcommand\intersection{\ensuremath{\cap}}
+\newcommand\intersect{\ensuremath{\cap}}
+\newcommand\Intersection{\ensuremath{\bigcap}}
+\newcommand\Intersect{\ensuremath{\bigcap}}
+\newcommand\es{\ensuremath{\emptyset}}
+ 
+%%ALGEBRA%%
+\newcommand\leqc{\trianglelefteq}
+ 
+ %%ANALYSIS
+ \newcommand\hs{\ensuremath{\cal{H}} }
+ \newcommand\lp[1]{\ensuremath{ {L^#1(\bb{R}^d)}}}
+  \newcommand\LpRd{\ensuremath{ {L^P(\bb{R}^d)}}}
+  \newcommand\Lp{\ensuremath{ {L^P}}}  
+ \newcommand\Rd{\ensuremath{ {\bb{R}^d} }}
+ \newcommand\R{\ensuremath{\bb{R}}}
+  \newcommand\Q{\ensuremath{\bb{Q}} }
+ \newcommand\Z{\ensuremath{\bb{Z}}}
+ \newcommand\C{\ensuremath{\bb{C}}}
+ \newcommand\N{\ensuremath{\bb{N}}}
+ \newcommand\T{\ensuremath{\bb{T}}}
+ \newcommand\Td{\ensuremath{ \bb{T}^d}}
+ \newcommand\sa{$\sigma$\text{--algebra}}
+ \newcommand\order[1]{\ensuremath{\cal{O}(#1)}}
+
+%%PROBABILITY
+ \newcommand\sigmafield{\ensuremath{\sigma\text{--field}}}
+  \newcommand\lsystem{\ensuremath{\lambda\text{--system}}}
+  \newcommand\psystem{\ensuremath{\pi \text{--system}}}
+ 
+ %%PHYSICAL CONSTANTS
+ \newcommand\h{\ensuremath{\hbar}}
+ \newcommand\hb{\ensuremath{\hbar}}
+ 
+ %%PHYSICS%%
+ \newcommand\pb[2]{\ensuremath{ \left [#1, #2 \right ]_{PB}}} 
+
+%% CALC/QUANTUM %%
+\newcommand\abs[1]{\ensuremath{\left\vert #1\right \vert}}
+\newcommand\Bigabs[1]{\ensuremath{\Bigl\vert #1 \Bigr\vert}}
+\newcommand\biggabs[1]{\ensuremath{\biggl\vert #1 \biggr\vert}}
+
+\newcommand\norm[1]{\ensuremath{\lvert \lvert  #1 \rvert \rvert }} 
+\newcommand\Tr[1]{\ensuremath{\text{Tr}(#1) }} 
+\newcommand\Bignorm[1]{\ensuremath{\Bigl\lvert \Bigl\lvert  #1 \Bigr\rvert \Bigr\rvert }} 
+
+\newcommand\ip[1]{\ensuremath{\left\langle#1\right\rangle}}
+
+\newcommand\avg[2][1]{
+	\ifthenelse{\equal{#1}{1}}{\ensuremath{\left \langle#2\right \rangle }}{}
+	\ifthenelse{\equal{#1}{2}}{\ensuremath{\left \langle#2^2\right \rangle }}{}
+	\ifthenelse{\equal{#1}{3}}{\ensuremath{\left \langle#2\right \rangle ^2}}{}}
+
+\newcommand\derv[3][1]{
+	\ifthenelse{\equal{#1}{1}}{\ensuremath{\frac{d#2}{d#3}}}{ 
+		\ensuremath{\frac{d^#1 #2}{d#3^#1}}
+	}
+}
+
+\newcommand\totalderv[2]{\ensuremath{\frac{\text{d}#1}{\text{d}#2}}}
+
+\newcommand\prtl[3][1]{	\ifthenelse{\equal{#1}{1}}{\ensuremath{\frac{\partial#2}{\partial#3}}}{}
+	\ifthenelse{\equal{#1}{2}}{\ensuremath{\frac{\partial^2#2}{\partial#3^2}}}{}}
+	
+\newcommand\db{\ensuremath{\mathchar'26\mkern-12mu d}} 
+	
+\newcommand\bra[1]{\ensuremath{\langle#1\vert}}
+ \newcommand\ket[1]{\ensuremath{\vert #1 \rangle}} 
+ \newcommand\bk[2]{\ensuremath{\langle#1\vert#2\rangle}}
+\newcommand\re[1]{\ensuremath{\text{Re}(#1)}}
+\newcommand\im[1]{\ensuremath{\text{Im}(#1)}}
+
+\newcommand\intall[2][x]{\int_{-\infty}^\infty #2 d #1}	
+
+
+\newcommand\mathc{\ensuremath{\textbf{C}}}
+\newcommand\mathr{\ensuremath{\textbf{R}}}
+\newcommand\res{\ensuremath{\text{Res}}}
+\newcommand\confeq{\ensuremath{\stackrel{\sim}{\rightarrow}}}	
+
+
+%MATRIX%
+\newcommand\qmatrix[9]{
+ \left( \begin{array}{ccc}
+ #1&#2&#3\\
+ #4&#5&#6\\
+ #7&#8&#9
+ \end{array} \right)}
+ 
+ \newcommand\sqmatrix[4]{
+ \left( \begin{array}{cc}
+ #1&#2\\
+ #3&#4
+  \end{array} \right)}
+
+ \newcommand\matTWO[4]{
+ \left( \begin{array}{cc}
+ #1&#2\\
+ #3&#4
+  \end{array} \right)}
+
+ \newcommand\matTHREE[9]{
+ \left( \begin{array}{ccc}
+ #1&#2&#3\\
+ #4&#5&#6\\
+ #7&#8&#9
+  \end{array} \right)}
+ 
+
+ \newcommand\mat[2][cccccccccccccccccccccc]{
+ \left[ \begin{array}{#1} 
+ #2\\
+ \end{array} \right]}
+
+% \newcommand\det[2][rrrrrrrrrrrrrrrrrrrrrrrrrrrrrr]{
+ %\left| \begin{array}{#1} 
+ %#2\\
+ %\end{array} \right|}
+
+ \newcommand\qdet[9]{
+ \left\vert \begin{array}{ccc}
+ #1&#2&#3\\
+ #4&#5&#6\\
+ #7&#8&#9
+ \end{array} \right\vert}
+
+  \newcommand\sqdet[4]{
+ \left\vert \begin{array}{cc}
+ #1&#2\\
+ #3&#4
+  \end{array} \right\vert}
+ 
+ \newcommand\qvec[3]{
+  \left( \begin{array}{c}
+ #1\\
+ #2\\
+ #3
+  \end{array} \right)}
+
+ \newcommand\sqvec[2]{
+  \left( \begin{array}{c}
+ #1\\
+ #2
+  \end{array} \right)}
+  
+  %MATLAB%
+  \newcommand\tril[1]{\ensuremath{\text{tril}(#1)}}
+  \newcommand\diag[1]{\ensuremath{\text{diag}(#1)}}
+
+  
+%DISPLAY  
+
+%ENVIRONMENTS
+
+\theoremstyle{plain}   \newtheorem{thm}{Theorem}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+\theoremstyle{plain}   \newtheorem{lem}{Lemma}
+\theoremstyle{definition}   \newtheorem*{defn}{Definition}
+\theoremstyle{plain}   \newtheorem{post}{Postulate}
+\theoremstyle{plain}   \newtheorem{prop}{Proposition}
+\theoremstyle{plain}   \newtheorem{cor}{Corollary} 
+\newcommand\problem[1]{\textbf{Problem #1}\\}
+%{\renewcommand{\descriptionlabel}[1]{}
+
+\newcommand\pspace[2][20]{$\hspace{#1pt}$~}
