@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.6.30)  31 MAR 2013 15:53
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.6.30)  31 MAR 2013 16:50
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -453,45 +453,51 @@ LaTeX Font Info:    Try loading font information for U+pxsyc on input line 18.
 (/usr/local/texlive/2012/texmf-dist/tex/latex/pxfonts/upxsyc.fd
 File: upxsyc.fd 2000/12/14 v1.0
 )
-Underfull \hbox (badness 10000) in paragraph at lines 30--31
+Underfull \hbox (badness 10000) in paragraph at lines 29--30
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 32--33
+Underfull \hbox (badness 10000) in paragraph at lines 31--32
 
  []
 
-LaTeX Font Info:    Try loading font information for OMS+pxr on input line 39.
+LaTeX Font Info:    Try loading font information for OMS+pxr on input line 38.
 (/usr/local/texlive/2012/texmf-dist/tex/latex/pxfonts/omspxr.fd
 File: omspxr.fd 2000/12/14 v1.0
 )
 LaTeX Font Info:    Font shape `OMS/pxr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/pxsy/m/n' tried instead on input line 39.
+(Font)              Font shape `OMS/pxsy/m/n' tried instead on input line 38.
  [1
 
 
 
-{/usr/local/texlive/2012/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+{/usr/local/texlive/2012/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2]
 Missing character: There is no ¿ in font pxr!
- [2] (./Report.aux) ) 
+ [3]
+(./Report.aux)
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
- 3557 strings out of 493488
- 46106 string characters out of 3141326
- 101015 words of memory out of 3000000
- 6761 multiletter control sequences out of 15000+200000
- 18780 words of font info for 58 fonts, out of 3000000 for 9000
+ 3550 strings out of 493488
+ 46099 string characters out of 3141326
+ 100960 words of memory out of 3000000
+ 6752 multiletter control sequences out of 15000+200000
+ 20159 words of font info for 61 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
- 42i,6n,26p,407b,219s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/local/texlive/2012/texmf-dist/fonts/enc/dvips/base/8
-r.enc}</usr/local/texlive/2012/texmf-dist/fonts/type1/public/pxfonts/pxsy.pfb><
-/usr/local/texlive/2012/texmf-dist/fonts/type1/public/pxfonts/rpxr.pfb></usr/lo
-cal/texlive/2012/texmf-dist/fonts/type1/urw/palatino/uplb8a.pfb></usr/local/tex
-live/2012/texmf-dist/fonts/type1/urw/palatino/uplr8a.pfb>
-Output written on Report.pdf (2 pages, 46235 bytes).
+ 42i,6n,26p,407b,207s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/usr/local/texlive/2012/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
+exlive/2012/texmf-dist/fonts/type1/public/pxfonts/pxsy.pfb></usr/local/texlive/
+2012/texmf-dist/fonts/type1/public/pxfonts/rpxr.pfb></usr/local/texlive/2012/te
+xmf-dist/fonts/type1/urw/palatino/uplb8a.pfb></usr/local/texlive/2012/texmf-dis
+t/fonts/type1/urw/palatino/uplr8a.pfb></usr/local/texlive/2012/texmf-dist/fonts
+/type1/urw/palatino/uplri8a.pfb>
+Output written on Report.pdf (3 pages, 55314 bytes).
 PDF statistics:
- 28 PDF objects out of 1000 (max. 8388607)
- 19 compressed objects within 1 object stream
+ 35 PDF objects out of 1000 (max. 8388607)
+ 24 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
