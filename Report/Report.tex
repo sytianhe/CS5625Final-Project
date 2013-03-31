@@ -26,6 +26,13 @@
 \section{Game design}
 % talk about the game
 
+\section{Technical Components}
+The main chellenge for our game is how we create a real time physical interactive object such as our palm tree. We would like to experiment how the tree skeleton mesh interacts with different kinds of forces. In order to this, we are going to explore a third party physical engine. Other tasks includs how we can build the mesh for the tree model procedurely according to the skeleton mesh.\\
+
+Another chellenge is to make the tree look plausible. We would like to explore the hair optimization method described in [1] and use it to simulate the tree leaves and fronds. In this way, we make our tree model more efficient.\\
+
+We also plan to implement other techniques if time allowed. For example, we can implement a normal/relief mapping for the bark on the trunk. We would also want to explore the wind model described in [2] so that we can see how the palm tree interacts with the wind.
+
 %\begin{enumerate}
 \section{Tentative Schedule}
 \begin{itemize}
@@ -73,24 +80,15 @@
 
 \end{itemize}
 
-\section{Outline}
+\section{Citations}
+\begin{thebibliography}{9}
 
+\bibitem{1}
+GPU gems 2 : programming techniques for high-performance graphics and general-purpose
+computation / edited by Matt Pharr ; Randima Fernando, series editor.
 
-
-\section{Palm Tree}
-\subsection{Hair Model}
-\subsection{Wind Model}
-
-\section{Terrian}
-\subsection{Sand Pile Model}
-\subsection{Subdivision Surface}
-
-\section{Other related}
-\subsection{Target}
-\subsection{Sun \& Sky}
-
-\section{Conclusion}
-% maybe have a scene of what the game should look like
-
+\bibitem{2}
+GPU gems 3 : Chapter 6. GPU-Generated Procedural Wind Animations for Trees by Renaldas Zioma 
+\end{thebibliography}
 
 \end{document}
