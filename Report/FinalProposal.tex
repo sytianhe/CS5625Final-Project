@@ -1,0 +1,118 @@
+\documentclass[11pt]{article}
+%
+\include{macros}
+\usepackage{graphicx}
+\usepackage{pxfonts}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{epstopdf}
+\usepackage{fullpage}
+\usepackage{epic}
+\usepackage{eepic}
+
+\begin{document}
+
+\title{CS5625 Final Project Proposal}
+\author{Michael Flashman \\ mtf53@cornell.edu \and Tianhe Zhang \\ tz249@cornell.edu\\}
+\date{\today}
+\maketitle
+
+
+\section{Overview}
+We propose a simple  game based the short play \textit{Act Without Words I}, by Samuel Becket.   
+The setting for the game is sandy dessert under on blazing .  In the middle of this dessert  stands a palm tree, and a pile of perfect spheres.  The premise of the game is to launch these spheres off into the distance using the palm tree as an impromptu catapult.  See Figure 1.
+
+\section{Technical Components}
+The primary technical component of our game is modeling, specifically, procedurally generating a palm tree. This includes procedurally generation of the meshes for the trunk and fronds of the palm tree. In addition, we would like to explore how to procedurally generate textures for the barks and leaves. Our goal for this modeling portion is that we are able to make a plausible looking tree. Because it is procedurally generated, we have control of all kinds of parameters to make the tree look different.
+
+The minor technical components includes rendering and animation. For rendering, we would like to implement some normal mapping technique (such as relief mapping) for the trunk with the bark texture. Also, we would like to discover the opaque effect of the leaves, which happens when the light placed behind the leave. For animation, we would like to implement some simple physically based animation techniques such as collision detection. In such way, the tree fronds can avoid overlap.
+
+Above is our main goal for this project. However, if we have more time, below is a list of extensions.
+\begin{enumerate}
+\item{Wind animation for the tree.}
+\item{Sand dune modeling.}
+\item{Level of detail algorithm.}
+\item{Full day scenario such that the sun and the sky change overtime.}
+\end{enumerate}
+
+%\begin{enumerate}
+\section{Tentative Schedule}
+\begin{itemize}
+\item{Week 1: April 1 - April 7}
+
+\begin{enumerate}
+\item{Talk to Prof. Bala and the TAs about our idea. - Michael and Tianhe }
+\item{Finalize our idea and proposal. - Michael and Tianhe}
+\item{Have a clear idea about how we want to implement our tree model. This includes discussion about all the features we might want so that we can make it generic. - Michael and Tianhe}
+\item{Get familiar with the framework of the base code so that we are ready to implement. - Michael and Tianhe}
+\end{enumerate}
+
+\item{Week 2: April 8 - April 14}
+
+\begin{enumerate}
+\item{Implement particle edge collision detection. - Michael and Tianhe}
+\item{Tree model: build the trunk model procedurally . - Tianhe}
+\end{enumerate}
+
+\item{Week 3: April 15 - April 21}
+
+\begin{enumerate}
+\item{Tree model: build the fronds model procedurally. - Michael}
+\item{Testing this physically interactive mesh. - Michael and Tianhe}
+
+\end{enumerate}
+
+\item{Week 4: April 22 - April 28}
+
+\begin{enumerate}
+\item{Learn how to procedurally generate texture for barks. - Michael}
+\item{Implement the texture mapping for the bark and leaves. -Tianhe}
+\end{enumerate}
+
+\item{Week 5: April 29 - May 5}
+
+\begin{enumerate}
+\item{Implementation of normal mapping for the barks. -Tianhe }
+\item{Implementation for the game related stuff. - Michael}
+
+\end{enumerate}
+
+\item{Week 6: May 5 - May 11}
+
+\begin{enumerate}
+\item{Wrap up - Michael and Tianhe}
+\item{Implement some of the extension if have time - Michael and Tianhe}
+\item{Test and report - Michael and Tianhe}
+\end{enumerate}
+
+\item{Week 6: May 12 - May 15}
+
+\begin{enumerate}
+\item{Implement some of the extension if have time - Michael and Tianhe}
+\item{Test and report - Michael and Tianhe}
+\end{enumerate}
+
+\end{itemize}
+
+
+\begin{thebibliography}{11}
+
+\bibitem{1}
+GPU gems 3 : Chapter 6. GPU-Generated Procedural Wind Animations for Trees by Renaldas Zioma 
+
+
+\bibitem{2}
+GPU gem 3: Chapter 4. Next-Generation SpeedTree Rendering by Alexander Kharlamov, Iain Cantlay and Yury Stepanenko 
+
+\bibitem{3}
+GPU gem 3: Chapter 16. Vegetation Procedural Animation and Shading in Crysis by Tiago Sousa
+
+\bibitem{4}
+Real-time Terrain Rendering using Smooth Hardware Optimized Level of Detail by Bent Dalgaard, Larsen Niels and J¿rgen Christensen
+
+\bibitem{5}
+Stochastic Dynamics: Simulating the Effects of Turbulence on Flexible Structures by Jos Stam
+
+
+\end{thebibliography}
+\end{document}
