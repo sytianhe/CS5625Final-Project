@@ -19,19 +19,21 @@
 
 
 \section{Overview}
-We propose a simple  game based the short play \textit{Act Without Words I}, by Samuel Becket.   
-The setting for the game is sandy dessert under on blazing .  In the middle of this dessert  stands a palm tree, and a pile of perfect spheres.  The premise of the game is to launch these spheres off into the distance using the palm tree as an impromptu catapult.  See Figure 1.
+We propose a simple  game inspired by the short play \textit{Act Without Words I}, by Samuel Becket.   
+The setting for the game is barren dessert.  In the middle of this dessert  stands a palm tree, and a pile of  shiny colored spheres.  The premise of the game is to launch these spheres off at some distant target by using the palm tree as an impromptu catapult.   When the player hits the target, the tree grows taller.  Additional trees may be added or removed from the scene as desired.  A sketch of the scene is shown in Fig. 1.
 
 \section{Technical Components}
-The primary technical component of our game is modeling, specifically, procedurally generating a palm tree. This includes procedurally generation of the meshes for the trunk and fronds of the palm tree. In addition, we would like to explore how to procedurally generate textures for the barks and leaves. Our goal for this modeling portion is that we are able to make a plausible looking tree. Because it is procedurally generated, we have control of all kinds of parameters to make the tree look different.
+The primary technical component of our game is the procedural generation of interactive palm trees.  We choose the palm tree for its relatively simple organization: trunk, fronds, leaves.  But a few simple changes to model parameters yield a broad range of distinct plant species.  The generative task consists of a modeling component and a rendering component.  For the modeling component, we first generate a parametrized tree skeleton to represent the basic positioning of trunk fronds and leaves.  From the skeleton we  build custom mesh surfaces for the trunk fronds and leaves.  In general, it will suffice to use relatively simply geometry for our mesh surfaces;  much of the complexity of the tree will come from the particular skeleton configuration and texturing.   
 
-The minor technical components includes rendering and animation. For rendering, we would like to implement some normal mapping technique (such as relief mapping) for the trunk with the bark texture. Also, we would like to discover the opaque effect of the leaves, which happens when the light placed behind the leave. For animation, we would like to implement some simple physically based animation techniques such as collision detection. In such way, the tree fronds can avoid overlap.
+The rendering component concerns texturing the mesh surfaces and adding lighting effects.  We will  explore  procedural  generation of bark textures following the methods outlined in \cite{}.  The nice thing about the procedural approach, rather than say image texturing, is that we gain immediate access to normal maps/ height maps / etc.  So we are immediately in a position to implement  normal mapping technique (such as relief mapping).  Depending on the how well our generated textures look, we may also explore related work which uses real bark images to get plausible height maps.  For the leaf rendering, we will apply a simple opacity texture to capture the effect of light  being placed behind the leave.  Shadow mapping techniques from previous assignments will also be incorporated.  
 
-Above is our main goal for this project. However, if we have more time, below is a list of extensions.
+A significant challenge with procedurally generated vegetation is breaking away from the organization inherent to the generative procedure.  In addition, it is important to get physically plausible positioning.  To that end, and with a broader interest in interaction,  we will perform a simple physics simulation and collision detection on the tree skeleton.   We will not try to model the physics exactly, but rather think of the tree in terms of simple mass and spring system.  Though the effect may be comical rather than realistic, the result should not be unpleasant.  As time allows we will consider different physical constant schemes to give more natural behavior in the leaves.    
+
+Above is our main goal for this project. However, if we have more time, we will consider some of the extensions described below.
 \begin{enumerate}
-\item{Wind animation for the tree.}
-\item{Sand dune modeling.}
-\item{Level of detail algorithm.}
+\item{Apply procedural wind animation to the tree.}
+\item{Create non planer environment using sand dune model.}
+\item{Apply level of detail to tree mesh.}
 \item{Full day scenario such that the sun and the sky change overtime.}
 \end{enumerate}
 
