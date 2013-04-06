@@ -20,7 +20,7 @@
 
 \section{Overview}
 We propose a simple  game inspired by the short play \textit{Act Without Words I}, by Samuel Becket.   
-The setting for the game is barren dessert.  In the middle of this dessert  stands a palm tree, and a pile of  shiny colored spheres.  The premise of the game is to launch these spheres off at some distant target by using the palm tree as an impromptu catapult.   When the player hits the target, the tree grows taller.  Additional trees may be added or removed from the scene as desired.  A sketch of the scene is shown in Fig. 1.
+The setting for the game is barren dessert.  In the middle of this dessert  stands a palm tree, and a pile of  shiny colored spheres.  The premise of the game is to launch these spheres off at some distant target by using the palm tree as an impromptu catapult.   When the player hits the target, the tree grows taller.  Additional trees may be added or removed from the scene as desired.
 
 \section{Technical Components}
 The primary technical component of our game is the procedural generation of interactive palm trees.  We choose the palm tree for its relatively simple organization: trunk, fronds, leaves.  But a few simple changes to model parameters yield a broad range of distinct plant species.  The generative task consists of a modeling component and a rendering component.  For the modeling component, we first generate a parametrized tree skeleton to represent the basic positioning of trunk fronds and leaves.  From the skeleton we  build custom mesh surfaces for the trunk fronds and leaves.  In general, it will suffice to use relatively simply geometry for our mesh surfaces;  much of the complexity of the tree will come from the particular skeleton configuration and texturing.   
