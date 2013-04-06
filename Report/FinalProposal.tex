@@ -1,6 +1,5 @@
-\documentclass[11pt]{article}
+\documentclass[annual]{acmsiggraph}
 %
-\include{macros}
 \usepackage{graphicx}
 \usepackage{pxfonts}
 \usepackage{algorithm}
@@ -10,11 +9,16 @@
 \usepackage{epic}
 \usepackage{eepic}
 
-\begin{document}
 
 \title{CS5625 Final Project Proposal}
-\author{Michael Flashman \\ mtf53@cornell.edu \and Tianhe Zhang \\ tz249@cornell.edu\\}
-\date{\today}
+
+\author{Michael Flashman\thanks{e-mail:mtf53@cornell.edu}\\Cornell University \and Tianhe Zhang \thanks{e-mail:tz249@cornell.edu}\\Cornell University}
+
+\pdfauthor{Michael Flashman, Tianhe Zhang}
+
+\begin{document}
+
+
 \maketitle
 
 
@@ -25,15 +29,15 @@ The setting for the game is barren dessert.  In the middle of this dessert  stan
 \section{Technical Components}
 The primary technical component of our game is the procedural generation of interactive palm trees.  We choose the palm tree for its relatively simple organization: trunk, fronds, leaves.  But a few simple changes to model parameters yield a broad range of distinct plant species.  The generative task consists of a modeling component and a rendering component.  For the modeling component, we first generate a parametrized tree skeleton to represent the basic positioning of trunk fronds and leaves.  From the skeleton we  build custom mesh surfaces for the trunk fronds and leaves.  In general, it will suffice to use relatively simply geometry for our mesh surfaces;  much of the complexity of the tree will come from the particular skeleton configuration and texturing.   
 
-The rendering component concerns texturing the mesh surfaces and adding lighting effects.  We will  explore  procedural  generation of bark textures following the methods outlined in \cite{}.  The nice thing about the procedural approach, rather than say image texturing, is that we gain immediate access to normal maps/ height maps / etc.  So we are immediately in a position to implement  normal mapping technique (such as relief mapping).  Depending on the how well our generated textures look, we may also explore related work which uses real bark images to get plausible height maps.  For the leaf rendering, we will apply a simple opacity texture to capture the effect of light  being placed behind the leave.  Shadow mapping techniques from previous assignments will also be incorporated.  
+The rendering component concerns texturing the mesh surfaces and adding lighting effects.  We will  explore  procedural  generation of bark textures following the methods outlined in .  The nice thing about the procedural approach, rather than say image texturing, is that we gain immediate access to normal maps/ height maps / etc.  So we are immediately in a position to implement  normal mapping technique (such as relief mapping).  Depending on the how well our generated textures look, we may also explore related work which uses real bark images to get plausible height maps.  For the leaf rendering, we will apply a simple opacity texture to capture the effect of light  being placed behind the leave.  Shadow mapping techniques from previous assignments will also be incorporated.  
 
 A significant challenge with procedurally generated vegetation is breaking away from the organization inherent to the generative procedure.  In addition, it is important to get physically plausible positioning.  To that end, and with a broader interest in interaction,  we will perform a simple physics simulation and collision detection on the tree skeleton.   We will not try to model the physics exactly, but rather think of the tree in terms of simple mass and spring system.  Though the effect may be comical rather than realistic, the result should not be unpleasant.  As time allows we will consider different physical constant schemes to give more natural behavior in the leaves.    
 
 Above is our main goal for this project. However, if we have more time, we will consider some of the extensions described below.
 \begin{enumerate}
-\item{Apply procedural wind animation to the tree.}
-\item{Create non planer environment using sand dune model.}
-\item{Apply level of detail to tree mesh.}
+\item{Apply procedural wind animation to the tree  \cite{renaldas2008}  }
+\item{Create non planer environment using sand dune model \cite{momiji2002}}
+\item{Apply level of detail to tree mesh}
 \item{Full day scenario such that the sun and the sky change overtime.}
 \end{enumerate}
 
@@ -97,24 +101,26 @@ Above is our main goal for this project. However, if we have more time, we will 
 \end{itemize}
 
 
-\begin{thebibliography}{11}
+\bibliographystyle{acmsiggraph}
+\bibliography{bibliography}
 
-\bibitem{1}
-GPU gems 3 : Chapter 6. GPU-Generated Procedural Wind Animations for Trees by Renaldas Zioma 
+%
+%\bibitem{1}
+%GPU gems 3 : Chapter 6. GPU-Generated Procedural Wind Animations for Trees by Renaldas Zioma 
+%
+%
+%\bibitem{2}
+%GPU gem 3: Chapter 4. Next-Generation SpeedTree Rendering by Alexander Kharlamov, Iain Cantlay and Yury Stepanenko 
+%
+%\bibitem{3}
+%GPU gem 3: Chapter 16. Vegetation Procedural Animation and Shading in Crysis by Tiago Sousa
+%
+%\bibitem{4}
+%Real-time Terrain Rendering using Smooth Hardware Optimized Level of Detail by Bent Dalgaard, Larsen Niels and J¿rgen Christensen
+%
+%\bibitem{5}
+%Stochastic Dynamics: Simulating the Effects of Turbulence on Flexible Structures by Jos Stam
 
 
-\bibitem{2}
-GPU gem 3: Chapter 4. Next-Generation SpeedTree Rendering by Alexander Kharlamov, Iain Cantlay and Yury Stepanenko 
-
-\bibitem{3}
-GPU gem 3: Chapter 16. Vegetation Procedural Animation and Shading in Crysis by Tiago Sousa
-
-\bibitem{4}
-Real-time Terrain Rendering using Smooth Hardware Optimized Level of Detail by Bent Dalgaard, Larsen Niels and J¿rgen Christensen
-
-\bibitem{5}
-Stochastic Dynamics: Simulating the Effects of Turbulence on Flexible Structures by Jos Stam
-
-
-\end{thebibliography}
+%\end{thebibliography}
 \end{document}
