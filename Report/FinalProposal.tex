@@ -24,7 +24,16 @@
 
 \section{Overview}
 We propose a simple  game inspired by the short play \textit{Act Without Words I}, by Samuel Becket.   
-The setting for the game is barren dessert.  In the middle of this dessert  stands a palm tree, and a pile of  shiny colored spheres.  The premise of the game is to launch these spheres off at some distant target by using the palm tree as an impromptu catapult.   When the player hits the target, the tree grows taller.  Additional trees may be added or removed from the scene as desired.
+The setting for the game is barren dessert.  In the middle of this dessert  stands a palm tree, and a pile of  shiny colored spheres.  The premise of the game is to launch these spheres off at some distant target by using the palm tree as an impromptu catapult.   When the player hits the target, the tree grows taller.  Additional trees may be added or removed from the scene as desired. See Fig. 1.
+
+\begin{figure}[b]
+\begin{center}
+\includegraphics[height=100pt]{scene.png}
+\caption{Crude sketch of game scene with a single frond--less palm tree.}
+\label{default}
+\end{center}
+\end{figure}
+
 
 \section{Technical Components}
 The primary technical component of our game is the procedural generation of interactive palm trees.  We choose the palm tree for it's relatively simple organization: trunk, fronds, leaves.  But a few simple changes to model parameters yield a broad range of distinct plant species.  The generative task consists of a modeling component and a rendering component.  For the modeling component, we first generate a parametrized tree skeleton to represent the basic positioning of trunk fronds and leaves.  From the skeleton we  build custom mesh surfaces for the trunk fronds and leaves.  In general, it will suffice to use relatively simply geometry for our mesh surfaces;  much of the complexity of the tree will come from the particular skeleton configuration and texturing.   While will so not directly follow a single paper, many of the problems and solutions to modeling trees and vegetation are considered in \cite{bloomenthal1985}  \cite{kharlamov2008} \cite{sousa2008} 
@@ -106,23 +115,6 @@ Above is our main goal for this project. However, if we have more time, we will 
 \bibliographystyle{acmsiggraph}
 \bibliography{bibliography}
 
-%
-%\bibitem{1}
-%GPU gems 3 : Chapter 6. GPU-Generated Procedural Wind Animations for Trees by Renaldas Zioma 
-%
-%
-%\bibitem{2}
-%GPU gem 3: Chapter 4. Next-Generation SpeedTree Rendering by Alexander Kharlamov, Iain Cantlay and Yury Stepanenko 
-%
-%\bibitem{3}
-%GPU gem 3: Chapter 16. Vegetation Procedural Animation and Shading in Crysis by Tiago Sousa
-%
-%\bibitem{4}
-%Real-time Terrain Rendering using Smooth Hardware Optimized Level of Detail by Bent Dalgaard, Larsen Niels and J¿rgen Christensen
-%
-%\bibitem{5}
-%Stochastic Dynamics: Simulating the Effects of Turbulence on Flexible Structures by Jos Stam
 
 
-%\end{thebibliography}
 \end{document}
