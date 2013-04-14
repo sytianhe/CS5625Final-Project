@@ -1,0 +1,75 @@
+# Blender MTL File: 'default-scene.blend'
+# Material Count: 7
+newmtl cubematerial_tile.jpg
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd ../textures/tile.jpg
+
+
+newmtl cylindermaterial
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.470456 0.263662
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+
+
+newmtl fightermatfi_fighter1.jpg
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.398431 0.398431 0.398431
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd ../textures/fighter1.jpg
+
+
+newmtl floormaterial_brick1.png
+Ns 30
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.200000 0.200000 0.200000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd ../textures/brick1.png
+
+
+newmtl monkeymaterial
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.148984 0.143889 1.000000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+
+
+newmtl spherematerial
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.050953 0.067252
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+
+
+newmtl torusmaterial
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+
+

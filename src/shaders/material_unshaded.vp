@@ -1,0 +1,26 @@
+/**
+ * material_unshaded.vp
+ * 
+ * Vertex shader shader which writes material information needed for unshaded (constant color) 
+ * shading to the gbuffer.
+ * 
+ * Written for Cornell CS 5625 (Interactive Computer Graphics).
+ * Copyright (c) 2012, Computer Science Department, Cornell University.
+ * 
+ * @author Asher Dunn (ad488)
+ * @date 2012-03-27
+ */
+
+/* Pass eyespace position and normal to the fragment shader. */
+varying vec3 EyespacePosition;
+varying vec3 EyespaceNormal;
+
+void main()
+{
+	/* Standard vertex transform. */
+	gl_Position = ftransform();
+	
+	/* Pass eyespace position and normal to the fragment shader. */
+	EyespacePosition = vec3(gl_ModelViewMatrix * gl_Vertex);
+	EyespaceNormal = normalize(gl_NormalMatrix * gl_Normal);
+}

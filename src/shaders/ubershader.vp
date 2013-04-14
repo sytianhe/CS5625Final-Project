@@ -1,0 +1,17 @@
+/**
+ * ubershader.vp
+ * 
+ * Vertex shader for the "ubershader" which lights the contents of the gbuffer. All the
+ * action is in the fragment shader, though.
+ * 
+ * Written for Cornell CS 5625 (Interactive Computer Graphics).
+ * Copyright (c) 2012, Computer Science Department, Cornell University.
+ * 
+ * @author Asher Dunn (ad488)
+ * @date 2012-03-24
+ */
+
+void main()
+{
+	gl_Position = ftransform();
+}
