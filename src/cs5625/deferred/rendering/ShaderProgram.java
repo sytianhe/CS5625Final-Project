@@ -238,6 +238,61 @@ public class ShaderProgram implements OpenGLResourceObject
 		return gl.glGetAttribLocation(mHandle, attributeName);
 	}
 	
+	/**
+	 * Queries the shader program for the vector size of a uniform array.
+	 * For example, Renderer uses this to figure out how many lights the ubershader supports.
+	 * 
+	 * @param gl The OpenGL state.
+	 * @param arrayName The name of the array with no bracket notation attached.
+	 * @return The vector size of the array or zero if it doesn't exist.
+	 */
+	public int getUniformArraySize(GL2 gl, String arrayName)
+	{
+		int count[] = new int[1];
+		int maxLen[] = new int[1];
+		
+		/* Start by figuring out how many uniforms there are and what the name buffer size should be. */
+	    gl.glGetProgramiv(getHandle(), GL2.GL_ACTIVE_UNIFORMS, count, 0);
+	    gl.glGetProgramiv(getHandle(), GL2.GL_ACTIVE_UNIFORM_MAX_LENGTH, maxLen, 0);
+	    
+	    if (maxLen[0] < 1)
+	    {
+	    	// Pick some large buffer size if the query fails.
+	    	// This is known to happen on Intel GPUs.
+	    	maxLen[0] = 512;
+	    }
+	    
+	    int size[] = new int[1];
+	    int type[] = new int[1];
+	    int used[] = new int[1];
+		byte name[] = new byte[maxLen[0]];
+
+		/* Loop over the uniforms until we find "arrayName" or "arrayName[0]" and grab its size. */
+	    for(int i = 0; i < count[0]; ++i)
+	    {
+	    	/* We provide arrays for all fields (even if we don't use them) to prevent crashes. */
+	    	gl.glGetActiveUniform(getHandle(), i, maxLen[0], used, 0, size, 0, type, 0, name, 0);
+	    	
+	    	String str = new String(name, 0, used[0]);
+	    	if(str.equals(arrayName) || str.equals(arrayName + "[0]"))
+	    	{
+	    		return size[0];
+	    	}
+	    }
+	    
+	    try
+		{
+			OpenGLException.checkOpenGLError(gl);
+		}
+		catch (OpenGLException err)
+		{
+			err.printStackTrace();
+		}
+	    
+	    // Not found.
+	    return 0;
+	}
+	
 	@Override
 	public void releaseGPUResources(GL2 gl)
 	{

@@ -3,15 +3,18 @@ package cs5625.deferred.apps;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.util.ArrayList;
 
 import javax.vecmath.AxisAngle4f;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
 
+import cs5625.deferred.materials.BlinnPhongMaterial;
 import cs5625.deferred.materials.LambertianMaterial;
 import cs5625.deferred.misc.Util;
 import cs5625.deferred.scenegraph.Geometry;
+import cs5625.deferred.scenegraph.MengerSponge;
 import cs5625.deferred.scenegraph.PointLight;
 
 /**
@@ -53,6 +56,17 @@ public class ShadowMapSceneController extends SceneController
 			/* Example of manipulating an object by name. */
 			mSceneRoot.findDescendantByName("fighter1").getOrientation().set(new AxisAngle4f(0.0f, 1.0f, 0.0f, -(float)Math.PI / 4.0f));
 			((Geometry)mSceneRoot.findDescendantByName("Cylinder")).getMeshes().get(0).setMaterial(new LambertianMaterial(new Color3f(0.64f, 0.47f, 0.26f)));
+			
+			MengerSponge sponge = new MengerSponge(3);
+			sponge.setMaterial(new BlinnPhongMaterial(new Color3f(0.10f, 0.70f, 0.10f)));
+			
+			ArrayList<Geometry> geoList = new ArrayList<Geometry>();
+			Geometry geo = new Geometry();
+			geo.addMesh(sponge);
+			geo.setPosition(new Point3f(4.0f, 1.0f, 0.0f));
+			geoList.add(geo);
+			
+			mSceneRoot.addGeometry(geoList);
 			
 			/* Add an unattenuated point light to provide overall illumination. */
 			PointLight light = new PointLight();

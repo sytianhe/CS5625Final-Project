@@ -26,8 +26,10 @@ uniform sampler2DRect PositionBuffer;
 uniform sampler2DRect MaterialParams1Buffer;
 uniform sampler2DRect MaterialParams2Buffer;
 uniform sampler2DRect SilhouetteBuffer;
+uniform sampler2DRect SSAOBuffer;
 
 uniform bool EnableToonShading;
+uniform bool EnableSSAO;
 
 /* Uniform specifying the sky (background) color. */
 uniform vec3 SkyColor;
@@ -235,7 +237,21 @@ float getShadowStrength(vec3 position) {
 float silhouetteStrength()
 {
 	// TODO PA3 Prereq (Optional): Paste in your silhouetteStrength code if you like toon shading.
-	return 0.0;
+	float k = 0.3;
+	vec4 gMin = vec4(1.0);
+	vec4 gMax = vec4(0.0);	
+	vec4 color = vec4(0.0);
+	for(int i = int(gl_FragCoord.x)-1; i<=int(gl_FragCoord.x)+1; i++){
+		for(int j = int(gl_FragCoord.y)-1; j<=int(gl_FragCoord.y)+1; j++){
+			color = texture2DRect(SilhouetteBuffer, vec2(float(i),float(j)));
+			gMin.x = min(gMin.x, color.x); gMax.x = max(gMax.x, color.x);
+			gMin.y= min(gMin.y, color.y); gMax.y = max(gMax.y, color.y);
+			gMin.z = min(gMin.z, color.z); gMax.z = max(gMax.z, color.z);
+			gMin.w = min(gMin.w, color.w); gMax.w = max(gMax.w, color.w);
+		}
+	}
+	vec4 g = (gMax - gMin)/k;
+	return min(pow(length(g), 2.0),1.0);
 }
 
 /**
@@ -256,6 +272,9 @@ vec3 shadeLambertian(vec3 diffuse, vec3 position, vec3 normal, vec3 lightPositio
 	float ndotl = max(0.0, dot(normal, lightDirection));
 
 	// TODO PA3 Prereq (Optional): Paste in your n.l and n.h thresholding code if you like toon shading.
+	if (EnableToonShading){	 	
+		ndotl = step(0.1, ndotl);	 	
+	}
 	
 	float r = length(lightPosition - position);
 	float attenuation = 1.0 / dot(lightAttenuation, vec3(1.0, r, r * r));
@@ -353,6 +372,11 @@ void main()
 	
 	if (HasShadowMaps == 1 && materialID != 0) {	
 		gl_FragColor.rgb *= getShadowStrength(position);
+	}
+	
+	if (EnableSSAO)
+	{
+		gl_FragColor.rgb *= texture2DRect(SSAOBuffer, gl_FragCoord.xy).rgb;
 	}
 	
 }

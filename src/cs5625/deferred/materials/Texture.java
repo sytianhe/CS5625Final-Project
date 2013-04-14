@@ -409,6 +409,43 @@ public abstract class Texture implements OpenGLResourceObject
 			unbind(gl);
 		}
 	}
+	
+	/**
+	 * Enables or disables interpolation during texture sampling.
+	 * Use this whenever your texture contains a quantity that cannot be interpolated.
+	 * Note that interpolation is always on by default.
+	 */
+	public void enableInterpolation(GL2 gl, boolean isEnabled) throws OpenGLException
+	{
+		int target = getTextureTarget();
+		
+		boolean wasBound = isBound();
+		
+		int previousActive[] = new int[1];
+		gl.glGetIntegerv(GL2.GL_ACTIVE_TEXTURE, previousActive, 0);
+		
+		if (!wasBound)
+		{
+			bind(gl, 0);
+		}
+		
+		gl.glActiveTexture(GL2.GL_TEXTURE0 + getBoundTextureUnit());
+
+		if (isEnabled) {
+			gl.glTexParameteri(target, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR);
+			gl.glTexParameteri(target, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
+		} else {
+			gl.glTexParameteri(target, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_NEAREST);
+			gl.glTexParameteri(target, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_NEAREST);
+		}
+		
+		gl.glActiveTexture(previousActive[0]);
+		
+		if (!wasBound)
+		{
+			unbind(gl);
+		}
+	}
 		
 	/**
 	 * Returns the number of texture units available to shaders in the given OpenGL context.

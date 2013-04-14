@@ -3,6 +3,7 @@ package cs5625.deferred.rendering;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
@@ -12,6 +13,7 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
+import javax.vecmath.Vector3f;
 
 import cs5625.deferred.materials.Material;
 import cs5625.deferred.materials.Texture.Datatype;
@@ -64,8 +66,9 @@ public class Renderer
 	protected final int GBuffer_MaterialIndex1 = 2;
 	protected final int GBuffer_MaterialIndex2 = 3;
 	protected final int GBuffer_GradientsIndex = 4;
-	protected final int GBuffer_FinalSceneIndex = 5;
-	protected final int GBuffer_Count = 6;
+	protected final int GBuffer_SSAOIndex = 5;
+	protected final int GBuffer_FinalSceneIndex = 6;
+	protected final int GBuffer_Count = 7;
 	
 	/* The index of the texture to preview in GBufferFBO, or -1 for no preview. */
 	protected int mPreviewIndex = -1;
@@ -115,6 +118,25 @@ public class Renderer
 	private int mShadowTextureLocation = GBuffer_FinalSceneIndex + 1;
 	private int mShadowModeUniformLocation = -1;
 	
+	/* SSAO modifications to the ubershader. */
+	private int mEnableSSAOUniformLocation = -1;
+	private boolean mEnableSSAO = false;
+	
+	/* All SSAO variables and uniform locations. */
+	private ShaderProgram mSSAOShader;
+	private int mNumRaysUniformLocation = -1;
+	private int mSampleRaysUniformLocation = -1;
+	private int mSampleRadiusUniformLocation = -1;
+	private int mProjectionMatrixUniformLocation = -1;
+	private int mScreenSizeUniformLocation = -1;
+	
+	/* The size of the sample rays array in the ssao shader. 
+	 * This is queried directly from the shader file. */
+	private int mMaxSSAORays;
+	
+	/* Local copies of the SSAO uniform data. */
+	private Vector3f[] mSampleRays = null;
+	private float mSampleRadius = 0.1f;
 	
 	/* The current shadow mode */
 	private int mShadowMode = 0;
@@ -158,6 +180,7 @@ public class Renderer
 			
 			/* 2. Compute gradient buffer based on positions and normals, used for toon shading. */
 			computeGradientBuffer(gl);
+			computeSSAOBuffer(gl, camera);
 			
 			/* 3. Apply deferred lighting to the g-buffer. At this point, the opaque scene has been rendered. */
 			lightGBuffer(gl, camera, shadowCamera);
@@ -372,6 +395,76 @@ public class Renderer
 	}
 	
 	/**
+	 * Computes SSAO values based on the position and normal textures of the GBuffer. 
+	 */
+	private void computeSSAOBuffer(GL2 gl, Camera camera) throws OpenGLException
+	{
+		/* Bind the SSAO buffer as output. */
+		mGBufferFBO.bindOne(gl, GBuffer_SSAOIndex);
+
+		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
+		
+		/* Save state before we disable depth testing for blitting. */
+		gl.glPushAttrib(GL2.GL_ENABLE_BIT);
+		
+		/* Disable depth test and blend, since we just want to replace the contents of the framebuffer.
+		 * Since we are rendering an opaque fullscreen quad here, we don't bother clearing the buffer
+		 * first. */
+		gl.glDisable(GL2.GL_DEPTH_TEST);
+		gl.glDisable(GL2.GL_BLEND);
+		
+		mGBufferFBO.getColorTexture(GBuffer_DiffuseIndex).bind(gl, 0);
+		mGBufferFBO.getColorTexture(GBuffer_PositionIndex).bind(gl, 1);
+		
+		/* We need to disable interpolation on the g-buffer, otherwise we get ringing artifacts!
+		 * This won't reduce the quality of our ssao because the g-buffer is full resolution. */
+		mGBufferFBO.getColorTexture(GBuffer_DiffuseIndex).enableInterpolation(gl, false);
+		mGBufferFBO.getColorTexture(GBuffer_PositionIndex).enableInterpolation(gl, false);
+		
+		/* Bind the SSAO shader and update the uniforms. */
+		mSSAOShader.bind(gl);
+		
+		float[] projMatrix = Util.fromMatrix4f(camera.getProjectionMatrix(mViewportWidth, mViewportHeight));
+		gl.glUniform1f(mSampleRadiusUniformLocation, mSampleRadius);
+		gl.glUniform2f(mScreenSizeUniformLocation, mViewportWidth, mViewportHeight);
+		gl.glUniformMatrix4fv(mProjectionMatrixUniformLocation, 1, false, projMatrix, 0);
+		
+		if (mSampleRays != null) {
+			if (mSampleRays.length > mMaxSSAORays) {
+				throw new RuntimeException("MAX_RAYS is " + mMaxSSAORays + ". " + mSampleRays.length + " is too many!");
+			}
+			
+			gl.glUniform1i(mNumRaysUniformLocation, mSampleRays.length);
+			for (int i = 0; i < mSampleRays.length; i++) {
+				gl.glUniform3f(mSampleRaysUniformLocation + i, mSampleRays[i].x, mSampleRays[i].y, mSampleRays[i].z);
+			}
+		}
+		else {
+			gl.glUniform1i(mNumRaysUniformLocation, 0);
+		}
+		
+		
+		/* Render. */
+		Util.drawFullscreenQuad(gl, mViewportWidth, mViewportHeight);
+		
+		/* Unbind everything. */
+		mSSAOShader.unbind(gl);
+		
+		/* Re-enable interpolation. */
+		mGBufferFBO.getColorTexture(GBuffer_DiffuseIndex).enableInterpolation(gl, true);
+		mGBufferFBO.getColorTexture(GBuffer_PositionIndex).enableInterpolation(gl, true);
+		
+		mGBufferFBO.getColorTexture(GBuffer_DiffuseIndex).unbind(gl);
+		mGBufferFBO.getColorTexture(GBuffer_PositionIndex).unbind(gl);
+
+		mGBufferFBO.unbind(gl);
+
+		/* Restore attributes (blending and depth-testing) to as they were before. */
+		gl.glPopAttrib();
+	}
+	
+	/**
 	 * Applies lighting to an already-filled gbuffer to produce the final scene. Output is sent 
 	 * to the main framebuffer of the view/window.
 	 * 
@@ -440,6 +533,7 @@ public class Renderer
 		/* Ubershader needs to know how many lights. */
 		gl.glUniform1i(mNumLightsUniformLocation, mLights.size());	
 		gl.glUniform1i(mEnableToonShadingUniformLocation, (mEnableToonShading ? 1 : 0));			
+		gl.glUniform1i(mEnableSSAOUniformLocation, (mEnableSSAO ? 1 : 0));
 		
 		gl.glUniform1i(mHasShadowMapsUniformLocation, shadowCamera == null ? 0 : 1);
 		gl.glUniform1i(mShadowModeUniformLocation, mShadowMode);
@@ -887,6 +981,76 @@ public class Renderer
 		return mLightWidth;
 	}
 	
+	/**
+	 * Turns SSAO on/off in the final scene.
+	 */
+	public void setSSAOEnabled(boolean enable)
+	{
+		mEnableSSAO = enable;
+	}
+	
+	/**
+	 * Gets the current SSAO enabled state.
+	 */
+	public boolean getSSAOEnabled()
+	{
+		return mEnableSSAO;
+	}
+	
+	/**
+	 * Sets the SSAO sample radius (in pixels).
+	 */
+	public void setSSAORadius(float radius)
+	{
+		mSampleRadius = radius;
+	}
+	
+	/**
+	 * Gets the SSAO sample radius (in pixels).
+	 */
+	public float getSSAORadius()
+	{
+		return mSampleRadius;
+	}
+	
+	/**
+	 * This method should populate mSampleRays with 
+	 */
+	public void createNewSSAORays(int numRays)
+	{
+		// TODO PA4: Generate numRays random normalized vectors.	
+		Random generator = new Random();
+		
+		mSampleRays = new Vector3f[numRays];
+		for(int i = 0; i < numRays; i++) {
+			// use equation 1 & 2 from http://mathword.wolfram.com/SpherePointPicking.html.
+			
+			double u = generator.nextDouble();
+			double v = generator.nextDouble();
+
+			double theta = 2* Math.PI*u;
+			double phi = Math.acos(2*v- 1.0);
+			
+			mSampleRays[i] = new Vector3f(((float)Math.cos(theta)*(float)Math.sin(phi)), ((float)Math.sin(theta)*(float)Math.sin(phi)), ((float)Math.abs(Math.cos(phi))));     
+			mSampleRays[i].normalize();
+		}
+	}
+	
+	/**
+	 * Returns the current number of sample rays.
+	 */
+	public int getSSAORayCount() {
+		return (mSampleRays == null) ? 0 : mSampleRays.length;
+	}
+	
+	/**
+	 * Returns the maximum number of sample rays supported by the SSAO shader.
+	 */
+	public int getMaxSSAORays()
+	{
+		return mMaxSSAORays;
+	}
+
 	
 	/**
 	 * Performs one-time initialization of OpenGL state and shaders used by this renderer.
@@ -912,7 +1076,9 @@ public class Renderer
 			gl.glUniform1i(mUberShader.getUniformLocation(gl, "MaterialParams1Buffer"), 2);
 			gl.glUniform1i(mUberShader.getUniformLocation(gl, "MaterialParams2Buffer"), 3);
 			gl.glUniform1i(mUberShader.getUniformLocation(gl, "SilhouetteBuffer"), 4);
-			gl.glUniform3f(mUberShader.getUniformLocation(gl, "SkyColor"), 0.1f, 0.1f, 0.1f);
+			gl.glUniform1i(mUberShader.getUniformLocation(gl, "SSAOBuffer"), 5);
+			gl.glUniform3f(mUberShader.getUniformLocation(gl, "SkyColor"), 0.3f, 0.3f, 0.3f);
+			//gl.glUniform3f(mUberShader.getUniformLocation(gl, "SkyColor"), 0.1f, 0.1f, 0.1f);
 			gl.glUniform1i(mUberShader.getUniformLocation(gl, "ShadowMap"), mShadowTextureLocation);
 			mUberShader.unbind(gl);			
 			
@@ -922,6 +1088,7 @@ public class Renderer
 			mLightAttenuationsUniformLocation = mUberShader.getUniformLocation(gl, "LightAttenuations");
 			mNumLightsUniformLocation = mUberShader.getUniformLocation(gl, "NumLights");
 			mEnableToonShadingUniformLocation = mUberShader.getUniformLocation(gl, "EnableToonShading");
+			mEnableSSAOUniformLocation = mUberShader.getUniformLocation(gl, "EnableSSAO");
 			
 			/* Shadow map uniforms */
 			mHasShadowMapsUniformLocation = mUberShader.getUniformLocation(gl, "HasShadowMaps");
@@ -935,6 +1102,7 @@ public class Renderer
 			mLightWidthUniformLocation = mUberShader.getUniformLocation(gl, "LightWidth");
 			
 			/* Get the maximum number of lights the shader supports. */
+			mMaxLightsInUberShader = mUberShader.getUniformArraySize(gl, "LightPositions");
 			int count[] = new int[1];
 			int maxLen[] = new int[1];
 			
@@ -986,6 +1154,26 @@ public class Renderer
 			gl.glUniform1i(mVisShader.getUniformLocation(gl, "MaterialParams2Buffer"), 3);
 			mVisShader.unbind(gl);
 			
+			/* Load the SSAO shader. */
+			mSSAOShader = new ShaderProgram(gl, "shaders/ssao");
+			
+			mSSAOShader.bind(gl);
+			gl.glUniform1i(mSSAOShader.getUniformLocation(gl, "DiffuseBuffer"), 0);
+			gl.glUniform1i(mSSAOShader.getUniformLocation(gl, "PositionBuffer"), 1);
+			mSSAOShader.unbind(gl);
+			
+			mNumRaysUniformLocation = mSSAOShader.getUniformLocation(gl, "NumRays");
+			mSampleRaysUniformLocation = mSSAOShader.getUniformLocation(gl, "SampleRays");
+			mSampleRadiusUniformLocation = mSSAOShader.getUniformLocation(gl, "SampleRadius");
+			mProjectionMatrixUniformLocation = mSSAOShader.getUniformLocation(gl, "ProjectionMatrix");
+			mScreenSizeUniformLocation = mSSAOShader.getUniformLocation(gl, "ScreenSize");
+			
+			/* Query the max number of sample rays. */
+		    mMaxSSAORays = mSSAOShader.getUniformArraySize(gl, "SampleRays");
+		    
+		    /* Start with half of the max number of rays. */
+		    createNewSSAORays(mMaxSSAORays / 2);
+		    
 			/* Load the material used to render mesh edges (e.g. creases for subdivs). */
 			mWireframeMaterial = new UnshadedMaterial(new Color3f(0.8f, 0.8f, 0.8f));
 			mWireframeMarkedEdgeMaterial = new UnshadedMaterial(new Color3f(1.0f, 0.0f, 1.0f));

@@ -311,6 +311,42 @@ public abstract class SceneController implements MouseListener, MouseMotionListe
 				requiresRender();
 			}
 		}
+		else if (c == 'S')
+		{
+			mRenderer.setSSAOEnabled(!mRenderer.getSSAOEnabled());
+			System.out.println("SSAO enabled: " + mRenderer.getSSAOEnabled());
+			requiresRender();
+		}
+		else if (c == 'r')
+		{
+			mRenderer.setSSAORadius(Math.max(mRenderer.getSSAORadius() - 0.01f, 0.01f));
+			System.out.println("SSAO radius: " + mRenderer.getSSAORadius());
+			requiresRender();
+		}
+		else if (c == 'R')
+		{
+			mRenderer.setSSAORadius(mRenderer.getSSAORadius() + 0.01f);
+			System.out.println("SSAO radius: " + mRenderer.getSSAORadius());
+			requiresRender();
+		}
+		else if (c == 'e')
+		{
+			int min = 5;
+			int max = mRenderer.getMaxSSAORays();
+			
+			mRenderer.createNewSSAORays(Math.max(min, Math.min(max, mRenderer.getSSAORayCount() - 5)));
+			System.out.println("SSAO rays: " + mRenderer.getSSAORayCount());
+			requiresRender();
+		}
+		else if (c == 'E')
+		{
+			int min = 5;
+			int max = mRenderer.getMaxSSAORays();
+			
+			mRenderer.createNewSSAORays(Math.max(min, Math.min(max, mRenderer.getSSAORayCount() + 5)));
+			System.out.println("SSAO rays: " + mRenderer.getSSAORayCount());
+			requiresRender();
+		}
 	}
 
 	/**

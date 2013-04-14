@@ -1,0 +1,15 @@
+/**
+ * ssao.vp
+ * 
+ * Written for Cornell CS 5625 (Interactive Computer Graphics).
+ * Copyright (c) 2013, Computer Science Department, Cornell University.
+ * 
+ * @author Sean Ryan (ser99)
+ * @date 2013-03-23
+ */
+
+void main()
+{
+	gl_Position = ftransform();
+
+}
