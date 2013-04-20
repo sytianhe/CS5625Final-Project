@@ -6,8 +6,12 @@ import java.util.List;
 import javax.media.opengl.GL2;
 import javax.vecmath.Matrix3f;
 import javax.vecmath.Matrix4f;
+import javax.vecmath.Point2d;
 import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
+import javax.vecmath.Tuple3f;
+import javax.vecmath.Vector2d;
+import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
 import cs5625.deferred.misc.OpenGLResourceObject;
@@ -31,14 +35,29 @@ public class SceneObject implements OpenGLResourceObject
 {
 	/* Attributes common to all SceneObject subclasses. */
 	protected Point3f mPosition = new Point3f();
+	protected Point3f mPosition0 = new Point3f();
 	protected Quat4f mOrientation = new Quat4f(0.0f, 0.0f, 0.0f, 1.0f);
 	private float mScale = 1.0f;
 	private String mName = "";
 	private SceneObject mParent = null;
 	private boolean mIsVisible = true;
+	float   mMassLinear = 1;
+	float   mMassAngular = 1;
+	Vector3f mLinVelocity = new Vector3f(); 
+	Vector3f mAngVelocity = new Vector3f(); 
+	Vector3f mForce  = new Vector3f(); 
+	Vector3f mTorque  = new Vector3f(); 
+	boolean mIsPinned = true;
 	
 	/* List of child nodes. */
 	private ArrayList<SceneObject> mChildren = new ArrayList<SceneObject>();
+	
+	
+	/** Easy access methods for physics.*/
+	public Point3f x() { return getWorldspacePosition(); };
+	public Vector3f v() { return transformVectorToWorldSpace(mLinVelocity); };
+	public Vector3f f() { return transformVectorToWorldSpace(mForce); };
+
 	
 	/**
 	 * Updates any animation for this node at each frame, if any.
@@ -48,9 +67,26 @@ public class SceneObject implements OpenGLResourceObject
 	 */
 	public void animate(float dt)
 	{
+		if (! mIsPinned ){
+			//add gravity
+			mForce.y -= 5*mMassLinear;
+			mLinVelocity.scaleAdd(dt / mMassLinear , mForce, mLinVelocity);
+			mPosition.scaleAdd(dt, (Tuple3f) mLinVelocity, mPosition);
+		}
+		
 		for (SceneObject child : mChildren)
 		{
 			child.animate(dt);
+		}
+	}
+	
+	public void clearForces(){
+		mForce.set(0,0,0);
+		mTorque.set(0,0,0);
+	
+		for (SceneObject child : mChildren)
+		{
+			child.clearForces();
 		}
 	}
 	
@@ -74,6 +110,12 @@ public class SceneObject implements OpenGLResourceObject
 	{
 		mIsVisible = visible;
 	}
+	
+	public void setIsPinned(boolean p)
+	{
+		mIsPinned = p;
+	}
+	
 	
 	/**
 	 * Returns all direct child nodes of this node.
@@ -237,6 +279,7 @@ public class SceneObject implements OpenGLResourceObject
 	public void setPosition(Point3f position)
 	{
 		mPosition = position;
+		mPosition0.set(mPosition);
 	}
 	
 	/**

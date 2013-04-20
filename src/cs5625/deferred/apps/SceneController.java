@@ -56,6 +56,8 @@ public abstract class SceneController implements MouseListener, MouseMotionListe
 	
 	protected static Timer timer;
 	protected boolean isAnimate = false;
+	private static int N_STEPS_PER_FRAME = 10;
+	private static int FRAMES_PER_SECOND = 30;
 	
 	/**
 	 * SceneController contains the application main() method. It creates an OpenGL 
@@ -100,7 +102,7 @@ public abstract class SceneController implements MouseListener, MouseMotionListe
 	{
 		mMainWindow = new MainViewWindow("CS 5625 Deferred Renderer", this);
 		mMainWindow.setVisible(true);
-        timer = new Timer(1000 / 10, this);
+        timer = new Timer(1000 / FRAMES_PER_SECOND, this);
 	}
 	
 	/**
@@ -125,9 +127,11 @@ public abstract class SceneController implements MouseListener, MouseMotionListe
 	 */
 	public void nextFrame(float dt)
 	{
-		mSceneRoot.animate(dt);
+		mSceneRoot.clearForces();
+		for(int i =0; i< N_STEPS_PER_FRAME; i++){
+			mSceneRoot.animate(dt/N_STEPS_PER_FRAME);
+		}
 		requiresRender();
-		System.out.println("asdasda");
 	}
 	
 	/**

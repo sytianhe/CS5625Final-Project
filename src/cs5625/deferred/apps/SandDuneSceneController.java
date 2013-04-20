@@ -73,7 +73,8 @@ public class SandDuneSceneController extends SceneController{
 			
             Geometry sphere =  Geometry.load("models/sphere.obj", false, false).get(0);
             sphere.setPosition(new Point3f(0.0f,2.0f,0.0f));
-            sphere.getMeshes().get(0).setMaterial(new MandelbrotMaterial());
+            sphere.setIsPinned(false);
+            //sphere.getMeshes().get(0).setMaterial(new MandelbrotMaterial());
             mSceneRoot.addChild(sphere);
 
 			/* Add an unattenuated point light to provide overall illumination. */

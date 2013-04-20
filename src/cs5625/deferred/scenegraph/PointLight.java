@@ -47,8 +47,4 @@ public class PointLight extends Light
 	{
 		mQuadraticAttenuation = atten;
 	}
-	@Override
-	public void animate(float dt){
-		System.out.println("asdas");
-	}
 }
