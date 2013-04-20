@@ -51,11 +51,11 @@ public class ShadowMapSceneController extends SceneController
 		try
 		{
 			/* Load default scene with materials. */
-			mSceneRoot.addGeometry(Geometry.load("models/default-scene.obj", true, true));
+			//mSceneRoot.addGeometry(Geometry.load("models/default-scene.obj", true, true));
 			
 			/* Example of manipulating an object by name. */
-			mSceneRoot.findDescendantByName("fighter1").getOrientation().set(new AxisAngle4f(0.0f, 1.0f, 0.0f, -(float)Math.PI / 4.0f));
-			((Geometry)mSceneRoot.findDescendantByName("Cylinder")).getMeshes().get(0).setMaterial(new LambertianMaterial(new Color3f(0.64f, 0.47f, 0.26f)));
+			//mSceneRoot.findDescendantByName("fighter1").getOrientation().set(new AxisAngle4f(0.0f, 1.0f, 0.0f, -(float)Math.PI / 4.0f));
+			//((Geometry)mSceneRoot.findDescendantByName("Cylinder")).getMeshes().get(0).setMaterial(new LambertianMaterial(new Color3f(0.64f, 0.47f, 0.26f)));
 			
 			MengerSponge sponge = new MengerSponge(3);
 			sponge.setMaterial(new BlinnPhongMaterial(new Color3f(0.10f, 0.70f, 0.10f)));
@@ -91,6 +91,19 @@ public class ShadowMapSceneController extends SceneController
 		/* Initialize camera position. */
 		updateCamera();
 		updateShadowCamera();
+	}
+	
+	/**
+	 * Can be called by anyone to tell a self-animating controller to update and render a new frame.
+	 * Default implementation just calls `mSceneRoot.animate(dt)` and `requiresRender()`.
+	 * 
+	 * @param dt The time (in seconds) since the last frame update. Used for time-based (as opposed to 
+	 *        frame-based) animation.
+	 */
+	public void nextFrame(float dt)
+	{
+		mSceneRoot.animate(dt);
+		requiresRender();
 	}
 		
 	/**
@@ -212,4 +225,5 @@ public class ShadowMapSceneController extends SceneController
 		}
 		requiresRender();
 	}
+	
 }

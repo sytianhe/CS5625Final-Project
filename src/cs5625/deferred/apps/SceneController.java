@@ -1,5 +1,7 @@
 package cs5625.deferred.apps;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -7,9 +9,11 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.sql.Time;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
+import javax.swing.Timer;
 
 import cs5625.deferred.rendering.Camera;
 import cs5625.deferred.rendering.Renderer;
@@ -28,7 +32,7 @@ import cs5625.deferred.ui.MainViewWindow;
  * @author Asher Dunn (ad488)
  * @date 2012-03-23
  */
-public abstract class SceneController implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener
+public abstract class SceneController implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener, ActionListener
 {
 	/*
 	 * Member variables to store the renderer, scene root, and camera.
@@ -49,6 +53,9 @@ public abstract class SceneController implements MouseListener, MouseMotionListe
 	
 	@SuppressWarnings("unused")
 	private static SceneController globalController = null;
+	
+	protected static Timer timer;
+	protected boolean isAnimate = false;
 	
 	/**
 	 * SceneController contains the application main() method. It creates an OpenGL 
@@ -81,7 +88,9 @@ public abstract class SceneController implements MouseListener, MouseMotionListe
 		//globalController = new ManyLightsSceneController();
 		//globalController = new MaterialTestSceneController();
 		//globalController = new TexturesTestSceneController();
-		globalController = new ShadowMapSceneController();
+		//globalController = new ShadowMapSceneController();
+		//globalController = new DesertTreeController();
+		globalController = new SandDuneSceneController();
 	}
 	
 	/*
@@ -91,6 +100,7 @@ public abstract class SceneController implements MouseListener, MouseMotionListe
 	{
 		mMainWindow = new MainViewWindow("CS 5625 Deferred Renderer", this);
 		mMainWindow.setVisible(true);
+        timer = new Timer(1000 / 10, this);
 	}
 	
 	/**
@@ -117,6 +127,7 @@ public abstract class SceneController implements MouseListener, MouseMotionListe
 	{
 		mSceneRoot.animate(dt);
 		requiresRender();
+		System.out.println("asdasda");
 	}
 	
 	/**
@@ -347,6 +358,16 @@ public abstract class SceneController implements MouseListener, MouseMotionListe
 			System.out.println("SSAO rays: " + mRenderer.getSSAORayCount());
 			requiresRender();
 		}
+		else if (c == ' ')
+		{
+			isAnimate = !isAnimate;
+			if (isAnimate){
+				startAnimation();
+			}
+			else{
+				stopAnimation();
+			}
+		}
 	}
 
 	/**
@@ -419,5 +440,21 @@ public abstract class SceneController implements MouseListener, MouseMotionListe
 	public void mouseReleased(MouseEvent arg0)
 	{
 		/* No default response. */
+	}
+	
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if (e.getSource() == timer)
+		{
+			this.nextFrame(0.1f);
+		}
+	}
+	
+	public void startAnimation() {
+		timer.start();
+	}
+	
+	public void stopAnimation() {
+		timer.stop();		
 	}
 }
