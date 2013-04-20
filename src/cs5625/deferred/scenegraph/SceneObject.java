@@ -43,10 +43,10 @@ public class SceneObject implements OpenGLResourceObject
 	private boolean mIsVisible = true;
 	float   mMassLinear = 1;
 	float   mMassAngular = 1;
-	Vector3f mLinVelocity = new Vector3f(); 
-	Vector3f mAngVelocity = new Vector3f(); 
-	Vector3f mForce  = new Vector3f(); 
-	Vector3f mTorque  = new Vector3f(); 
+	Vector3f mLinVelocity = new Vector3f();
+	Vector3f mAngVelocity = new Vector3f();
+	Vector3f mForce  = new Vector3f();
+	Vector3f mTorque  = new Vector3f();
 	boolean mIsPinned = true;
 	
 	/* List of child nodes. */
