@@ -1,12 +1,10 @@
 package cs5625.deferred.apps;
 
 import java.awt.Point;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.io.IOException;
-import java.sql.Time;
 import java.util.ArrayList;
 
 import javax.vecmath.AxisAngle4f;
@@ -16,11 +14,8 @@ import javax.vecmath.Quat4f;
 
 import cs5625.deferred.catmullclark.CCSubdiv;
 import cs5625.deferred.datastruct.EdgeDS;
-import cs5625.deferred.defaultGeometry.Tetrahedron;
-import cs5625.deferred.loop.LoopSubdiv;
 import cs5625.deferred.materials.BlinnPhongMaterial;
 import cs5625.deferred.materials.LambertianMaterial;
-import cs5625.deferred.materials.MandelbrotMaterial;
 import cs5625.deferred.materials.UnshadedMaterial;
 import cs5625.deferred.misc.ScenegraphException;
 import cs5625.deferred.misc.Util;
@@ -50,9 +45,7 @@ public class SandDuneSceneController extends SceneController{
 	
 	/* Used to calculate subdivision surfaces. */
 	private Mesh visibleMesh;
-	private Trimesh loopMesh;
 	private Quadmesh ccMesh;
-	private boolean isLoop;
 
 	public void updateSceneGraph() {
 		try {
@@ -91,7 +84,6 @@ public class SandDuneSceneController extends SceneController{
 //            sphere.setIsPinned(false);
 //            sphere.getMeshes().get(0).setMaterial(new MandelbrotMaterial());
 //            mSceneRoot.addChild(sphere);
-            
 
 			/* Add an unattenuated point light to provide overall illumination. */
 			PointLight light = new PointLight();
@@ -106,7 +98,6 @@ public class SandDuneSceneController extends SceneController{
 			light.setPosition(new Point3f(mShadowCamera.getPosition()));
 			light.setName("CameraLight");
 			mSceneRoot.addChild(light);		
-			
 		}		 	
 		catch (ScenegraphException e) {
 			// TODO Auto-generated catch block
@@ -128,15 +119,6 @@ public class SandDuneSceneController extends SceneController{
 	{
 		try
 		{
-			// TODO PA5: This is where you change the base meshes.
-			//ccMesh = new FourQuadMesh().getTriMesh();
-			//loopMesh = new Tetrahedron().getTriMesh();
-			//loopMesh = new TwoTriangleMesh().getTriMesh();
-
-			//ccMesh = new CubeQuadMesh().getQuadMesh();
-//			MengerSponge sponge = new MengerSponge(1);
-//			sponge.setMaterial(new BlinnPhongMaterial(new Color3f(0.10f, 0.70f, 0.10f)));
-//			ccMesh = (Quadmesh)sponge;
 			ArrayList<Point3f>list = new ArrayList<Point3f>();
 			Point3f point = new Point3f();
 			point.set(3f,0f,0f);
@@ -152,11 +134,8 @@ public class SandDuneSceneController extends SceneController{
 
 			TreeTrunk trunck = new TreeTrunk(list, 0.3f, 0.1f);
 			ccMesh = (Quadmesh)trunck;
-			loopMesh = (Trimesh)Geometry.load("models/lowpolysphere.obj", true, true).get(0).getMeshes().get(0);
 			
-			visibleMesh = loopMesh;
-			isLoop = true;
-			
+			visibleMesh = ccMesh;
 			this.updateSceneGraph();
 		}
 		catch (Exception err)
@@ -197,30 +176,12 @@ public class SandDuneSceneController extends SceneController{
 		char c = key.getKeyChar();
 		if (c == 'n')
 		{
-			if (isLoop)
-			{
-				System.out.println("Loop Subdivision!");
-				EdgeDS edgeDS = new EdgeDS(loopMesh);
-				LoopSubdiv loopSubdiv = new LoopSubdiv(edgeDS);
-				loopMesh = (Trimesh)loopSubdiv.getNewMesh();
-			}
-			else
-			{
-				System.out.println("Catmull-Clark Subdivision!");
-				EdgeDS edgeDS = new EdgeDS(ccMesh);
-				CCSubdiv ccSubdiv = new CCSubdiv(edgeDS);
-				ccMesh = (Quadmesh)ccSubdiv.getNewMesh();
-			}
+
+			System.out.println("Catmull-Clark Subdivision!");
+			EdgeDS edgeDS = new EdgeDS(ccMesh);
+			CCSubdiv ccSubdiv = new CCSubdiv(edgeDS);
+			ccMesh = (Quadmesh)ccSubdiv.getNewMesh();
 			
-			visibleMesh = isLoop ? loopMesh : ccMesh;
-			updateSceneGraph();
-			requiresRender();
-		}
-		else if (c == 'm')
-		{
-			isLoop = !isLoop;
-			
-			visibleMesh = isLoop ? loopMesh : ccMesh;
 			updateSceneGraph();
 			requiresRender();
 		}

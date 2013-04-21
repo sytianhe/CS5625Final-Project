@@ -68,11 +68,11 @@ public class MengerSponge extends Quadmesh {
 				
 				// Use the same normals and texture coordinates.
 				for (int j = 0; j < 3; j++) {
-					mNormalData.put(cubeNormals.get());
+					//mNormalData.put(cubeNormals.get());
 				}
 				
 				for (int j = 0; j < 2; j++) {
-					mTexCoordData.put(cubeTexture.get());
+					//mTexCoordData.put(cubeTexture.get());
 				}
 				
 				// Offset the index by the cube count.
