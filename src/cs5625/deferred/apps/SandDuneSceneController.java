@@ -29,6 +29,7 @@ import cs5625.deferred.scenegraph.MengerSponge;
 import cs5625.deferred.scenegraph.Mesh;
 import cs5625.deferred.scenegraph.PointLight;
 import cs5625.deferred.scenegraph.Quadmesh;
+import cs5625.deferred.scenegraph.TreeTrunk;
 import cs5625.deferred.scenegraph.Trimesh;
 
 public class SandDuneSceneController extends SceneController{
@@ -56,8 +57,9 @@ public class SandDuneSceneController extends SceneController{
 	public void updateSceneGraph() {
 		try {
 			Geometry geom = new Geometry();
+			visibleMesh.setMaterial(new UnshadedMaterial(new Color3f(0.10f, 0.70f, 0.10f)));
 			geom.addMesh(visibleMesh);
-			//geom.setPosition(new Point3f(0.0f,5.0f,0.0f));
+			geom.setPosition(new Point3f(0.0f,2.0f,0.0f));
 			ArrayList<Geometry> geoList = new ArrayList<Geometry>();
 			geoList.add(geom);
 
@@ -66,14 +68,12 @@ public class SandDuneSceneController extends SceneController{
 			geoList.add(plane);
 			plane.setIsPinned(true);
 			
-			
-			
 			MengerSponge sponge = new MengerSponge(3);
-			sponge.setMaterial(new BlinnPhongMaterial(new Color3f(0.10f, 0.70f, 0.10f)));
+			sponge.setMaterial(new UnshadedMaterial(new Color3f(0.10f, 0.70f, 0.10f)));
 			
 			geo = new Geometry();
 			geo.addMesh(sponge);
-			geo.setPosition(new Point3f(4.0f, 1.0f, 0.0f));
+			geo.setPosition(new Point3f(4.0f, 2.0f, 0.0f));
 			geoList.add(geo);
 			
 			geo = new Geometry();
@@ -86,11 +86,11 @@ public class SandDuneSceneController extends SceneController{
 						
 			mSceneRoot.addGeometry(geoList);
 			
-            Geometry sphere =  Geometry.load("models/sphere.obj", false, false).get(0);
-            sphere.setPosition(new Point3f(0.0f,2.0f,0.0f));
-            sphere.setIsPinned(false);
-            sphere.getMeshes().get(0).setMaterial(new MandelbrotMaterial());
-            mSceneRoot.addChild(sphere);
+//            Geometry sphere =  Geometry.load("models/sphere.obj", false, false).get(0);
+//            sphere.setPosition(new Point3f(0.0f,2.0f,0.0f));
+//            sphere.setIsPinned(false);
+//            sphere.getMeshes().get(0).setMaterial(new MandelbrotMaterial());
+//            mSceneRoot.addChild(sphere);
             
 
 			/* Add an unattenuated point light to provide overall illumination. */
@@ -137,8 +137,21 @@ public class SandDuneSceneController extends SceneController{
 //			MengerSponge sponge = new MengerSponge(1);
 //			sponge.setMaterial(new BlinnPhongMaterial(new Color3f(0.10f, 0.70f, 0.10f)));
 //			ccMesh = (Quadmesh)sponge;
-			
-			ccMesh = (Quadmesh)Geometry.load("models/cube.obj", true, true).get(0).getMeshes().get(0);
+			ArrayList<Point3f>list = new ArrayList<Point3f>();
+			Point3f point = new Point3f();
+			point.set(3f,0f,0f);
+			list.add(new Point3f(point));
+			point.set(2.771f,1.148f,-0.05f);
+			list.add(new Point3f(point));
+			point.set(2.121f,2.121f,-0.1f);
+			list.add(new Point3f(point));
+			point.set(1.148f,2.771f,-0.15f);
+			list.add(new Point3f(point));
+			point.set(0f,3f,-0.2f);
+			list.add(new Point3f(point));
+
+			TreeTrunk trunck = new TreeTrunk(list, 0.3f, 0.1f);
+			ccMesh = (Quadmesh)trunck;
 			loopMesh = (Trimesh)Geometry.load("models/lowpolysphere.obj", true, true).get(0).getMeshes().get(0);
 			
 			visibleMesh = loopMesh;
