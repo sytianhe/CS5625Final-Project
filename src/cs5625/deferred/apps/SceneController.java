@@ -15,6 +15,8 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.swing.Timer;
 
+
+import cs5625.deferred.physics.ParticleSystem;
 import cs5625.deferred.rendering.Camera;
 import cs5625.deferred.rendering.Renderer;
 import cs5625.deferred.scenegraph.SceneObject;
@@ -56,8 +58,9 @@ public abstract class SceneController implements MouseListener, MouseMotionListe
 	
 	protected static Timer timer;
 	protected boolean isAnimate = false;
-	private static int N_STEPS_PER_FRAME = 10;
-	private static int FRAMES_PER_SECOND = 30;
+	private static int N_STEPS_PER_FRAME = 40;
+	public static final float DT = 0.05f;
+	public ParticleSystem PS;
 	
 	/**
 	 * SceneController contains the application main() method. It creates an OpenGL 
@@ -102,7 +105,7 @@ public abstract class SceneController implements MouseListener, MouseMotionListe
 	{
 		mMainWindow = new MainViewWindow("CS 5625 Deferred Renderer", this);
 		mMainWindow.setVisible(true);
-        timer = new Timer(1000 / FRAMES_PER_SECOND, this);
+        timer = new Timer( (int) (1000 *  DT), this);
 	}
 	
 	/**
@@ -125,12 +128,19 @@ public abstract class SceneController implements MouseListener, MouseMotionListe
 	 * @param dt The time (in seconds) since the last frame update. Used for time-based (as opposed to 
 	 *        frame-based) animation.
 	 */
-	public void nextFrame(float dt)
+	public void nextFrame(float DT)
 	{
-		mSceneRoot.clearForces();
-		for(int i =0; i< N_STEPS_PER_FRAME; i++){
-			mSceneRoot.animate(dt/N_STEPS_PER_FRAME);
+		//Initialize PS if necessary
+		if (PS == null){
+	        PS = new ParticleSystem();
+	        mSceneRoot.addToParticleSystem(PS);
 		}
+		//Perform several small time steps per iteration
+		float dt = DT / N_STEPS_PER_FRAME;
+		for(int i =0; i< N_STEPS_PER_FRAME; i++){
+			PS.advanceTime(dt);
+		}
+		mSceneRoot.animate(DT);
 		requiresRender();
 	}
 	
@@ -450,7 +460,7 @@ public abstract class SceneController implements MouseListener, MouseMotionListe
 		// TODO Auto-generated method stub
 		if (e.getSource() == timer)
 		{
-			this.nextFrame(0.1f);
+			this.nextFrame(DT);
 		}
 	}
 	

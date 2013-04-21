@@ -66,6 +66,7 @@ public class SandDuneSceneController extends SceneController{
 			Geometry plane = Geometry.load("models/plane.obj", false, false).get(0);					
 			plane.getMeshes().get(0).setMaterial(new LambertianMaterial(new Color3f(0.00f, 0.70f, 0.70f)));
 			geoList.add(plane);
+			plane.setIsPinned(true);
 			
 			MengerSponge sponge = new MengerSponge(3);
 			sponge.setMaterial(new UnshadedMaterial(new Color3f(0.10f, 0.70f, 0.10f)));
@@ -91,6 +92,7 @@ public class SandDuneSceneController extends SceneController{
 //            sphere.getMeshes().get(0).setMaterial(new MandelbrotMaterial());
 //            mSceneRoot.addChild(sphere);
             
+
 			/* Add an unattenuated point light to provide overall illumination. */
 			PointLight light = new PointLight();
 
