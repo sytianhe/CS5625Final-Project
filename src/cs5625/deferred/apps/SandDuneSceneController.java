@@ -44,11 +44,34 @@ public class SandDuneSceneController extends SceneController{
 	private Geometry geo;
 	
 	/* Used to calculate subdivision surfaces. */
-	private Mesh visibleMesh;
-	private Quadmesh ccMesh;
+	private Quadmesh visibleMesh;
+	
+	private int numberofSub = 3;
 
-	public void updateSceneGraph() {
+	public void initializeScene() {
 		try {
+			ArrayList<Point3f>list = new ArrayList<Point3f>();
+			Point3f point = new Point3f();
+			point.set(3f,0f,0f);
+			list.add(new Point3f(point));
+			point.set(2.771f,1.148f,-0.05f);
+			list.add(new Point3f(point));
+			point.set(2.121f,2.121f,-0.1f);
+			list.add(new Point3f(point));
+			point.set(1.148f,2.771f,-0.15f);
+			list.add(new Point3f(point));
+			point.set(0f,3f,-0.2f);
+			list.add(new Point3f(point));
+
+			TreeTrunk trunck = new TreeTrunk(list, 0.3f, 0.1f);
+			visibleMesh = (Quadmesh)trunck;
+			
+			for (int i = 0; i< numberofSub; i++){
+				EdgeDS edgeDS = new EdgeDS(visibleMesh);
+				CCSubdiv ccSubdiv = new CCSubdiv(edgeDS);
+				visibleMesh = (Quadmesh)ccSubdiv.getNewMesh();
+			}
+			
 			Geometry geom = new Geometry();
 			visibleMesh.setMaterial(new UnshadedMaterial(new Color3f(0.10f, 0.70f, 0.10f)));
 			geom.addMesh(visibleMesh);
@@ -113,42 +136,7 @@ public class SandDuneSceneController extends SceneController{
 		updateCamera();
 		updateShadowCamera();
 	}
-	
-	@Override
-	public void initializeScene()
-	{
-		try
-		{
-			ArrayList<Point3f>list = new ArrayList<Point3f>();
-			Point3f point = new Point3f();
-			point.set(3f,0f,0f);
-			list.add(new Point3f(point));
-			point.set(2.771f,1.148f,-0.05f);
-			list.add(new Point3f(point));
-			point.set(2.121f,2.121f,-0.1f);
-			list.add(new Point3f(point));
-			point.set(1.148f,2.771f,-0.15f);
-			list.add(new Point3f(point));
-			point.set(0f,3f,-0.2f);
-			list.add(new Point3f(point));
 
-			TreeTrunk trunck = new TreeTrunk(list, 0.3f, 0.1f);
-			ccMesh = (Quadmesh)trunck;
-			
-			visibleMesh = ccMesh;
-			this.updateSceneGraph();
-		}
-		catch (Exception err)
-		{
-			/* If anything goes wrong, just die. */
-			err.printStackTrace();
-			System.exit(-1);
-		}
-		
-		/* Initialize camera position. */
-		updateCamera();
-	}	
-	
 	/**
 	 * Updates the camera position and orientation based on orbit parameters.
 	 */
@@ -166,25 +154,6 @@ public class SandDuneSceneController extends SceneController{
 		/* Set the camera's position so that it looks towards the origin. */
 		mCamera.setPosition(new Point3f(0.0f, 0.0f, mCameraRadius));
 		Util.rotateTuple(mCamera.getOrientation(), mCamera.getPosition());
-	}
-	
-	@Override
-	public void keyTyped(KeyEvent key)
-	{
-		super.keyTyped(key);
-		
-		char c = key.getKeyChar();
-		if (c == 'n')
-		{
-
-			System.out.println("Catmull-Clark Subdivision!");
-			EdgeDS edgeDS = new EdgeDS(ccMesh);
-			CCSubdiv ccSubdiv = new CCSubdiv(edgeDS);
-			ccMesh = (Quadmesh)ccSubdiv.getNewMesh();
-			
-			updateSceneGraph();
-			requiresRender();
-		}
 	}
 	
 	@Override
