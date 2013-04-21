@@ -142,7 +142,7 @@ public class Renderer
 	private int mShadowMode = 0;
 	
 	/* All of the shadow mapping parameters */
-	private float mBias = 0f;
+	private float mBias =  0.000011f;
 	private int mBiasUniformLocation = -1;
 	
 	private int mShadowSampleWidth = 4;

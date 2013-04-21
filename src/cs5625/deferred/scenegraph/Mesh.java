@@ -7,6 +7,7 @@ import java.util.HashMap;
 import javax.media.opengl.GL2;
 import javax.vecmath.GMatrix;
 import javax.vecmath.GVector;
+import javax.vecmath.Tuple3f;
 import javax.vecmath.Vector3f;
 
 import com.jogamp.common.nio.Buffers;
@@ -418,5 +419,14 @@ public abstract class Mesh implements OpenGLResourceObject
 	public void releaseGPUResources(GL2 gl)
 	{
 		mMaterial.releaseGPUResources(gl);
+	}
+	
+	/**
+	 * Animate for different meshes
+	 * @param dt
+	 */
+	public void animate(float dt)
+	{
+		
 	}
 }

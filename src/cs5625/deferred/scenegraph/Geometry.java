@@ -14,6 +14,7 @@ import javax.media.opengl.GL2;
 import javax.vecmath.Point2i;
 import javax.vecmath.Point3f;
 import javax.vecmath.Point3i;
+import javax.vecmath.Tuple3f;
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
@@ -627,5 +628,15 @@ public class Geometry extends SceneObject
 		}
 		
 		return results;
+	}
+	
+	@Override
+	public void animate(float dt)
+	{
+		
+		for (Mesh child : mMeshes)
+		{
+			child.animate(dt);
+		}
 	}
 }
