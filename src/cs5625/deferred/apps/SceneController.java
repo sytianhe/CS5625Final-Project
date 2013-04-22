@@ -382,6 +382,14 @@ public abstract class SceneController implements MouseListener, MouseMotionListe
 				stopAnimation();
 			}
 		}
+		else if (c == '.')
+		{
+			PS = new ParticleSystem();
+//			mSceneRoot = new SceneObject();
+//			isAnimate = false;
+//			timer = new Timer( (int) (1000 *  DT), this);
+			globalController = new SandDuneSceneController();
+		}
 	}
 
 	/**
