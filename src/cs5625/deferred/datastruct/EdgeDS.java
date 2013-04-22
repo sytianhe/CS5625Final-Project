@@ -341,7 +341,7 @@ public class EdgeDS {
 			z = positionData.get(3 * index0 + 2);			
 			nx = normalData.get(3 * index0 + 0);
 			ny = normalData.get(3 * index0 + 1);
-			nz = positionData.get(3 * index0 + 2);	
+			nz = normalData.get(3 * index0 + 2);	
 			tx = textureData.get(2 * index0);
 			ty = textureData.get(2 * index0 + 1);
 			
@@ -352,7 +352,7 @@ public class EdgeDS {
 			z = positionData.get(3 * index1 + 2);
 			nx = normalData.get(3 * index1 + 0);
 			ny = normalData.get(3 * index1 + 1);
-			nz = positionData.get(3 * index1 + 2);	
+			nz = normalData.get(3 * index1 + 2);	
 			tx = textureData.get(2 * index1);
 			ty = textureData.get(2 * index1 + 1);
 			
@@ -361,6 +361,9 @@ public class EdgeDS {
 			x = positionData.get(3 * index2 + 0);
 			y = positionData.get(3 * index2 + 1);
 			z = positionData.get(3 * index2 + 2);
+			nx = normalData.get(3 * index2 + 0);
+			ny = normalData.get(3 * index2 + 1);
+			nz = normalData.get(3 * index2 + 2);
 			tx = textureData.get(2 * index2);
 			ty = textureData.get(2 * index2 + 1);
 			
@@ -369,6 +372,9 @@ public class EdgeDS {
 			x = positionData.get(3 * index3 + 0);
 			y = positionData.get(3 * index3 + 1);
 			z = positionData.get(3 * index3 + 2);
+			nx = normalData.get(3 * index3 + 0);
+			ny = normalData.get(3 * index3 + 1);
+			nz = normalData.get(3 * index3 + 2);
 			tx = textureData.get(2 * index3);
 			ty = textureData.get(2 * index3 + 1);
 			

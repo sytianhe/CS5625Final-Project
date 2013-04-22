@@ -10,7 +10,6 @@ import cs5625.deferred.materials.BlinnPhongMaterial;
 import cs5625.deferred.materials.UnshadedMaterial;
 import cs5625.deferred.physics.Particle;
 import cs5625.deferred.physics.ParticleSystem;
-import cs5625.deferred.physics.Force;
 import cs5625.deferred.physics.SpringForce2Particle;
 import cs5625.deferred.physics.SpringForceBending;
 ;
@@ -18,7 +17,7 @@ import cs5625.deferred.physics.SpringForceBending;
 
 public class TrunckGeometry extends Geometry
 {
-	private int numSubdivisions = 2;
+	private int numSubdivisions = 3;
 	private ArrayList<Particle> particleList = new ArrayList<Particle>();
 	
 	public TrunckGeometry(ArrayList<Point3f>list){
