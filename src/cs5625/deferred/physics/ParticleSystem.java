@@ -172,7 +172,7 @@ public class ParticleSystem
 
 			// ADD SOME MASS-PROPORTIONAL DAMPING (DEFAULT IS ZERO)
 			for(Particle p : P) 
-				Utils.acc(p.f,  -Constants.DAMPING_MASS * p.m * 0, p.v);
+				Utils.acc(p.f,  -Constants.DAMPING_MASS * p.m, p.v);
 		}
 
 

@@ -18,7 +18,7 @@ public class SpringForceBending implements Force
      * Constructs a bending force affecting the angle implied by the
      * three-particle chain, p0-p1-p2.  
      */
-    SpringForceBending(Particle p0, Particle p1, Particle p2)
+    public SpringForceBending(Particle p0, Particle p1, Particle p2)
     {
 	if(p0==null || p1==null || p2==null) 
 	    throw new NullPointerException("p0="+p0+", p1="+p1+", p2="+p2);
@@ -73,7 +73,6 @@ public class SpringForceBending implements Force
 	    p0.f.add(f0);
 	    p1.f.add(f1);
 	    p2.f.add(f2);
-
 	    /// SKIP DAMPING (YOU MAY WANT TO ADD IT)
 	}
     }

@@ -53,7 +53,7 @@ public class SandDuneSceneController extends SceneController{
 			Point3f point = new Point3f();
 			point.set(3f,0f,0f);
 			list.add(new Point3f(point));
-			point.set(2.771f,1.148f,-0.05f);
+			point.set(3f,1.148f,0f);
 			list.add(new Point3f(point));
 			point.set(2.121f,2.121f,-0.1f);
 			list.add(new Point3f(point));
@@ -100,7 +100,7 @@ public class SandDuneSceneController extends SceneController{
 			geoList.add(geo);
 					
 			TrunckGeometry newTrunk = new TrunckGeometry(list);
-			newTrunk.setPosition(new Point3f(-3.0f, 5.0f, 0.0f));
+			newTrunk.setPosition(new Point3f(-3.0f, 0.0f, 0.0f));
 			newTrunk.setIsPinned(false);
 			
 			geoList.add(newTrunk);

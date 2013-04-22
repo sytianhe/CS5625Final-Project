@@ -11,6 +11,8 @@ import cs5625.deferred.physics.Particle;
 import cs5625.deferred.physics.ParticleSystem;
 import cs5625.deferred.physics.Force;
 import cs5625.deferred.physics.SpringForce2Particle;
+import cs5625.deferred.physics.SpringForceBending;
+;
 
 
 public class TrunckGeometry extends Geometry
@@ -21,6 +23,10 @@ public class TrunckGeometry extends Geometry
 		for (Point3f p : list){
 			this.particleList.add(new Particle(new Point3d(p)));
 		}
+		TreeTrunk newtree = new TreeTrunk(list, 0.5f, 0.1f);
+		newtree.subdivide(2);
+		this.mMeshes.add( newtree );
+		((Mesh) this.mMeshes.get(0)).setMaterial(new UnshadedMaterial(new Color3f(0.10f, 0.70f, 0.10f)));
 	}
 
 	@Override
@@ -30,10 +36,15 @@ public class TrunckGeometry extends Geometry
 			p.setPin(false);
 		}
 		particleList.get(0).setPin(true);
-		//particleList.get(1).setPin(true);
+		particleList.get(1).setPin(true);
 		
 		for (int i = 0; i<particleList.size() - 1; i++){
 			SpringForce2Particle f = new SpringForce2Particle(particleList.get(i), particleList.get(i+1), PS);
+			PS.addForce(f);
+		}
+		
+		for (int i = 1; i<particleList.size() - 1; i++){
+			SpringForceBending f = new SpringForceBending(particleList.get(i-1), particleList.get(i), particleList.get(i+1));
 			PS.addForce(f);
 		}
 
