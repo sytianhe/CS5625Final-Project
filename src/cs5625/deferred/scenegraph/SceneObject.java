@@ -57,21 +57,12 @@ public class SceneObject implements OpenGLResourceObject
 	public void animate(float dt)
 	{
 		setPositionFromControlParticle();
-		otherAnimationTasks(); //Maybe?
 		for (SceneObject child : mChildren)
 		{
 			child.animate(dt);
 		}
 	}
 	
-	/**
-	 * This method is called after physically based animation has occurred.
-	 * Extend it to include other non physically based animation effects.
-	 */
-	private void otherAnimationTasks(){
-		//Nothing here yet
-	}
-		
 	/**
 	 * Returns this object's parent node, if any.
 	 */

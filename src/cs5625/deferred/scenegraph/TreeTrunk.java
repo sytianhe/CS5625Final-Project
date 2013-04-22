@@ -35,6 +35,8 @@ public class TreeTrunk extends Quadmesh {
 			
 			Vector3f normal = new Vector3f();
 			Vector3f tangent = new Vector3f();
+			Vector3f normalDir = new Vector3f();
+			Vector3f tangentDir = new Vector3f();			
 			Vector3f temp = new Vector3f();
 			if (i == 0 ){
 				temp.set(ControlPoints.get(i+1));
@@ -60,21 +62,37 @@ public class TreeTrunk extends Quadmesh {
 				tangent.cross(normal, temp);
 				tangent.normalize();
 			}
+			normalDir.set(normal);
+			tangentDir.set(tangent);
+			normal.scale(radius*1.41f);
+			tangent.scale(radius*1.41f);
+			mVertexData.put(ControlPoints.get(i).x + normal.x);
+			mVertexData.put(ControlPoints.get(i).y + normal.y);
+			mVertexData.put(ControlPoints.get(i).z + normal.z);
+			mNormalData.put(ControlPoints.get(i).x + normalDir.x);
+			mNormalData.put(ControlPoints.get(i).y + normalDir.y);
+			mNormalData.put(ControlPoints.get(i).z + normalDir.z);
 
-			normal.scale(radius);
-			tangent.scale(radius);
-			mVertexData.put(ControlPoints.get(i).x + normal.x + tangent.x);
-			mVertexData.put(ControlPoints.get(i).y + normal.y + tangent.y);
-			mVertexData.put(ControlPoints.get(i).z + normal.z + tangent.z);
-			mVertexData.put(ControlPoints.get(i).x - normal.x + tangent.x);
-			mVertexData.put(ControlPoints.get(i).y - normal.y + tangent.y);
-			mVertexData.put(ControlPoints.get(i).z - normal.z + tangent.z);
-			mVertexData.put(ControlPoints.get(i).x - normal.x - tangent.x);
-			mVertexData.put(ControlPoints.get(i).y - normal.y - tangent.y);
-			mVertexData.put(ControlPoints.get(i).z - normal.z - tangent.z);
-			mVertexData.put(ControlPoints.get(i).x + normal.x - tangent.x);
-			mVertexData.put(ControlPoints.get(i).y + normal.y - tangent.y);
-			mVertexData.put(ControlPoints.get(i).z + normal.z - tangent.z);
+			mVertexData.put(ControlPoints.get(i).x + tangent.x);
+			mVertexData.put(ControlPoints.get(i).y + tangent.y);
+			mVertexData.put(ControlPoints.get(i).z + tangent.z);
+			mNormalData.put(ControlPoints.get(i).x + tangentDir.x);
+			mNormalData.put(ControlPoints.get(i).y + tangentDir.y);
+			mNormalData.put(ControlPoints.get(i).z + tangentDir.z);
+
+			mVertexData.put(ControlPoints.get(i).x - normal.x );
+			mVertexData.put(ControlPoints.get(i).y - normal.y );
+			mVertexData.put(ControlPoints.get(i).z - normal.z );
+			mNormalData.put(ControlPoints.get(i).x - normalDir.x );
+			mNormalData.put(ControlPoints.get(i).y - normalDir.y );
+			mNormalData.put(ControlPoints.get(i).z - normalDir.z );
+			
+			mVertexData.put(ControlPoints.get(i).x - tangent.x);
+			mVertexData.put(ControlPoints.get(i).y - tangent.y);
+			mVertexData.put(ControlPoints.get(i).z - tangent.z);
+			mNormalData.put(ControlPoints.get(i).x - tangentDir.x);
+			mNormalData.put(ControlPoints.get(i).y - tangentDir.y);
+			mNormalData.put(ControlPoints.get(i).z - tangentDir.z);
 		}
 	
 		for (int i = 0; i<ControlPoints.size()-1; i++){

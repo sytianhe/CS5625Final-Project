@@ -38,6 +38,7 @@ public class CCSubdiv {
 		
 		//INITIALIZE NEW BUFFERS FOR NEW MESH
 		FloatBuffer vertexBuf = FloatBuffer.allocate(nVertices*3);
+		FloatBuffer normalBuf = FloatBuffer.allocate(nVertices*3);
 		FloatBuffer texCoordBuf = FloatBuffer.allocate(nVertices*2);
 		IntBuffer edgeBuf = IntBuffer.allocate(nCreaseEdges*2);
 		IntBuffer faceBuf = IntBuffer.allocate(nFaces*4);

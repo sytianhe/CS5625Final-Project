@@ -11,6 +11,7 @@ import java.util.TreeSet;
 
 import javax.vecmath.Point2f;
 import javax.vecmath.Point3f;
+import javax.vecmath.Vector3f;
 
 import cs5625.deferred.scenegraph.Mesh;
 import cs5625.deferred.scenegraph.Quadmesh;
@@ -214,6 +215,7 @@ public class EdgeDS {
 		
 		//add all the triangles to this data structure
 		FloatBuffer positionData = trimesh.getVertexData();
+		FloatBuffer normalData = trimesh.getNormalData();
 		FloatBuffer textureData = trimesh.getTexCoordData();
 		IntBuffer indexData = trimesh.getPolygonData();
 		IntBuffer creaseData = trimesh.getEdgeData();
@@ -223,7 +225,7 @@ public class EdgeDS {
 		int i;
 		
 		int index0, index1, index2;
-		float x,y,z,tx,ty;
+		float x,y,z,nx,ny,nz,tx,ty;
 		
 		this.vertexMap = new TreeMap<Integer, VertexData>();	
 		this.edgeMap = new TreeMap<Integer, EdgeData>();
@@ -240,27 +242,36 @@ public class EdgeDS {
 			
 			x = positionData.get(3 * index0 + 0);
 			y = positionData.get(3 * index0 + 1);
-			z = positionData.get(3 * index0 + 2);			
+			z = positionData.get(3 * index0 + 2);
+			nx = normalData.get(3 * index0 + 0);
+			ny = normalData.get(3 * index0 + 1);
+			nz = normalData.get(3 * index0 + 2);
 			tx = textureData.get(2 * index0);
 			ty = textureData.get(2 * index0 + 1);
 			
-			VertexAttributeData v0 = new VertexAttributeData(new Point3f(x,y,z), new Point2f(tx,ty));
+			VertexAttributeData v0 = new VertexAttributeData(new Point3f(x,y,z), new Point2f(tx,ty), new Vector3f(nx,ny,nz));
 			
 			x = positionData.get(3 * index1 + 0);
 			y = positionData.get(3 * index1 + 1);
 			z = positionData.get(3 * index1 + 2);
+			nx = normalData.get(3 * index1 + 0);
+			ny = normalData.get(3 * index1 + 1);
+			nz = normalData.get(3 * index1 + 2);
 			tx = textureData.get(2 * index1);
 			ty = textureData.get(2 * index1 + 1);
 			
-			VertexAttributeData v1 = new VertexAttributeData(new Point3f(x,y,z), new Point2f(tx,ty));
+			VertexAttributeData v1 = new VertexAttributeData(new Point3f(x,y,z), new Point2f(tx,ty), new Vector3f(nx,ny,nz));
 			
 			x = positionData.get(3 * index2 + 0);
 			y = positionData.get(3 * index2 + 1);
 			z = positionData.get(3 * index2 + 2);
+			nx = normalData.get(3 * index1 + 0);
+			ny = normalData.get(3 * index1 + 1);
+			nz = normalData.get(3 * index1 + 2);
 			tx = textureData.get(2 * index2);
 			ty = textureData.get(2 * index2 + 1);
 			
-			VertexAttributeData v2 = new VertexAttributeData(new Point3f(x,y,z), new Point2f(tx,ty));
+			VertexAttributeData v2 = new VertexAttributeData(new Point3f(x,y,z), new Point2f(tx,ty), new Vector3f(nx,ny,nz));
 			
 			this.addTriangle(index0, index1, index2, v0, v1, v2);		
 			}
@@ -299,6 +310,7 @@ public class EdgeDS {
 		
 		//add all the triangles to this data structure
 		FloatBuffer positionData = quadmesh.getVertexData(); 
+		FloatBuffer normalData = quadmesh.getNormalData(); 
 		FloatBuffer textureData = quadmesh.getTexCoordData();
 		IntBuffer indexData = quadmesh.getPolygonData();
 		IntBuffer creaseData = quadmesh.getEdgeData();
@@ -308,7 +320,7 @@ public class EdgeDS {
 		int i;
 		
 		int index0, index1, index2, index3;
-		float x,y,z,tx,ty;
+		float x,y,z,nx,ny,nz,tx,ty;
 		
 		this.vertexMap = new TreeMap<Integer, VertexData>();	
 		this.edgeMap = new TreeMap<Integer, EdgeData>();
@@ -327,18 +339,24 @@ public class EdgeDS {
 			x = positionData.get(3 * index0 + 0);
 			y = positionData.get(3 * index0 + 1);
 			z = positionData.get(3 * index0 + 2);			
+			nx = normalData.get(3 * index0 + 0);
+			ny = normalData.get(3 * index0 + 1);
+			nz = positionData.get(3 * index0 + 2);	
 			tx = textureData.get(2 * index0);
 			ty = textureData.get(2 * index0 + 1);
 			
-			VertexAttributeData v0 = new VertexAttributeData(new Point3f(x,y,z), new Point2f(tx,ty));
+			VertexAttributeData v0 = new VertexAttributeData(new Point3f(x,y,z), new Point2f(tx,ty),  new Vector3f(nx,ny,nz));
 			
 			x = positionData.get(3 * index1 + 0);
 			y = positionData.get(3 * index1 + 1);
 			z = positionData.get(3 * index1 + 2);
+			nx = normalData.get(3 * index1 + 0);
+			ny = normalData.get(3 * index1 + 1);
+			nz = positionData.get(3 * index1 + 2);	
 			tx = textureData.get(2 * index1);
 			ty = textureData.get(2 * index1 + 1);
 			
-			VertexAttributeData v1 = new VertexAttributeData(new Point3f(x,y,z), new Point2f(tx,ty));
+			VertexAttributeData v1 = new VertexAttributeData(new Point3f(x,y,z), new Point2f(tx,ty),  new Vector3f(nx,ny,nz));
 			
 			x = positionData.get(3 * index2 + 0);
 			y = positionData.get(3 * index2 + 1);
@@ -346,7 +364,7 @@ public class EdgeDS {
 			tx = textureData.get(2 * index2);
 			ty = textureData.get(2 * index2 + 1);
 			
-			VertexAttributeData v2 = new VertexAttributeData(new Point3f(x,y,z), new Point2f(tx,ty));
+			VertexAttributeData v2 = new VertexAttributeData(new Point3f(x,y,z), new Point2f(tx,ty),  new Vector3f(nx,ny,nz));
 			
 			x = positionData.get(3 * index3 + 0);
 			y = positionData.get(3 * index3 + 1);
@@ -354,7 +372,7 @@ public class EdgeDS {
 			tx = textureData.get(2 * index3);
 			ty = textureData.get(2 * index3 + 1);
 			
-			VertexAttributeData v3 = new VertexAttributeData(new Point3f(x,y,z), new Point2f(tx,ty));;
+			VertexAttributeData v3 = new VertexAttributeData(new Point3f(x,y,z), new Point2f(tx,ty),  new Vector3f(nx,ny,nz));;
 			
 			this.addQuad(index0, index1, index2, index3, v0, v1, v2, v3);		
 			}
