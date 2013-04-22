@@ -69,30 +69,30 @@ public class TreeTrunk extends Quadmesh {
 			mVertexData.put(ControlPoints.get(i).x + normal.x);
 			mVertexData.put(ControlPoints.get(i).y + normal.y);
 			mVertexData.put(ControlPoints.get(i).z + normal.z);
-			mNormalData.put(ControlPoints.get(i).x + normalDir.x);
-			mNormalData.put(ControlPoints.get(i).y + normalDir.y);
-			mNormalData.put(ControlPoints.get(i).z + normalDir.z);
+			mNormalData.put(normalDir.x);
+			mNormalData.put(normalDir.y);
+			mNormalData.put(normalDir.z);
 
 			mVertexData.put(ControlPoints.get(i).x + tangent.x);
 			mVertexData.put(ControlPoints.get(i).y + tangent.y);
 			mVertexData.put(ControlPoints.get(i).z + tangent.z);
-			mNormalData.put(ControlPoints.get(i).x + tangentDir.x);
-			mNormalData.put(ControlPoints.get(i).y + tangentDir.y);
-			mNormalData.put(ControlPoints.get(i).z + tangentDir.z);
+			mNormalData.put(tangentDir.x);
+			mNormalData.put(tangentDir.y);
+			mNormalData.put(tangentDir.z);
 
 			mVertexData.put(ControlPoints.get(i).x - normal.x );
 			mVertexData.put(ControlPoints.get(i).y - normal.y );
 			mVertexData.put(ControlPoints.get(i).z - normal.z );
-			mNormalData.put(ControlPoints.get(i).x - normalDir.x );
-			mNormalData.put(ControlPoints.get(i).y - normalDir.y );
-			mNormalData.put(ControlPoints.get(i).z - normalDir.z );
+			mNormalData.put(- normalDir.x );
+			mNormalData.put(- normalDir.y );
+			mNormalData.put(- normalDir.z );
 			
 			mVertexData.put(ControlPoints.get(i).x - tangent.x);
 			mVertexData.put(ControlPoints.get(i).y - tangent.y);
 			mVertexData.put(ControlPoints.get(i).z - tangent.z);
-			mNormalData.put(ControlPoints.get(i).x - tangentDir.x);
-			mNormalData.put(ControlPoints.get(i).y - tangentDir.y);
-			mNormalData.put(ControlPoints.get(i).z - tangentDir.z);
+			mNormalData.put(- tangentDir.x);
+			mNormalData.put(- tangentDir.y);
+			mNormalData.put(- tangentDir.z);
 		}
 	
 		for (int i = 0; i<ControlPoints.size()-1; i++){

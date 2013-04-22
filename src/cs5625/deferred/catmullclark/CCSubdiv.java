@@ -69,6 +69,7 @@ public class CCSubdiv {
 			texCoordBuf.put(targetTexture.x);
 			texCoordBuf.put(targetTexture.y);
 			
+			targetNormal.normalize();
 			normalBuf.put(targetNormal.x);
 			normalBuf.put(targetNormal.y);
 			normalBuf.put(targetNormal.z);
@@ -149,6 +150,7 @@ public class CCSubdiv {
 			texCoordBuf.put(targetTexture.x);
 			texCoordBuf.put(targetTexture.y);	
 			
+			targetNormal.normalize();
 			normalBuf.put(targetNormal.x);
 			normalBuf.put(targetNormal.y);
 			normalBuf.put(targetNormal.z);
@@ -192,7 +194,7 @@ public class CCSubdiv {
 
 					targetPosition.scaleAdd(beta, tempPos, targetPosition);
 					targetTexture.scaleAdd(beta, tempTexCoord, targetTexture);
-					targetNormal.scaleAdd(beta, tempNorm, targetPosition);
+					targetNormal.scaleAdd(beta, tempNorm, targetNormal);
 				}
 
 				for(int faceID : faces){
@@ -204,7 +206,7 @@ public class CCSubdiv {
 
 					targetPosition.scaleAdd(beta,vPosition, targetPosition);
 					targetTexture.scaleAdd(beta, vTexCoord, targetTexture);
-					targetNormal.scaleAdd(beta,vNormal, targetPosition);
+					targetNormal.scaleAdd(beta,vNormal, targetNormal);
 				}
 			}
 			
@@ -258,6 +260,7 @@ public class CCSubdiv {
 			texCoordBuf.put(targetTexture.x);
 			texCoordBuf.put(targetTexture.y);				
 			
+			targetNormal.normalize();
 			normalBuf.put(targetNormal.x);
 			normalBuf.put(targetNormal.y);
 			normalBuf.put(targetNormal.z);
