@@ -7,6 +7,9 @@ import javax.vecmath.Vector3f;
 
 import com.jogamp.common.nio.Buffers;
 
+import cs5625.deferred.catmullclark.CCSubdiv;
+import cs5625.deferred.datastruct.EdgeDS;
+
 /**
  * TreeTrunk.java
  * 
@@ -35,11 +38,7 @@ public class TreeTrunk extends Quadmesh {
 			Vector3f temp = new Vector3f();
 			if (i == 0 ){
 				temp.set(ControlPoints.get(i+1));
-
 				temp.sub(ControlPoints.get(i));
-				System.out.println(ControlPoints.get(i+1));
-				System.out.println(ControlPoints.get(i));
-				System.out.println("temp is, "+temp);
 				temp.normalize();
 				normal = new Vector3f(temp.x, -temp.z, temp.y);
 				tangent.cross(normal, temp);
@@ -91,12 +90,22 @@ public class TreeTrunk extends Quadmesh {
 		}
 		
 		setName("TreeTrunk");
-
 		mVertexData.rewind();
 		mNormalData.rewind();
 		mTexCoordData.rewind();
 		mPolygonData.rewind();
 		
 	}
-
+	
+	public void subdivide(int numberofSub){
+		for (int i = 0; i< numberofSub; i++){
+			EdgeDS edgeDS = new EdgeDS(this);
+			CCSubdiv ccSubdiv = new CCSubdiv(edgeDS);
+			Mesh newMesh = (Quadmesh)ccSubdiv.getNewMesh();
+			this.setVertexData(newMesh.getVertexData());
+			this.setEdgeData(newMesh.getEdgeData());
+			this.setNormalData(newMesh.getNormalData());
+			this.setPolygonData(newMesh.getPolygonData());
+		}
+	}
 }

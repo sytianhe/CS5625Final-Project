@@ -65,7 +65,7 @@ public class SceneObject implements OpenGLResourceObject
 	}
 	
 	/**
-	 * This method is called after physically based animation has occured.
+	 * This method is called after physically based animation has occurred.
 	 * Extend it to include other non physically based animation effects.
 	 */
 	private void otherAnimationTasks(){

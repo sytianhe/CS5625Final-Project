@@ -40,7 +40,7 @@ import cs5625.deferred.misc.Util;
 public class Geometry extends SceneObject
 {
 	/* List of meshes in this object. */
-	private ArrayList<Mesh> mMeshes = new ArrayList<Mesh>();
+	protected ArrayList<Mesh> mMeshes = new ArrayList<Mesh>();
 	
 	/**
 	 * Returns the list of meshes in this geometry object.
@@ -630,13 +630,13 @@ public class Geometry extends SceneObject
 		return results;
 	}
 	
-	@Override
-	public void animate(float dt)
-	{
-		
-		for (Mesh child : mMeshes)
-		{
-			child.animate(dt);
-		}
-	}
+//	@Override
+//	public void animate(float dt)
+//	{
+//		
+//		for (Mesh child : mMeshes)
+//		{
+//			child.animate(dt);
+//		}
+//	}
 }

@@ -17,7 +17,8 @@ public class Constants
     public static double PARTICLE_MASS     = 1.0;
 
     /** Spring stretching stiffness. */
-    public static double STIFFNESS_STRETCH = 10000.0; 
+    //public static double STIFFNESS_STRETCH = 10000.0; 
+    public static double STIFFNESS_STRETCH = 100.0; 
 
     /** Spring bending stiffness. */
     public static double STIFFNESS_BEND    = 4.; 

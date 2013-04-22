@@ -1,7 +1,6 @@
 package cs5625.deferred.apps;
 
 import java.awt.Point;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.io.IOException;
@@ -21,11 +20,11 @@ import cs5625.deferred.misc.ScenegraphException;
 import cs5625.deferred.misc.Util;
 import cs5625.deferred.scenegraph.Geometry;
 import cs5625.deferred.scenegraph.MengerSponge;
-import cs5625.deferred.scenegraph.Mesh;
 import cs5625.deferred.scenegraph.PointLight;
 import cs5625.deferred.scenegraph.Quadmesh;
 import cs5625.deferred.scenegraph.TreeTrunk;
 import cs5625.deferred.scenegraph.Trimesh;
+import cs5625.deferred.scenegraph.TrunckGeometry;
 
 public class SandDuneSceneController extends SceneController{
 
@@ -62,22 +61,22 @@ public class SandDuneSceneController extends SceneController{
 			list.add(new Point3f(point));
 			point.set(0f,3f,-0.2f);
 			list.add(new Point3f(point));
-
-			TreeTrunk trunck = new TreeTrunk(list, 0.3f, 0.1f);
-			visibleMesh = (Quadmesh)trunck;
-			
-			for (int i = 0; i< numberofSub; i++){
-				EdgeDS edgeDS = new EdgeDS(visibleMesh);
-				CCSubdiv ccSubdiv = new CCSubdiv(edgeDS);
-				visibleMesh = (Quadmesh)ccSubdiv.getNewMesh();
-			}
-			
-			Geometry geom = new Geometry();
-			visibleMesh.setMaterial(new UnshadedMaterial(new Color3f(0.10f, 0.70f, 0.10f)));
-			geom.addMesh(visibleMesh);
-			geom.setPosition(new Point3f(0.0f,2.0f,0.0f));
+//
+//			TreeTrunk trunck = new TreeTrunk(list, 0.3f, 0.1f);
+//			visibleMesh = (Quadmesh)trunck;
+//			
+//			for (int i = 0; i< numberofSub; i++){
+//				EdgeDS edgeDS = new EdgeDS(visibleMesh);
+//				CCSubdiv ccSubdiv = new CCSubdiv(edgeDS);
+//				visibleMesh = (Quadmesh)ccSubdiv.getNewMesh();
+//			}
+//			
+//			Geometry geom = new Geometry();
+//			visibleMesh.setMaterial(new UnshadedMaterial(new Color3f(0.10f, 0.70f, 0.10f)));
+//			geom.addMesh(visibleMesh);
+//			geom.setPosition(new Point3f(0.0f,2.0f,0.0f));
 			ArrayList<Geometry> geoList = new ArrayList<Geometry>();
-			geoList.add(geom);
+//			geoList.add(geom);
 
 			Geometry plane = Geometry.load("models/plane.obj", false, false).get(0);					
 			plane.getMeshes().get(0).setMaterial(new LambertianMaterial(new Color3f(0.00f, 0.70f, 0.70f)));
@@ -85,7 +84,7 @@ public class SandDuneSceneController extends SceneController{
 			plane.setIsPinned(true);
 			
 			MengerSponge sponge = new MengerSponge(3);
-			sponge.setMaterial(new UnshadedMaterial(new Color3f(0.10f, 0.70f, 0.10f)));
+			sponge.setMaterial(new BlinnPhongMaterial(new Color3f(0.10f, 0.70f, 0.10f)));
 			
 			geo = new Geometry();
 			geo.addMesh(sponge);
@@ -99,9 +98,16 @@ public class SandDuneSceneController extends SceneController{
 			geo.addMesh(triMesh);
 			geo.setPosition(new Point3f(-2.0f, 2.0f, 0.0f));
 			geoList.add(geo);
-						
+					
+			TrunckGeometry newTrunk = new TrunckGeometry(list);
+			newTrunk.setPosition(new Point3f(-3.0f, 5.0f, 0.0f));
+			newTrunk.setIsPinned(false);
+			
+			geoList.add(newTrunk);
 			mSceneRoot.addGeometry(geoList);
 			
+			
+
 //            Geometry sphere =  Geometry.load("models/sphere.obj", false, false).get(0);
 //            sphere.setPosition(new Point3f(0.0f,2.0f,0.0f));
 //            sphere.setIsPinned(false);
