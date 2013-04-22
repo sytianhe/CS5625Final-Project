@@ -17,6 +17,7 @@ import cs5625.deferred.physics.SpringForceBending;
 
 public class TrunckGeometry extends Geometry
 {
+	private int numSubdivisions = 2;
 	private ArrayList<Particle> particleList = new ArrayList<Particle>();
 	
 	public TrunckGeometry(ArrayList<Point3f>list){
@@ -24,7 +25,7 @@ public class TrunckGeometry extends Geometry
 			this.particleList.add(new Particle(new Point3d(p)));
 		}
 		TreeTrunk newtree = new TreeTrunk(list, 0.5f, 0.1f);
-		newtree.subdivide(2);
+		newtree.subdivide(numSubdivisions);
 		this.mMeshes.add( newtree );
 		((Mesh) this.mMeshes.get(0)).setMaterial(new UnshadedMaterial(new Color3f(0.10f, 0.70f, 0.10f)));
 	}
@@ -60,7 +61,7 @@ public class TrunckGeometry extends Geometry
 		}
 		this.mMeshes.clear();
 		TreeTrunk newtree = new TreeTrunk(controlPoints, 0.5f, 0.1f);
-		newtree.subdivide(2);
+		newtree.subdivide(numSubdivisions);
 		this.mMeshes.add( newtree );
 		((Mesh) this.mMeshes.get(0)).setMaterial(new UnshadedMaterial(new Color3f(0.10f, 0.70f, 0.10f)));
 		

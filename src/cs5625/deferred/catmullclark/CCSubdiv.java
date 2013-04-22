@@ -49,15 +49,18 @@ public class CCSubdiv {
 		for (int faceID:edgeDS.getPolygonIDs()){
 			Point3f targetPosition = new Point3f(0f, 0f, 0f);
 			Point2f targetTexture = new Point2f(0f, 0f);
+			Vector3f targetNormal = new Vector3f(0f,0f,0f);
 			
 			PolygonData face = edgeDS.getPolygonData(faceID);
 			for (int faceVertices:face.getAllVertices()){
 				targetPosition.add(edgeDS.getVertexData(faceVertices).mData.getPosition());
 				targetTexture.add(edgeDS.getVertexData(faceVertices).mData.getTexCoord());
+				targetNormal.add(edgeDS.getVertexData(faceVertices).mData.getNormal());
 			}
 			float nVertsOnFace = (float) face.getAllVertices().size(); 
 			targetPosition.scale(1/nVertsOnFace);
 			targetTexture.scale(1/nVertsOnFace);
+			targetNormal.scale(1/nVertsOnFace);
 			
 			vertexBuf.put(targetPosition.x);
 			vertexBuf.put(targetPosition.y);
@@ -65,6 +68,10 @@ public class CCSubdiv {
 			
 			texCoordBuf.put(targetTexture.x);
 			texCoordBuf.put(targetTexture.y);
+			
+			normalBuf.put(targetNormal.x);
+			normalBuf.put(targetNormal.y);
+			normalBuf.put(targetNormal.z);
 			
 			face.setNewFaceVertexID(VertexCounter);
 			VertexCounter +=1;
@@ -79,6 +86,7 @@ public class CCSubdiv {
 			
 			Point3f targetPosition = new Point3f();
 			Point2f targetTexture = new Point2f();
+			Vector3f targetNormal = new Vector3f(0f,0f,0f);
 
 			if (!edgeDS.isBoundaryEdge(edgeID) && !edgeDS.isCreaseEdge(edgeID)){
 			
@@ -93,6 +101,10 @@ public class CCSubdiv {
 				
 				Point2f v3TexCoord = new Point2f(texCoordBuf.get(2*v3), vertexBuf.get(2*v3+1));
 				Point2f v4TexCoord = new Point2f(texCoordBuf.get(2*v4), vertexBuf.get(2*v4+1));
+
+				Vector3f v3Normal = new Vector3f(normalBuf.get(3*v3), normalBuf.get(3*v3+1), normalBuf.get(3*v3+2));
+				Vector3f v4Normal = new Vector3f(normalBuf.get(3*v4), normalBuf.get(3*v4+1), normalBuf.get(3*v4+2));
+
 				
 				targetPosition.set(vDatav1.getPosition());
 				targetPosition.add(vDatav2.getPosition());
@@ -105,6 +117,12 @@ public class CCSubdiv {
 				targetTexture.add(v3TexCoord);
 				targetTexture.add(v4TexCoord);
 				targetTexture.scale(0.25f);
+				
+				targetNormal.set(vDatav1.getNormal());
+				targetNormal.add(vDatav2.getNormal());
+				targetNormal.add(v3Normal);
+				targetNormal.add(v4Normal);
+				targetNormal.scale(0.25f);
 			}
 			else{ // IF ON A CREASE EDGE
 				VertexAttributeData vDatav1 = edgeDS.getVertexData(v1).mData;
@@ -117,6 +135,10 @@ public class CCSubdiv {
 				targetTexture.set(vDatav1.getTexCoord());
 				targetTexture.add(vDatav2.getTexCoord());
 				targetTexture.scale(0.5f);
+				
+				targetNormal.set(vDatav1.getNormal());
+				targetNormal.add(vDatav2.getNormal());
+				targetNormal.scale(0.5f);
 			}
 			
 			//SAVE NEW POINT TO BUFFER
@@ -125,7 +147,11 @@ public class CCSubdiv {
 			vertexBuf.put(targetPosition.z);
 			
 			texCoordBuf.put(targetTexture.x);
-			texCoordBuf.put(targetTexture.y);				
+			texCoordBuf.put(targetTexture.y);	
+			
+			normalBuf.put(targetNormal.x);
+			normalBuf.put(targetNormal.y);
+			normalBuf.put(targetNormal.z);
 			
 			edge.setVertexIDNew(VertexCounter);
 			VertexCounter +=1;
@@ -140,6 +166,7 @@ public class CCSubdiv {
 
 			Point3f targetPosition = new Point3f(edgeDS.getVertexData(vertexID).mData.getPosition());
 			Point2f targetTexture = new Point2f(edgeDS.getVertexData(vertexID).mData.getTexCoord());
+			Vector3f targetNormal = new Vector3f(edgeDS.getVertexData(vertexID).mData.getNormal());
 			
 			// Not on an crease/edge
 			if (creaseEdges.size() <= 1 ){
@@ -149,6 +176,7 @@ public class CCSubdiv {
 		
 				targetPosition.scale(1f - 2f/numberConnectedEdges);
 				targetTexture.scale(1f - 2f/numberConnectedEdges);
+				targetNormal.scale(1f - 2f/numberConnectedEdges);
 				
 				Set<Integer> faces = new HashSet<Integer>();
 				for(int edgeID : edgeDS.getVertexData(vertexID).getConnectedEdges()){
@@ -160,8 +188,11 @@ public class CCSubdiv {
 				for (int connectedVertexID :edgeDS.getVertexData(vertexID).getConnectedVertices()){
 					Vector3f tempPos = new Vector3f(edgeDS.getVertexData(connectedVertexID).mData.getPosition());  
 					Vector2f tempTexCoord = new Vector2f(edgeDS.getVertexData(connectedVertexID).mData.getTexCoord());
+					Vector3f tempNorm = new Vector3f(edgeDS.getVertexData(connectedVertexID).mData.getNormal());  
+
 					targetPosition.scaleAdd(beta, tempPos, targetPosition);
 					targetTexture.scaleAdd(beta, tempTexCoord, targetTexture);
+					targetNormal.scaleAdd(beta, tempNorm, targetPosition);
 				}
 
 				for(int faceID : faces){
@@ -169,9 +200,11 @@ public class CCSubdiv {
 					int v = face.getNewFaceVertexID();
 					Point3f vPosition = new Point3f(vertexBuf.get(3*v), vertexBuf.get(3*v+1), vertexBuf.get(3*v+2));
 					Point2f vTexCoord = new Point2f(texCoordBuf.get(2*v), vertexBuf.get(2*v+1));
-					
+					Vector3f vNormal = new Vector3f(normalBuf.get(3*v), normalBuf.get(3*v+1), normalBuf.get(3*v+2));
+
 					targetPosition.scaleAdd(beta,vPosition, targetPosition);
 					targetTexture.scaleAdd(beta, vTexCoord, targetTexture);
+					targetNormal.scaleAdd(beta,vNormal, targetPosition);
 				}
 			}
 			
@@ -189,9 +222,13 @@ public class CCSubdiv {
 					newVertexId = edgeDS.getEdgeData(creaseEdges.get(0)).getVertex0();
 				}
 				Vector3f tempPos = new Vector3f(edgeDS.getVertexData(newVertexId).mData.getPosition());  
-				Vector2f tempTexCoord = new Vector2f(edgeDS.getVertexData(newVertexId).mData.getTexCoord());				
+				Vector2f tempTexCoord = new Vector2f(edgeDS.getVertexData(newVertexId).mData.getTexCoord());
+				Vector3f tempNorm = new Vector3f(edgeDS.getVertexData(newVertexId).mData.getNormal());  
+
 				targetPosition.scaleAdd(0.125f,tempPos, targetPosition);
 				targetTexture.scaleAdd(0.125f, tempTexCoord, targetTexture);
+				targetNormal.scaleAdd(0.125f,tempNorm, targetNormal);
+
 				
 				//NEW VERTEX 2
 				if (edgeDS.getEdgeData(creaseEdges.get(1)).getVertex0() == vertexID){
@@ -201,9 +238,12 @@ public class CCSubdiv {
 					newVertexId = edgeDS.getEdgeData(creaseEdges.get(1)).getVertex0();
 				}
 				tempPos = new Vector3f(edgeDS.getVertexData(newVertexId).mData.getPosition());  
-				tempTexCoord = new Vector2f(edgeDS.getVertexData(newVertexId).mData.getTexCoord());				
+				tempTexCoord = new Vector2f(edgeDS.getVertexData(newVertexId).mData.getTexCoord());
+				tempNorm = new Vector3f(edgeDS.getVertexData(newVertexId).mData.getNormal());  
+
 				targetPosition.scaleAdd(0.125f,tempPos, targetPosition);
 				targetTexture.scaleAdd(0.125f, tempTexCoord, targetTexture);
+				targetNormal.scaleAdd(0.125f,tempNorm, targetNormal);
 			}
 			
 			else {
@@ -217,6 +257,10 @@ public class CCSubdiv {
 			
 			texCoordBuf.put(targetTexture.x);
 			texCoordBuf.put(targetTexture.y);				
+			
+			normalBuf.put(targetNormal.x);
+			normalBuf.put(targetNormal.y);
+			normalBuf.put(targetNormal.z);
 
 			edgeDS.getVertexData(vertexID).setNewVertexID(VertexCounter);
 			VertexCounter +=1;
@@ -269,6 +313,7 @@ public class CCSubdiv {
 		
 		vertexBuf.rewind();
 		texCoordBuf.rewind();
+		normalBuf.rewind();
 		edgeBuf.rewind();
 		faceBuf.rewind();
 		
@@ -277,7 +322,7 @@ public class CCSubdiv {
 		this.mMesh.setTexCoordData(texCoordBuf);
 		this.mMesh.setEdgeData(edgeBuf);
 		this.mMesh.setPolygonData(faceBuf);
-		this.mMesh.setNormalData(null);	
+		this.mMesh.setNormalData(normalBuf);	
 	}
 	
 	public Mesh getNewMesh()
