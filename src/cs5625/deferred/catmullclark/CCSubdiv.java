@@ -25,6 +25,7 @@ public class CCSubdiv {
 	{
 		// TODO PA5: Fill in this function to perform catmull clark subdivision
 		//COMPUTE SIZES OF NEW MESH GEOMETRY
+		float machineEps = 0.0000001f;
 		int nVertices = edgeDS.getVertexIDs().size() + edgeDS.getEdgeIDs().size() + edgeDS.getPolygonIDs().size();
 	
 		int nFaces = 0;
@@ -49,7 +50,7 @@ public class CCSubdiv {
 		for (int faceID:edgeDS.getPolygonIDs()){
 			Point3f targetPosition = new Point3f(0f, 0f, 0f);
 			Point2f targetTexture = new Point2f(0f, 0f);
-			Vector3f targetNormal = new Vector3f(0f,0f,0f);
+			Vector3f targetNormal = new Vector3f(machineEps,machineEps,machineEps);
 			
 			PolygonData face = edgeDS.getPolygonData(faceID);
 			for (int faceVertices:face.getAllVertices()){
@@ -57,6 +58,7 @@ public class CCSubdiv {
 				targetTexture.add(edgeDS.getVertexData(faceVertices).mData.getTexCoord());
 				targetNormal.add(edgeDS.getVertexData(faceVertices).mData.getNormal());
 			}
+			
 			float nVertsOnFace = (float) face.getAllVertices().size(); 
 			targetPosition.scale(1/nVertsOnFace);
 			targetTexture.scale(1/nVertsOnFace);
@@ -87,7 +89,7 @@ public class CCSubdiv {
 			
 			Point3f targetPosition = new Point3f();
 			Point2f targetTexture = new Point2f();
-			Vector3f targetNormal = new Vector3f(0f,0f,0f);
+			Vector3f targetNormal = new Vector3f(machineEps,machineEps,machineEps);
 
 			if (!edgeDS.isBoundaryEdge(edgeID) && !edgeDS.isCreaseEdge(edgeID)){
 			
