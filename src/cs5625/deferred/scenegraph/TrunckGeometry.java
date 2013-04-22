@@ -6,6 +6,7 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 
+import cs5625.deferred.materials.BlinnPhongMaterial;
 import cs5625.deferred.materials.UnshadedMaterial;
 import cs5625.deferred.physics.Particle;
 import cs5625.deferred.physics.ParticleSystem;
@@ -17,7 +18,7 @@ import cs5625.deferred.physics.SpringForceBending;
 
 public class TrunckGeometry extends Geometry
 {
-	private int numSubdivisions = 2;
+	private int numSubdivisions = 0;
 	private ArrayList<Particle> particleList = new ArrayList<Particle>();
 	
 	public TrunckGeometry(ArrayList<Point3f>list){
@@ -63,7 +64,7 @@ public class TrunckGeometry extends Geometry
 		TreeTrunk newtree = new TreeTrunk(controlPoints, 0.5f, 0.1f);
 		newtree.subdivide(numSubdivisions);
 		this.mMeshes.add( newtree );
-		((Mesh) this.mMeshes.get(0)).setMaterial(new UnshadedMaterial(new Color3f(0.10f, 0.70f, 0.10f)));
+		((Mesh) this.mMeshes.get(0)).setMaterial(new BlinnPhongMaterial(new Color3f(0.10f, 0.70f, 0.10f)));
 		
 	}
 }

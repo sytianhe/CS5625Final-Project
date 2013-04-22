@@ -27,7 +27,7 @@ public class TreeTrunk extends Quadmesh {
 		mVertexData   = Buffers.newDirectFloatBuffer(3 * 4 * ControlPoints.size());
 		mNormalData   = Buffers.newDirectFloatBuffer(3 * 4 * ControlPoints.size());
 		mTexCoordData = Buffers.newDirectFloatBuffer(2 * 4 * ControlPoints.size());
-		mPolygonData  = Buffers.newDirectIntBuffer(4 * 4 * (ControlPoints.size() -1 ));
+		mPolygonData  = Buffers.newDirectIntBuffer(4 * 4 * (ControlPoints.size() -1 ) + 4); //+1 for the top and bottom
 		
 		// Getting normals
 		for(int i = 0; i<ControlPoints.size(); i++){
@@ -106,7 +106,17 @@ public class TreeTrunk extends Quadmesh {
 		
 			}
 		}
+//		mPolygonData.put(0);
+//		mPolygonData.put(1);
+//		mPolygonData.put(2);
+//		mPolygonData.put(3);
 		
+		mPolygonData.put(4 * ControlPoints.size()-1);
+		mPolygonData.put(4 * ControlPoints.size()-2);
+		mPolygonData.put(4 * ControlPoints.size()-3);
+		mPolygonData.put(4 * ControlPoints.size()-4);
+
+
 		setName("TreeTrunk");
 		mVertexData.rewind();
 		mNormalData.rewind();
