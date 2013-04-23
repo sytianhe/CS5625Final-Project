@@ -3,6 +3,11 @@ package cs5625.deferred.scenegraph;
 import java.nio.FloatBuffer;
 import java.util.HashMap;
 
+import jogamp.graph.curve.tess.Loop;
+
+import cs5625.deferred.catmullclark.CCSubdiv;
+import cs5625.deferred.datastruct.EdgeDS;
+import cs5625.deferred.loop.LoopSubdiv;
 import cs5625.deferred.misc.OpenGLResourceObject;
 
 /**
@@ -78,5 +83,17 @@ public class Trimesh extends Mesh implements OpenGLResourceObject
 		copy.vertexAttribData = (HashMap<String, FloatBuffer>) vertexAttribData.clone();
 		
 		return copy;
+	}
+	
+	public void subdivide(int numberofSub){
+		for (int i = 0; i< numberofSub; i++){
+			EdgeDS edgeDS = new EdgeDS(this);
+			LoopSubdiv loopsubdiv = new LoopSubdiv(edgeDS);
+			Mesh newMesh = (Trimesh)loopsubdiv.getNewMesh();
+			this.setVertexData(newMesh.getVertexData());
+			this.setEdgeData(newMesh.getEdgeData());
+			this.setNormalData(newMesh.getNormalData());
+			this.setPolygonData(newMesh.getPolygonData());
+		}
 	}
 }

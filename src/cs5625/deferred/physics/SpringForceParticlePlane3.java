@@ -26,45 +26,66 @@ public class SpringForceParticlePlane3 implements Force
 	
 	ParticleSystem PS;
 
-	SpringForceParticlePlane3(Particle p1, Particle f1, Particle f2, Particle f3)
+	public SpringForceParticlePlane3(Particle p1, Particle f1, Particle f2, Particle f3, ParticleSystem ps)
 	{
 		this.p1 = p1;
 		this.f1 = f1;
 		this.f2 = f2;
 		this.f3 = f3;
+		this.PS = ps;
 	}
 
 	public void applyForce()
 	{
 		if(p1.isPinned() && f1.isPinned() && f2.isPinned()) return;/// no force
 		
+		
 		//EVALUATE SEPERATION VECTORS
+		Vector3d p = new Vector3d();
 		Vector3d a = new Vector3d();
 		Vector3d b = new Vector3d();
 		
-		a.sub(f2.x,f1.x);			//between first and second edge point
-		b.sub(p1.x,f1.x);			//between particle and first edge point
+		p.sub(p1.x,f1.x);			//between particle and first face point
+		a.sub(f2.x,f1.x);			//between first and second face point
+		b.sub(f1.x,f1.x);			//between first and third face point
 		
 
 		//COMPUTE NORMAL VECTOR IN THE DIRECTION OF P
 		Vector3d n = new Vector3d();
-
-		n.set(a);
-		n.scaleAdd(-n.dot(b), a, b);
-		n.scale(Math.signum(b.dot(n)));
-		n.normalize();		
+		n.cross(a,b);
+		if (n.dot(p) < 0) n.scale(-1);
+		
+		//PROJECT p ONTO THE PLANE
+		Vector3d t = new Vector3d(); //position of particle projected onto the plane
+		Vector3d pn = new Vector3d(); //seperation vector from plain to face
+		pn.set(n);
+		pn.normalize();
+		pn.scale(pn.dot(p));
+		t.sub(p,pn);
 		
 		//COMPUTE BARCENTRIC COORDINATE OF POINT ABOVE EDGE
-		double alpha = a.dot(b)/a.dot(a);
+		double adota = a.dot(a);
+		double bdotb = b.dot(b);
+		double adotb = a.dot(b);
+		double det = adota * bdotb - 2 * adotb;
+		double adott = a.dot(t);
+		double bdott = b.dot(t);
+		double alpha = (bdotb * adott - adotb * bdott)/det;
+		double beta = (-adotb * adott + adota * bdott)/det;
+		
+//		double alpha = a.dot(b)/a.dot(a);
+		
+		System.out.println("ALPHA: " + alpha + " BETA: " + beta );
 		
 		//THREE CASES:
 		//CHECK IF PARTICLE IS ABOVE EDGE
-		if(0<=alpha && alpha <=1 ){
+		if(0<=alpha && alpha <=1 && 0<=beta && beta <= 1){
 			
 			//COMPUTE RELATIVE VELOCITY AT POINT ABOVE EDGE
 			Vector3d v = new Vector3d(p1.v);
-			v.scaleAdd(-1+alpha, f1.v, v);
+			v.scaleAdd(-1+alpha+beta, f1.v, v);
 			v.scaleAdd(-alpha, f2.v,v);
+			v.scaleAdd(-beta, f3.v,v);
 			
 			//COMPUTE TANGENT VELOCITY DIRECTION FOR FRICTION TERM
 			Vector3d bn = new Vector3d(v);
@@ -84,38 +105,36 @@ public class SpringForceParticlePlane3 implements Force
 					//KINETIC FRICTION FORCE
 					p1.f.scaleAdd(Constants.KINETIC_FRICTION * p1.f.dot(n) , bn, p1.f);			
 				}
-//				if (bn.length()==0 && p1.f.dot(n)<0){
-//					//STATIC FRICTION FORCE
-//					bn.set(p1.f);  //compute normal from force 
-//					bn.scaleAdd(-p1.f.dot(n), n, bn);
-//				}
 			}			
 		}
+		
+		//IGNORE EDGES FOR NOW 
+		
 		//CHECK IF PARTICLE IS NEAR THE LEFT EDGE ENDPOINT
-		else if(p1.x.distance(f1.x)<h){
-			//COMPUTE NORMAL VECTOR AND RELATIVE VELOCITY OF THE TWO POINTS
-			n.sub(p1.x,f1.x);
-			Vector3d v = new Vector3d(p1.v);
-			v.sub(f1.v);
-			//SEPERATION BETWEEN POINTS
-			double d = p1.x.distance(f1.x);
-			if(v.dot(n)<0){
-				p1.f.scaleAdd(REL_STRENGTH * Constants.STIFFNESS_STRETCH * (h-d) + Constants.DAMPING_MASS*v.dot(n) , n , p1.f);
-			}
-		}
-		//CHECK IF PARTICLE IS NEAR THE RIGHT EDGE ENDPOINT
-		else if(p1.x.distance(f2.x)<h){
-			//COMPUTE NORMAL VECTOR AND RELATIVE VELOCITY OF THE TWO POINTS
-			n.sub(p1.x,f2.x);
-			Vector3d v = new Vector3d(p1.v);
-			v.sub(f2.v);
-			
-			//SEPERATION BETWEEN POINTS
-			double d = p1.x.distance(f2.x);
-			if(v.dot(n)<0){
-				p1.f.scaleAdd(REL_STRENGTH * Constants.STIFFNESS_STRETCH * (h-d) + Constants.DAMPING_MASS*v.dot(n) , n , p1.f);
-			}
-		}
+//		else if(p1.x.distance(f1.x)<h){
+//			//COMPUTE NORMAL VECTOR AND RELATIVE VELOCITY OF THE TWO POINTS
+//			n.sub(p1.x,f1.x);
+//			Vector3d v = new Vector3d(p1.v);
+//			v.sub(f1.v);
+//			//SEPERATION BETWEEN POINTS
+//			double d = p1.x.distance(f1.x);
+//			if(v.dot(n)<0){
+//				p1.f.scaleAdd(REL_STRENGTH * Constants.STIFFNESS_STRETCH * (h-d) + Constants.DAMPING_MASS*v.dot(n) , n , p1.f);
+//			}
+//		}
+//		//CHECK IF PARTICLE IS NEAR THE RIGHT EDGE ENDPOINT
+//		else if(p1.x.distance(f2.x)<h){
+//			//COMPUTE NORMAL VECTOR AND RELATIVE VELOCITY OF THE TWO POINTS
+//			n.sub(p1.x,f2.x);
+//			Vector3d v = new Vector3d(p1.v);
+//			v.sub(f2.v);
+//			
+//			//SEPERATION BETWEEN POINTS
+//			double d = p1.x.distance(f2.x);
+//			if(v.dot(n)<0){
+//				p1.f.scaleAdd(REL_STRENGTH * Constants.STIFFNESS_STRETCH * (h-d) + Constants.DAMPING_MASS*v.dot(n) , n , p1.f);
+//			}
+//		}
 	}
 
 	public void display(GL2 gl)

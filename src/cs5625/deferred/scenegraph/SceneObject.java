@@ -63,6 +63,10 @@ public class SceneObject implements OpenGLResourceObject
 		}
 	}
 	
+	public Particle getParticle(){
+		return mParticle;
+	}
+	
 	/**
 	 * Returns this object's parent node, if any.
 	 */

@@ -7,7 +7,7 @@ import com.jogamp.common.nio.Buffers;
 
 import cs5625.deferred.scenegraph.Quadmesh;
 
-public class CubeQuadMesh {
+public class CubeQuadMesh extends Quadmesh {
 
 private Quadmesh mMesh;
 	

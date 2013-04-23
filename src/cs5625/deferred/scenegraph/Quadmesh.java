@@ -3,6 +3,9 @@ package cs5625.deferred.scenegraph;
 import java.nio.FloatBuffer;
 import java.util.HashMap;
 
+import cs5625.deferred.catmullclark.CCSubdiv;
+import cs5625.deferred.datastruct.EdgeDS;
+
 /**
  * Quadmesh.java
  * 
@@ -74,5 +77,17 @@ public class Quadmesh extends Mesh
 		copy.vertexAttribData = (HashMap<String, FloatBuffer>) vertexAttribData.clone();
 		
 		return copy;
+	}
+	
+	public void subdivide(int numberofSub){
+		for (int i = 0; i< numberofSub; i++){
+			EdgeDS edgeDS = new EdgeDS(this);
+			CCSubdiv ccSubdiv = new CCSubdiv(edgeDS);
+			Mesh newMesh = (Quadmesh)ccSubdiv.getNewMesh();
+			this.setVertexData(newMesh.getVertexData());
+			this.setEdgeData(newMesh.getEdgeData());
+			this.setNormalData(newMesh.getNormalData());
+			this.setPolygonData(newMesh.getPolygonData());
+		}
 	}
 }

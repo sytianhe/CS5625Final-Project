@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import javax.vecmath.AxisAngle4f;
 import javax.vecmath.Color3f;
+import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
 
@@ -18,6 +19,8 @@ import cs5625.deferred.materials.LambertianMaterial;
 import cs5625.deferred.materials.UnshadedMaterial;
 import cs5625.deferred.misc.ScenegraphException;
 import cs5625.deferred.misc.Util;
+import cs5625.deferred.physics.Particle;
+import cs5625.deferred.physics.SpringForceParticlePlane3;
 import cs5625.deferred.scenegraph.Geometry;
 import cs5625.deferred.scenegraph.LeaveGeometry;
 import cs5625.deferred.scenegraph.MengerSponge;
@@ -26,6 +29,7 @@ import cs5625.deferred.scenegraph.Quadmesh;
 import cs5625.deferred.scenegraph.TreeTrunk;
 import cs5625.deferred.scenegraph.Trimesh;
 import cs5625.deferred.scenegraph.TrunckGeometry;
+import cs5625.deffered.physicsGeometry.Ground;
 
 public class SandDuneSceneController extends SceneController{
 
@@ -79,10 +83,17 @@ public class SandDuneSceneController extends SceneController{
 			ArrayList<Geometry> geoList = new ArrayList<Geometry>();
 //			geoList.add(geom);
 
-			Geometry plane = Geometry.load("models/plane.obj", false, false).get(0);					
-			plane.getMeshes().get(0).setMaterial(new LambertianMaterial(new Color3f(0.00f, 0.70f, 0.70f)));
+//			Geometry plane = Geometry.load("models/plane.obj", false, false).get(0);					
+//			plane.getMeshes().get(0).setMaterial(new LambertianMaterial(new Color3f(0.00f, 0.70f, 0.70f)));
+			Ground plane = new Ground();
 			geoList.add(plane);
-			plane.setIsPinned(true);
+
+            Geometry sphere =  Geometry.load("models/sphere.obj", true, false).get(0);
+            sphere.setPosition(new Point3f(0.0f,2.0f,0.0f));
+            sphere.setIsPinned(false);
+//            sphere.getMeshes().get(0).setMaterial(new MandelbrotMaterial());
+            plane.addInteractionWith(sphere.getParticle());
+            mSceneRoot.addChild(sphere);
 			
 			MengerSponge sponge = new MengerSponge(3);
 			sponge.setMaterial(new BlinnPhongMaterial(new Color3f(0.10f, 0.70f, 0.10f)));
@@ -112,15 +123,7 @@ public class SandDuneSceneController extends SceneController{
 			
 			geoList.add(newLeaf);
 			mSceneRoot.addGeometry(geoList);
-			
-			
-
-//            Geometry sphere =  Geometry.load("models/sphere.obj", false, false).get(0);
-//            sphere.setPosition(new Point3f(0.0f,2.0f,0.0f));
-//            sphere.setIsPinned(false);
-//            sphere.getMeshes().get(0).setMaterial(new MandelbrotMaterial());
-//            mSceneRoot.addChild(sphere);
-
+			            
 			/* Add an unattenuated point light to provide overall illumination. */
 			PointLight light = new PointLight();
 

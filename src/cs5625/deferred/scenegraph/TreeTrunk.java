@@ -166,15 +166,15 @@ public class TreeTrunk extends Quadmesh {
 
 	}
 
-	public void subdivide(int numberofSub){
-		for (int i = 0; i< numberofSub; i++){
-			EdgeDS edgeDS = new EdgeDS(this);
-			CCSubdiv ccSubdiv = new CCSubdiv(edgeDS);
-			Mesh newMesh = (Quadmesh)ccSubdiv.getNewMesh();
-			this.setVertexData(newMesh.getVertexData());
-			this.setEdgeData(newMesh.getEdgeData());
-			this.setNormalData(newMesh.getNormalData());
-			this.setPolygonData(newMesh.getPolygonData());
-		}
-	}
+//	public void subdivide(int numberofSub){
+//		for (int i = 0; i< numberofSub; i++){
+//			EdgeDS edgeDS = new EdgeDS(this);
+//			CCSubdiv ccSubdiv = new CCSubdiv(edgeDS);
+//			Mesh newMesh = (Quadmesh)ccSubdiv.getNewMesh();
+//			this.setVertexData(newMesh.getVertexData());
+//			this.setEdgeData(newMesh.getEdgeData());
+//			this.setNormalData(newMesh.getNormalData());
+//			this.setPolygonData(newMesh.getPolygonData());
+//		}
+//	}
 }
