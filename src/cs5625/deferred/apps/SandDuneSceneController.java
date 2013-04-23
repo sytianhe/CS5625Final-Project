@@ -19,6 +19,7 @@ import cs5625.deferred.materials.UnshadedMaterial;
 import cs5625.deferred.misc.ScenegraphException;
 import cs5625.deferred.misc.Util;
 import cs5625.deferred.scenegraph.Geometry;
+import cs5625.deferred.scenegraph.LeaveGeometry;
 import cs5625.deferred.scenegraph.MengerSponge;
 import cs5625.deferred.scenegraph.PointLight;
 import cs5625.deferred.scenegraph.Quadmesh;
@@ -104,6 +105,12 @@ public class SandDuneSceneController extends SceneController{
 			newTrunk.setIsPinned(false);
 			
 			geoList.add(newTrunk);
+			
+			LeaveGeometry newLeaf = new LeaveGeometry(3f, 1f);
+			newLeaf.setPosition(new Point3f(-2f,3f,2f));
+			newLeaf.setIsPinned(false);
+			
+			geoList.add(newLeaf);
 			mSceneRoot.addGeometry(geoList);
 			
 			
