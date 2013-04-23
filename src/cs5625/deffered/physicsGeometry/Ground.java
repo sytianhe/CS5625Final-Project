@@ -24,7 +24,7 @@ public class Ground extends Geometry {
 		try {
 			Mesh groundMesh = Ground.load("models/plane.obj", true, true).get(0).getMeshes().get(0);
 			((Quadmesh) groundMesh).subdivide(1);
-			//groundMesh.setMaterial(new Unshaded(new Color3f(0.00f, 0.70f, 0.70f)));
+			groundMesh.setMaterial(new LambertianMaterial(new Color3f(0.00f, 0.70f, 0.70f)));
 			this.addMesh(groundMesh);
 			
 			P.add(new Particle(new Point3d(10,0,0))); 
@@ -47,6 +47,7 @@ public class Ground extends Geometry {
 		}
 		for(Particle p : IW){
 			PS.addForce(new SpringForceParticlePlane3(p, P.get(0), P.get(1), P.get(2), PS )  );
+			//PS.addForce(new SpringForceParticlePlane3(p, P.get(2), P.get(3), P.get(0), PS )  );
 		}
 		
 	}

@@ -19,10 +19,10 @@ public class SpringForceParticlePlane3 implements Force
 	public Particle f3;
 		
 	/** Soft edge thickness. */
-	double h = Constants.EDGE_COEFF;
+	double h = 0.1* Constants.EDGE_COEFF;
 	
 	/** Penalty force strength, relative to spring stiffness coefficient. */
-	double REL_STRENGTH = 3;
+	double REL_STRENGTH = 1000;
 	
 	ParticleSystem PS;
 
@@ -47,14 +47,14 @@ public class SpringForceParticlePlane3 implements Force
 		
 		p.sub(p1.x,f1.x);			//between particle and first face point
 		a.sub(f2.x,f1.x);			//between first and second face point
-		b.sub(f1.x,f1.x);			//between first and third face point
+		b.sub(f3.x,f1.x);			//between first and third face point
 		
 
 		//COMPUTE NORMAL VECTOR IN THE DIRECTION OF P
 		Vector3d n = new Vector3d();
 		n.cross(a,b);
+		n.normalize();
 		if (n.dot(p) < 0) n.scale(-1);
-		
 		//PROJECT p ONTO THE PLANE
 		Vector3d t = new Vector3d(); //position of particle projected onto the plane
 		Vector3d pn = new Vector3d(); //seperation vector from plain to face
@@ -75,7 +75,7 @@ public class SpringForceParticlePlane3 implements Force
 		
 //		double alpha = a.dot(b)/a.dot(a);
 		
-		System.out.println("ALPHA: " + alpha + " BETA: " + beta );
+//		System.out.println("ALPHA: " + alpha + " BETA: " + beta );
 		
 		//THREE CASES:
 		//CHECK IF PARTICLE IS ABOVE EDGE
@@ -93,18 +93,19 @@ public class SpringForceParticlePlane3 implements Force
 			if(bn.length()>0) bn.normalize();
 			
 			//SEPERATION FROM EDGE
-			double d = b.dot(n);
-
+			double d = pn.length() - p1.getRadius();
 			//IF CLOSE ENOUGH AND TRAVELING TOWARD, APPLY FORCES
 			if(d<=h){
-				if (v.dot(n)<0){
-					//REPULSION FORCE
-					p1.f.scaleAdd(REL_STRENGTH * Constants.STIFFNESS_STRETCH * (h-d) + Constants.DAMPING_MASS*v.dot(n), n , p1.f);
-				}
-				if (bn.length()>0 && p1.f.dot(n)<0){	
-					//KINETIC FRICTION FORCE
-					p1.f.scaleAdd(Constants.KINETIC_FRICTION * p1.f.dot(n) , bn, p1.f);			
-				}
+				p1.f.scaleAdd(REL_STRENGTH * Constants.STIFFNESS_STRETCH * (h-d) , n , p1.f);
+				System.out.println("APPLY SEPERATION FORCE");
+//				if (v.dot(n)<0){
+//					//REPULSION FORCE
+//					p1.f.scaleAdd(REL_STRENGTH * Constants.STIFFNESS_STRETCH * (h-d) + Constants.DAMPING_MASS*v.dot(n), n , p1.f);
+//				}
+//				if (bn.length()>0 && p1.f.dot(n)<0){	
+//					//KINETIC FRICTION FORCE
+//					p1.f.scaleAdd(Constants.KINETIC_FRICTION * p1.f.dot(n) , bn, p1.f);			
+//				}
 			}			
 		}
 		

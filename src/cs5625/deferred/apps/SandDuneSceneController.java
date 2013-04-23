@@ -89,7 +89,7 @@ public class SandDuneSceneController extends SceneController{
 			geoList.add(plane);
 
             Geometry sphere =  Geometry.load("models/sphere.obj", true, false).get(0);
-            sphere.setPosition(new Point3f(0.0f,2.0f,0.0f));
+            sphere.setPosition(new Point3f(-2.0f,2.0f,-2.0f));
             sphere.setIsPinned(false);
 //            sphere.getMeshes().get(0).setMaterial(new MandelbrotMaterial());
             plane.addInteractionWith(sphere.getParticle());
