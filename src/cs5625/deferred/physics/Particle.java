@@ -13,7 +13,7 @@ import javax.media.opengl.*;
 public class Particle
 {
 	/** Radius of particle's circle graphic. */
-	private static double PARTICLE_RADIUS = 1;/// (NOT USED)
+	private  double PARTICLE_RADIUS = 1;/// (NOT USED)
 
 	/** Display list index. */
 	private static int PARTICLE_DISPLAY_LIST = -1;
@@ -106,7 +106,8 @@ public class Particle
 	public boolean isPinned() { return pin; }
 
 	public double getRadius() {return PARTICLE_RADIUS ; };
-	
+
+	public void setRadius(double r) {PARTICLE_RADIUS = r ; };	
 	/** 
 	 * Draws a canonical circular particle.
 	 */

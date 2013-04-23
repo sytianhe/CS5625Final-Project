@@ -18,6 +18,7 @@ import cs5625.deferred.physics.SpringForceBending;
 public class LeaveGeometry extends Geometry
 {
 	private int numSubdivisions = 1;
+	ArrayList<Point3f>list = new ArrayList<Point3f>();
 	private ArrayList<Particle> particleList = new ArrayList<Particle>();
 	private float height = 0f;
 	private float width = 0f;
@@ -26,7 +27,6 @@ public class LeaveGeometry extends Geometry
 		this.height = height;
 		this.width = width;
 		
-		ArrayList<Point3f>list = new ArrayList<Point3f>();
 
 		list.add(new Point3f(0f,0f,0f));
 		list.add(new Point3f(width/2f,0f,height/4f));
@@ -36,9 +36,6 @@ public class LeaveGeometry extends Geometry
 //		list.add(new Point3f(-width/4f,height*width/5f,height/2f));
 //		list.add(new Point3f(width/4f,height*width/5f,height/2f));
 		
-		for (Point3f p: list){
-			particleList.add(new Particle(new Point3d(p)));
-		}
 
 		TreeLeave newtree = new TreeLeave(list);
 		newtree.subdivide(numSubdivisions);
@@ -48,12 +45,20 @@ public class LeaveGeometry extends Geometry
 
 	@Override
 	public void addToParticleSystem(ParticleSystem PS){
+		Point3f worldPos = new Point3f();
+		for (Point3f p: list){
+			worldPos.set(p);
+			worldPos.set(transformPointToWorldSpace(worldPos));
+			particleList.add(new Particle(new Point3d(worldPos)));
+		}
+		
 		for (Particle p: particleList){
 			PS.addParticle(p);
 			p.setPin(false);
+			p.setRadius(0.1);
 		}
-		particleList.get(0).setPin(true);
-		particleList.get(4).setPin(true);
+//		particleList.get(0).setPin(true);
+//		particleList.get(4).setPin(true);
 		
 		for (int i = 0; i<4; i++){
 			int j = (i+1)%4;
@@ -87,7 +92,10 @@ public class LeaveGeometry extends Geometry
 		//super.animate(dt);
 		ArrayList<Point3f>controlPoints = new ArrayList<Point3f>();
 		for (Particle p: particleList){
-			controlPoints.add(new Point3f(p.x));
+			Point3f point = new Point3f(p.x);
+			System.out.println("BEFORE TRANSFORM " + point);
+			System.out.println("AFTER TRANSFORM " + this.transformPointFromWorldSpace(point));
+			controlPoints.add(this.transformPointFromWorldSpace(point));
 		}
 		this.mMeshes.clear();
 		TreeLeave newtree = new TreeLeave(controlPoints);

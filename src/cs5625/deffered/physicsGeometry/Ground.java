@@ -47,7 +47,7 @@ public class Ground extends Geometry {
 		}
 		for(Particle p : IW){
 			PS.addForce(new SpringForceParticlePlane3(p, P.get(0), P.get(1), P.get(2), PS )  );
-			//PS.addForce(new SpringForceParticlePlane3(p, P.get(2), P.get(3), P.get(0), PS )  );
+			PS.addForce(new SpringForceParticlePlane3(p, P.get(2), P.get(3), P.get(0), PS )  );
 		}
 		
 	}

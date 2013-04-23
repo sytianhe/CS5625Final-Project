@@ -277,14 +277,10 @@ public class SceneObject implements OpenGLResourceObject
 	 * Sets the position of this object in its parent's space based on the control particle's postion in world space.
 	 */
 	public void setPositionFromControlParticle(){
-		tempPosition.set((float)mParticle.x.x,(float)mParticle.x.y,(float)mParticle.x.z );
-		if(mParent == null ){
-			mPosition = transformPointFromWorldSpace(tempPosition);
-		}
-		else{
-			mPosition = mParent.transformPointFromWorldSpace(tempPosition);
-		}
+		Point3f pos = new Point3f(mParticle.x);
+		mPosition.set(this.transformPointToParentSpace(transformPointFromWorldSpace(pos)));
 	}
+	
 	
 	/**
 	 * Returns the orientation of this object in its parent's space.
@@ -433,11 +429,45 @@ public class SceneObject implements OpenGLResourceObject
 		}
 	}
 	
+
+	/**
+	 * Transforms a point in this object's local space into world space.
+	 */
+	public Point3f transformParticlePointToWorldSpace(Particle p)
+	{
+		Point3f point = new Point3f(p.x);
+		if (mParent == null)
+		{
+			return transformPointToParentSpace(point);
+		}
+		else
+		{
+			return mParent.transformPointToWorldSpace(transformPointToParentSpace(point));
+		}
+	}
+	
+	
 	/**
 	 * Transforms a point in world space into this object's local space.
 	 */
 	public Point3f transformPointFromWorldSpace(Point3f point)
 	{
+		if (mParent == null)
+		{
+			return transformPointFromParentSpace(point);
+		}
+		else
+		{
+			return transformPointFromParentSpace(mParent.transformPointFromWorldSpace(point));
+		}
+	}
+	
+	/**
+	 * Transforms a particle postion in world space into this object's local space.
+	 */
+	public Point3f transformParticlePointFromWorldSpace(Particle p)
+	{
+		Point3f point = new Point3f(p.x);
 		if (mParent == null)
 		{
 			return transformPointFromParentSpace(point);

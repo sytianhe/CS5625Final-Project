@@ -66,5 +66,9 @@ public class TrunckGeometry extends Geometry
 		this.mMeshes.add( newtree );
 		((Mesh) this.mMeshes.get(0)).setMaterial(new BlinnPhongMaterial(new Color3f(0.10f, 0.70f, 0.10f)));
 		
+		for(SceneObject child: this.getChildren()){
+			child.animate(dt);
+		}
+		
 	}
 }

@@ -50,7 +50,7 @@ public class SandDuneSceneController extends SceneController{
 	/* Used to calculate subdivision surfaces. */
 	private Quadmesh visibleMesh;
 	
-	private int numberofSub = 3;
+	private int numberofSub = 2;
 
 	public void initializeScene() {
 		try {
@@ -66,25 +66,9 @@ public class SandDuneSceneController extends SceneController{
 			list.add(new Point3f(point));
 			point.set(0f,3f,-0.2f);
 			list.add(new Point3f(point));
-//
-//			TreeTrunk trunck = new TreeTrunk(list, 0.3f, 0.1f);
-//			visibleMesh = (Quadmesh)trunck;
-//			
-//			for (int i = 0; i< numberofSub; i++){
-//				EdgeDS edgeDS = new EdgeDS(visibleMesh);
-//				CCSubdiv ccSubdiv = new CCSubdiv(edgeDS);
-//				visibleMesh = (Quadmesh)ccSubdiv.getNewMesh();
-//			}
-//			
-//			Geometry geom = new Geometry();
-//			visibleMesh.setMaterial(new UnshadedMaterial(new Color3f(0.10f, 0.70f, 0.10f)));
-//			geom.addMesh(visibleMesh);
-//			geom.setPosition(new Point3f(0.0f,2.0f,0.0f));
-			ArrayList<Geometry> geoList = new ArrayList<Geometry>();
-//			geoList.add(geom);
 
-//			Geometry plane = Geometry.load("models/plane.obj", false, false).get(0);					
-//			plane.getMeshes().get(0).setMaterial(new LambertianMaterial(new Color3f(0.00f, 0.70f, 0.70f)));
+			ArrayList<Geometry> geoList = new ArrayList<Geometry>();
+
 			Ground plane = new Ground();
 			geoList.add(plane);
 
@@ -92,37 +76,22 @@ public class SandDuneSceneController extends SceneController{
             Geometry sphere =  Geometry.load("models/sphere.obj", true, false).get(0);
             sphere.setPosition(new Point3f(-2.0f,2.0f,-2.0f));
             sphere.setIsPinned(false);
-//            sphere.getMeshes().get(0).setMaterial(new MandelbrotMaterial());
+            sphere.getParticle().v.set(5,5,5);
             plane.addInteractionWith(sphere.getParticle());
             mSceneRoot.addChild(sphere);
-			
-			MengerSponge sponge = new MengerSponge(3);
-			sponge.setMaterial(new BlinnPhongMaterial(new Color3f(0.10f, 0.70f, 0.10f)));
-			
-			geo = new Geometry();
-			geo.addMesh(sponge);
-			geo.setPosition(new Point3f(4.0f, 2.0f, 0.0f));
-			geoList.add(geo);
-			
-			geo = new Geometry();
-			triMesh =  (Trimesh)Geometry.load("models/monkey.obj", true, true).get(0).getMeshes().get(0);
-			triMesh.setMaterial(new BlinnPhongMaterial(new Color3f(0.30f, 0.00f, 0.30f)));
-			triMesh.getMaterial();
-			geo.addMesh(triMesh);
-			geo.setPosition(new Point3f(-2.0f, 2.0f, 0.0f));
-			geoList.add(geo);
-					
+									
 			TrunckGeometry newTrunk = new TrunckGeometry(list);
 			newTrunk.setPosition(new Point3f(-3.0f, 0.0f, 0.0f));
 			newTrunk.setIsPinned(false);
 			
 			geoList.add(newTrunk);
 			
-			LeaveGeometry newLeaf = new LeaveGeometry(3f, 1f);
-			newLeaf.setPosition(new Point3f(-2f,3f,2f));
+			LeaveGeometry newLeaf = new LeaveGeometry(3f, 0.5f);
+			newLeaf.setPosition(new Point3f(0f,1f,0f));
 			newLeaf.setIsPinned(false);
-			
-			geoList.add(newLeaf);
+			//newTrunk.addChild(newLeaf);
+			sphere.addChild(newLeaf);
+			//geoList.add(newLeaf);
 			mSceneRoot.addGeometry(geoList);
 			            
 			/* Add an unattenuated point light to provide overall illumination. */
@@ -132,8 +101,6 @@ public class SandDuneSceneController extends SceneController{
 			light.setLinearAttenuation(0.0f);
 			light.setQuadraticAttenuation(0.0f);
 
-			//light.setPosition(new Point3f(50.0f, 180.0f, 100.0f));
-			//mSceneRoot.addChild(light);
 			
 			light.setPosition(new Point3f(mShadowCamera.getPosition()));
 			light.setName("CameraLight");

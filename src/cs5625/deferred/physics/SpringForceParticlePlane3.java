@@ -35,7 +35,13 @@ public class SpringForceParticlePlane3 implements Force
 		this.PS = ps;
 	}
 
-	public void applyForce()
+	public void applyForce(){
+		for (Particle p : PS.P){
+			applyForce(p);
+		}
+	}
+	
+	public void applyForce(Particle p1)
 	{
 		if(p1.isPinned() && f1.isPinned() && f2.isPinned()) return;/// no force
 		
@@ -96,16 +102,16 @@ public class SpringForceParticlePlane3 implements Force
 			double d = pn.length() - p1.getRadius();
 			//IF CLOSE ENOUGH AND TRAVELING TOWARD, APPLY FORCES
 			if(d<=h){
-				p1.f.scaleAdd(REL_STRENGTH * Constants.STIFFNESS_STRETCH * (h-d) , n , p1.f);
-				System.out.println("APPLY SEPERATION FORCE");
-//				if (v.dot(n)<0){
-//					//REPULSION FORCE
-//					p1.f.scaleAdd(REL_STRENGTH * Constants.STIFFNESS_STRETCH * (h-d) + Constants.DAMPING_MASS*v.dot(n), n , p1.f);
-//				}
-//				if (bn.length()>0 && p1.f.dot(n)<0){	
-//					//KINETIC FRICTION FORCE
-//					p1.f.scaleAdd(Constants.KINETIC_FRICTION * p1.f.dot(n) , bn, p1.f);			
-//				}
+//				p1.f.scaleAdd(REL_STRENGTH * Constants.STIFFNESS_STRETCH * (h-d) , n , p1.f);
+//				System.out.println("APPLY SEPERATION FORCE");
+				if (v.dot(n)<0){
+					//REPULSION FORCE
+					p1.f.scaleAdd(REL_STRENGTH * Constants.STIFFNESS_STRETCH * (h-d) + Constants.DAMPING_MASS*v.dot(n), n , p1.f);
+				}
+				if (bn.length()>0 && p1.f.dot(n)<0){	
+					//KINETIC FRICTION FORCE
+					p1.f.scaleAdd(Constants.KINETIC_FRICTION * p1.f.dot(n) , bn, p1.f);			
+				}
 			}			
 		}
 		
