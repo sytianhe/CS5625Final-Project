@@ -3,7 +3,6 @@ package cs5625.deferred.physics;
 import java.util.ArrayList;
 
 import javax.media.opengl.GL2;
-import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
 
@@ -73,8 +72,7 @@ public class RepulsionForce2Particle implements Force {
 
 	@Override
 	public boolean contains(Particle p) {
-
-		return false;
+		return PS.contains(p);
 	}
 
 }

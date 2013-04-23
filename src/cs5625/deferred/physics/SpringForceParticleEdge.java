@@ -7,7 +7,11 @@ import javax.media.opengl.*;
 /** 
  * Spring force between two particles, with spring-spring overlap tests.
  * 
+ * 2d base code provided by
  * @author Doug James, January 2007 (Revised Feb 2009)
+ * 
+ * updated to 3d by
+ * @author homoflashmanicus
  */
 public class SpringForceParticleEdge implements Force
 {	
@@ -31,9 +35,8 @@ public class SpringForceParticleEdge implements Force
 	
 	ParticleSystem PS;
 
-	SpringForceParticleEdge(Particle p1, SpringForce2Particle ff)
+	SpringForceParticleEdge(Particle p1, SpringForce2Particle ff, ParticleSystem PS)
 	{
-		if(p1==null || ff == null) throw new NullPointerException("p1="+p1+", p2="+p2 +"p3="+p3);
 		this.f = ff;
 		this.p1 = p1;
 		this.p2 = ff.p1;
@@ -64,6 +67,12 @@ public class SpringForceParticleEdge implements Force
 		//COMPUTE BARCENTRIC COORDINATE OF POINT ABOVE EDGE
 		double alpha = a.dot(b)/a.dot(a);
 		
+		//COMPUTE SEPERATION DISTANCES
+
+		double d = b.dot(n) - ( p1.getRadius() + alpha * p2.getRadius() + (1-alpha) * p3.getRadius() );
+		double dl = p1.x.distance(p2.x) - ( p1.getRadius() + p2.getRadius() );
+		double dr = p1.x.distance(p3.x) - ( p1.getRadius() + p3.getRadius() );
+		
 		//THREE CASES:
 		//CHECK IF PARTICLE IS ABOVE EDGE
 		if(0<=alpha && alpha <=1 ){
@@ -79,7 +88,6 @@ public class SpringForceParticleEdge implements Force
 			if(bn.length()>0) bn.normalize();
 			
 			//SEPERATION FROM EDGE
-			double d = b.dot(n);
 
 			//IF CLOSE ENOUGH AND TRAVELING TOWARD, APPLY FORCES
 			if(d<=h){
@@ -91,36 +99,29 @@ public class SpringForceParticleEdge implements Force
 					//KINETIC FRICTION FORCE
 					p1.f.scaleAdd(Constants.KINETIC_FRICTION * p1.f.dot(n) , bn, p1.f);			
 				}
-//				if (bn.length()==0 && p1.f.dot(n)<0){
-//					//STATIC FRICTION FORCE
-//					bn.set(p1.f);  //compute normal from force 
-//					bn.scaleAdd(-p1.f.dot(n), n, bn);
-//				}
 			}			
 		}
 		//CHECK IF PARTICLE IS NEAR THE LEFT EDGE ENDPOINT
-		else if(p1.x.distance(p2.x)<h){
+		else if(dl<h){
 			//COMPUTE NORMAL VECTOR AND RELATIVE VELOCITY OF THE TWO POINTS
 			n.sub(p1.x,p2.x);
 			Vector3d v = new Vector3d(p1.v);
 			v.sub(p2.v);
 			//SEPERATION BETWEEN POINTS
-			double d = p1.x.distance(p2.x);
 			if(v.dot(n)<0){
-				p1.f.scaleAdd(REL_STRENGTH * Constants.STIFFNESS_STRETCH * (h-d) + Constants.DAMPING_MASS*v.dot(n) , n , p1.f);
+				p1.f.scaleAdd(REL_STRENGTH * Constants.STIFFNESS_STRETCH * (h-dl) + Constants.DAMPING_MASS*v.dot(n) , n , p1.f);
 			}
 		}
 		//CHECK IF PARTICLE IS NEAR THE RIGHT EDGE ENDPOINT
-		else if(p1.x.distance(p3.x)<h){
+		else if(dr<h){
 			//COMPUTE NORMAL VECTOR AND RELATIVE VELOCITY OF THE TWO POINTS
 			n.sub(p1.x,p3.x);
 			Vector3d v = new Vector3d(p1.v);
 			v.sub(p3.v);
 			
 			//SEPERATION BETWEEN POINTS
-			double d = p1.x.distance(p3.x);
 			if(v.dot(n)<0){
-				p1.f.scaleAdd(REL_STRENGTH * Constants.STIFFNESS_STRETCH * (h-d) + Constants.DAMPING_MASS*v.dot(n) , n , p1.f);
+				p1.f.scaleAdd(REL_STRENGTH * Constants.STIFFNESS_STRETCH * (h-dr) + Constants.DAMPING_MASS*v.dot(n) , n , p1.f);
 			}
 		}
 	}
