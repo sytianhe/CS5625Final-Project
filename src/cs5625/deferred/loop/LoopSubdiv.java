@@ -42,6 +42,7 @@ public class LoopSubdiv {
 		
 		//INITIALIZE NEW BUFFERS FOR NEW MESH
 		FloatBuffer vertexBuf = FloatBuffer.allocate(nVertices*3);
+		FloatBuffer normalBuf = FloatBuffer.allocate(nVertices*3);
 		FloatBuffer texCoordBuf = FloatBuffer.allocate(nVertices*2);
 		IntBuffer edgeBuf = IntBuffer.allocate(nCreaseEdges*2);
 		IntBuffer faceBuf = IntBuffer.allocate(nFaces*3);
@@ -55,6 +56,7 @@ public class LoopSubdiv {
 			
 			Point3f targetPosition = new Point3f();
 			Point2f targetTexture = new Point2f();
+			Vector3f targetNormal = new Vector3f();
 			
 			// edge cases
 			if (!edgeDS.isCreaseEdge(edgeID) && !edgeDS.isBoundaryEdge(edgeID)){
@@ -92,6 +94,12 @@ public class LoopSubdiv {
 				targetTexture.scale(0.375f);
 				targetTexture.scaleAdd(0.125f, vDatav3.getTexCoord(), targetTexture);
 				targetTexture.scaleAdd(0.125f, vDatav4.getTexCoord(), targetTexture);
+
+				targetNormal.set(vDatav1.getNormal());
+				targetNormal.add(vDatav2.getNormal());
+				targetNormal.scale(0.375f);
+				targetNormal.scaleAdd(0.125f, vDatav3.getNormal(), targetNormal);
+				targetNormal.scaleAdd(0.125f, vDatav4.getNormal(), targetNormal);
 			}
 			else{
 				VertexAttributeData vDatav1 = edgeDS.getVertexData(v1).mData;
@@ -105,6 +113,10 @@ public class LoopSubdiv {
 				targetTexture.add(vDatav2.getTexCoord());
 				targetTexture.scale(0.5f);
 				
+				targetNormal.set(vDatav1.getNormal());
+				targetNormal.add(vDatav2.getNormal());
+				targetNormal.scale(0.5f);
+				
 			}
 			//SAVE NEW POINT TO BUFFER
 			vertexBuf.put(targetPosition.x);
@@ -112,7 +124,11 @@ public class LoopSubdiv {
 			vertexBuf.put(targetPosition.z);
 			
 			texCoordBuf.put(targetTexture.x);
-			texCoordBuf.put(targetTexture.y);				
+			texCoordBuf.put(targetTexture.y);	
+			
+			normalBuf.put(targetNormal.x);
+			normalBuf.put(targetNormal.y);
+			normalBuf.put(targetNormal.z);
 			
 			edge.setVertexIDNew(oddVertexCounter);
 			oddVertexCounter +=1;
@@ -126,7 +142,8 @@ public class LoopSubdiv {
 
 			Point3f targetPosition = new Point3f(edgeDS.getVertexData(vertexID).mData.getPosition());
 			Point2f targetTexture = new Point2f(edgeDS.getVertexData(vertexID).mData.getTexCoord());
-			
+			Vector3f targetNormal = new Vector3f(edgeDS.getVertexData(vertexID).mData.getNormal());
+
 			// Not on an edge
 			if (creaseEdges.size() <= 1 ){
 				int numberConnectedEdges = edgeDS.getVertexData(vertexID).getConnectedEdges().size();
@@ -142,16 +159,19 @@ public class LoopSubdiv {
 				// 1-n*beta
 				targetPosition.scale(1f - numberConnectedEdges*beta);
 				targetTexture.scale(1f - numberConnectedEdges*beta);
+				targetNormal.scale(1f - numberConnectedEdges*beta);
+
 				// beta
 				for (int edgeID :edgeDS.getVertexData(vertexID).getConnectedEdges()){
 					int newVertexId = edgeDS.getEdgeData(edgeID).getVertex0();
 					if (newVertexId == vertexID) newVertexId = edgeDS.getEdgeData(edgeID).getVertex1();
 					Vector3f tempPos = new Vector3f(edgeDS.getVertexData(newVertexId).mData.getPosition());  
 					Vector2f tempTexCoord = new Vector2f(edgeDS.getVertexData(newVertexId).mData.getTexCoord());  
+					Vector3f tempNorm = new Vector3f(edgeDS.getVertexData(newVertexId).mData.getNormal());  
 
-					
 					targetPosition.scaleAdd(beta, tempPos, targetPosition);
 					targetTexture.scaleAdd(beta, tempTexCoord, targetTexture);
+					targetNormal.scaleAdd(beta, tempNorm, targetNormal);
 				}
 			}
 			// On an edge
@@ -164,17 +184,22 @@ public class LoopSubdiv {
 				if (newVertexId == vertexID) newVertexId = edgeDS.getEdgeData(creaseEdges.get(0)).getVertex1();
 				Vector3f tempPos = new Vector3f(edgeDS.getVertexData(newVertexId).mData.getPosition());  
 				Vector2f tempTexCoord = new Vector2f(edgeDS.getVertexData(newVertexId).mData.getTexCoord()); 
+				Vector3f tempNorm = new Vector3f(edgeDS.getVertexData(newVertexId).mData.getNormal());  
+
 				targetPosition.scaleAdd(0.125f,tempPos, targetPosition);
 				targetTexture.scaleAdd(0.125f, tempTexCoord, targetTexture);
+				targetNormal.scaleAdd(0.125f,tempNorm, targetNormal);
 				
 				//NEW VERTEX 2
 				newVertexId = edgeDS.getEdgeData(creaseEdges.get(1)).getVertex0();
 				if (newVertexId == vertexID) newVertexId = edgeDS.getEdgeData(creaseEdges.get(1)).getVertex1();
 				tempPos = new Vector3f(edgeDS.getVertexData(newVertexId).mData.getPosition());  
 				tempTexCoord = new Vector2f(edgeDS.getVertexData(newVertexId).mData.getTexCoord()); 
+				tempNorm = new Vector3f(edgeDS.getVertexData(newVertexId).mData.getNormal());  
 
 				targetPosition.scaleAdd(0.125f,tempPos, targetPosition);
 				targetTexture.scaleAdd(0.125f, tempTexCoord, targetTexture);
+				targetNormal.scaleAdd(0.125f,tempNorm, targetNormal);
 			}
 			
 			else {
@@ -187,7 +212,11 @@ public class LoopSubdiv {
 			vertexBuf.put(targetPosition.z);
 			
 			texCoordBuf.put(targetTexture.x);
-			texCoordBuf.put(targetTexture.y);				
+			texCoordBuf.put(targetTexture.y);
+			
+			normalBuf.put(targetNormal.x);
+			normalBuf.put(targetNormal.y);
+			normalBuf.put(targetNormal.z);
 
 			edgeDS.getVertexData(vertexID).setNewVertexID(oddVertexCounter);
 			oddVertexCounter +=1;
@@ -250,6 +279,7 @@ public class LoopSubdiv {
 		}
 		
 		vertexBuf.rewind();
+		normalBuf.rewind();
 		texCoordBuf.rewind();
 		edgeBuf.rewind();
 		faceBuf.rewind();
@@ -259,7 +289,7 @@ public class LoopSubdiv {
 		this.mMesh.setTexCoordData(texCoordBuf);
 		this.mMesh.setEdgeData(edgeBuf);
 		this.mMesh.setPolygonData(faceBuf);
-		this.mMesh.setNormalData(null);		
+		this.mMesh.setNormalData(normalBuf);		
 	}
 	
 	public Mesh getNewMesh()
