@@ -191,7 +191,7 @@ public class Renderer
 			}
 			
 			/* 0. Cmpute sand dune buffer */
-			//computeSandDuneBuffer(gl,mWhichSandDune);
+			computeSandDuneBuffer(gl,mWhichSandDune);
 			
 			/* 1. Fill the gbuffer given this scene and camera. */ 
 			fillGBuffer(gl, sceneRoot, camera);
@@ -511,7 +511,7 @@ public class Renderer
 		gl.glDisable(GL2.GL_DEPTH_TEST);
 		gl.glDisable(GL2.GL_BLEND);
 		
-		mInitializeUniformLocation = mSandDuneShader.getUniformLocation(gl, "Initialize");
+		
 		gl.glUniform1i(mInitializeUniformLocation, (mInitialize ? 1: 0) );
 
 		

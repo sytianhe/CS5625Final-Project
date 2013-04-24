@@ -30,6 +30,9 @@ import cs5625.deferred.scenegraph.TreeTrunk;
 import cs5625.deferred.scenegraph.Trimesh;
 import cs5625.deferred.scenegraph.TrunckGeometry;
 import cs5625.deffered.physicsGeometry.Ground;
+import cs5625.deffered.physicsGeometry.Leaf;
+import cs5625.deffered.physicsGeometry.PhysicsGeometry;
+import cs5625.deffered.physicsGeometry.Sphere;
 
 public class SandDuneSceneController extends SceneController{
 
@@ -73,24 +76,32 @@ public class SandDuneSceneController extends SceneController{
 			geoList.add(plane);
 
 			
-            Geometry sphere =  Geometry.load("models/sphere.obj", true, false).get(0);
-            sphere.setPosition(new Point3f(-2.0f,2.0f,-2.0f));
-            sphere.setIsPinned(false);
+//            Geometry sphere =  Geometry.load("models/sphere.obj", true, false).get(0);
+//            sphere.setPosition(new Point3f(-2.0f,2.0f,-2.0f));
+//            
+			Sphere sphere = new Sphere(new Point3f(-2.0f,2.0f,-2.0f));
+            //sphere.setIsPinned(false);
             sphere.getParticle().v.set(5,5,5);
-            plane.addInteractionWith(sphere.getParticle());
+            
+            Leaf leaf = new Leaf(3f, 0.5f);
+            //leaf.setOrientation(new Quat4f(1,0,0,0));
+            sphere.pinToPhysicsGeometry(leaf, new Point3f(0,2,0));
+
+            
+            plane.addInteractionWith(sphere);
             mSceneRoot.addChild(sphere);
 									
 			TrunckGeometry newTrunk = new TrunckGeometry(list);
 			newTrunk.setPosition(new Point3f(-3.0f, 0.0f, 0.0f));
-			newTrunk.setIsPinned(false);
+			newTrunk.setIsPinned(true);
 			
 			geoList.add(newTrunk);
 			
 			LeaveGeometry newLeaf = new LeaveGeometry(3f, 0.5f);
 			newLeaf.setPosition(new Point3f(0f,1f,0f));
 			newLeaf.setIsPinned(false);
-			//newTrunk.addChild(newLeaf);
-			sphere.addChild(newLeaf);
+			//sphere.attachPhysicsGeometry(newLeaf, new Point3f(0f,1f,0f));
+			newTrunk.addChild(newLeaf);
 			//geoList.add(newLeaf);
 			mSceneRoot.addGeometry(geoList);
 			            
@@ -107,9 +118,6 @@ public class SandDuneSceneController extends SceneController{
 			mSceneRoot.addChild(light);		
 		}		 	
 		catch (ScenegraphException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

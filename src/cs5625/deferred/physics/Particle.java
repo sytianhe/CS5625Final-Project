@@ -23,13 +23,13 @@ public class Particle
 
 	/** If true, then particle is pinned in space. */
 	private boolean pin = true;
-
+		
 	/** Default mass. */
 	double   m = Constants.PARTICLE_MASS;
 
 	/** Deformed Position. */
 	public Point3d  x = new Point3d();
-
+	
 	/** Undeformed/material Position. */
 	public Point3d  x0 = new Point3d();
 

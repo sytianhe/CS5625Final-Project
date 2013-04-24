@@ -56,11 +56,21 @@ public class SceneObject implements OpenGLResourceObject
 	 */
 	public void animate(float dt)
 	{
-		setPositionFromControlParticle();
+		if (this.mParticle.isPinned())
+			setPositionFromControlPoint();
+		else
+			setPositionFromControlParticle();
+		
+		//do other stuff
+		animateHelper(dt);
+		
 		for (SceneObject child : mChildren)
 		{
 			child.animate(dt);
 		}
+	}
+	public void animateHelper(float dt){
+		
 	}
 	
 	public Particle getParticle(){
@@ -99,11 +109,14 @@ public class SceneObject implements OpenGLResourceObject
 	 */
 	public void addToParticleSystem(ParticleSystem PS){
 		PS.addParticle(mParticle);
+		addToParticleSystemHelper(PS);
 		for (SceneObject child : mChildren)
 		{
 			child.addToParticleSystem(PS);
 		}
 	}
+	
+	public void addToParticleSystemHelper(ParticleSystem PS){ }
 	
 	
 	/**
@@ -277,8 +290,13 @@ public class SceneObject implements OpenGLResourceObject
 	 * Sets the position of this object in its parent's space based on the control particle's postion in world space.
 	 */
 	public void setPositionFromControlParticle(){
-		Point3f pos = new Point3f(mParticle.x);
-		mPosition.set(this.transformPointToParentSpace(transformPointFromWorldSpace(pos)));
+		mPosition.set(this.transformPointToParentSpace(transformPointFromWorldSpace( new Point3f(mParticle.x))));
+	}
+	/**
+	 * Sets the position of this object in its parent's space based on the control particle's postion in world space.
+	 */
+	public void setPositionFromControlPoint(){
+		mParticle.x.set(getWorldspacePosition());
 	}
 	
 	
