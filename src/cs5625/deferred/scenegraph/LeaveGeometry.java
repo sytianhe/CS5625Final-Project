@@ -17,25 +17,18 @@ import cs5625.deferred.physics.SpringForceBending;
 
 public class LeaveGeometry extends Geometry
 {
-	private int numSubdivisions = 1;
+	private int numSubdivisions = 0;
 	ArrayList<Point3f>list = new ArrayList<Point3f>();
-	private ArrayList<Particle> particleList = new ArrayList<Particle>();
-	private float height = 0f;
-	private float width = 0f;
+	ArrayList<Particle> particleList = new ArrayList<Particle>();
 	
 	public LeaveGeometry(float height, float width){
-		this.height = height;
-		this.width = width;
-		
+		//this.numSubdivisions = numSub;
 
 		list.add(new Point3f(0f,0f,0f));
 		list.add(new Point3f(width/2f,0f,height/4f));
 		list.add(new Point3f(0f,0f,height));
 		list.add(new Point3f(-width/2f,0f,height/4f));
 		list.add(new Point3f(0f,-height*width/10f,height/4f));
-//		list.add(new Point3f(-width/4f,height*width/5f,height/2f));
-//		list.add(new Point3f(width/4f,height*width/5f,height/2f));
-		
 
 		TreeLeave newtree = new TreeLeave(list);
 		newtree.subdivide(numSubdivisions);
@@ -57,8 +50,8 @@ public class LeaveGeometry extends Geometry
 			p.setPin(false);
 			p.setRadius(0.1);
 		}
-//		particleList.get(0).setPin(true);
-//		particleList.get(4).setPin(true);
+		particleList.get(0).setPin(true);
+		particleList.get(4).setPin(true);
 		
 		for (int i = 0; i<4; i++){
 			int j = (i+1)%4;

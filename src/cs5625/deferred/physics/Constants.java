@@ -18,7 +18,7 @@ public class Constants
 
     /** Spring stretching stiffness. */
     //public static double STIFFNESS_STRETCH = 10000.0; 
-    public static double STIFFNESS_STRETCH = 100.0; 
+    public static double STIFFNESS_STRETCH = 1000.0; 
 
     /** Spring bending stiffness. */
     public static double STIFFNESS_BEND    = 4000.0; 

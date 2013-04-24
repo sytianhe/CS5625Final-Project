@@ -13,7 +13,7 @@ public class SpringForce2Particle implements Force
 	public Particle p1;
 	public Particle p2;
 	public Color4f color = new Color4f(1f, 239f/255f, 160f/255f, 1f);//spaghetti color
-
+	public double STIFFNESS = 1000.0;
 
 	ParticleSystem PS;
 
@@ -90,7 +90,7 @@ public class SpringForce2Particle implements Force
 			// DAMPING: dv-dot-dpHat
 			double dvDot = v.dot(p2.v) - v.dot(p1.v);
 
-			double k = Constants.STIFFNESS_STRETCH;
+			double k = this.STIFFNESS;
 			v.scale( k * ((L-L0)  + 0.1*dvDot ) );
 
 			p1.f.add(v);
@@ -123,5 +123,9 @@ public class SpringForce2Particle implements Force
     
     /** If collision is detected do somehting with edge here. */
     public void handleCollisionEvent(){
+    }
+    
+    public void setStiffness(double s){
+    	this.STIFFNESS = s;
     }
 }

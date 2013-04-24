@@ -43,7 +43,7 @@ public class SceneObject implements OpenGLResourceObject
 	private Particle mParticle = new Particle(new Point3d(0,0,0) ); 
 		
 	/* List of child nodes. */
-	private ArrayList<SceneObject> mChildren = new ArrayList<SceneObject>();
+	protected ArrayList<SceneObject> mChildren = new ArrayList<SceneObject>();
 	
 	/* Temp space for common operations*/
 	Point3f tempPosition = new Point3f();

@@ -41,63 +41,6 @@ public class TreeLeave extends Trimesh {
 		mVertexData.put(list.get(4).y);
 		mVertexData.put(list.get(4).z);
 		
-//		mNormalData.put(0f);
-//		mNormalData.put(0f);
-//		mNormalData.put(0f);
-//		
-//		mNormalData.put(0f);
-//		mNormalData.put(0f);
-//		mNormalData.put(0f);
-//		
-//		mNormalData.put(0f);
-//		mNormalData.put(0f);
-//		mNormalData.put(0f);
-//		
-//		mNormalData.put(0f);
-//		mNormalData.put(0f);
-//		mNormalData.put(0f);
-//		
-//		mNormalData.put(0f);
-//		mNormalData.put(0f);
-//		mNormalData.put(0f);
-//		
-//		mNormalData.put(0f);
-//		mNormalData.put(0f);
-//		mNormalData.put(0f);
-//		
-//		mNormalData.put(0f);
-//		mNormalData.put(0f);
-//		mNormalData.put(0f);
-
-//		
-//		mNormalData.put(0f);
-//		mNormalData.put(0f);
-//		mNormalData.put(height);
-//
-//		mNormalData.put(-width/2f);
-//		mNormalData.put(0f);
-//		mNormalData.put(height/2f);
-//		
-//		mNormalData.put(width/2f);
-//		mNormalData.put(0f);
-//		mNormalData.put(height/2f);
-//		
-//		mNormalData.put(0f);
-//		mNormalData.put(-height*width/1000f);
-//		mNormalData.put(height/2f);
-				
-
-//		mPolygonData.put(1);
-//		mPolygonData.put(2);
-//		mPolygonData.put(4);
-//		mPolygonData.put(0);
-//	
-//
-//		mPolygonData.put(3);
-//		mPolygonData.put(0);
-//		mPolygonData.put(4);
-//		mPolygonData.put(2);
-		
 		mPolygonData.put(2);
 		mPolygonData.put(4);
 		mPolygonData.put(1);

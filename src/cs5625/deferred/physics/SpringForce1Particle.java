@@ -13,6 +13,7 @@ public class SpringForce1Particle implements Force
     Particle p1;
     Point3d  x2;
 	Color4f color = new Color4f(0,1,0,1);
+	double STIFFNESS = 100.0;
 
     public SpringForce1Particle(Particle p1, Point3d x2)
     {
@@ -37,7 +38,7 @@ public class SpringForce1Particle implements Force
 
 	    double dvDot = - v.dot(p1.v);
 
-	    double k = Constants.STIFFNESS_STRETCH * 0.5;
+	    double k = this.STIFFNESS * 0.5;
 	    v.scale( (float) (k* ( L + 0.03*dvDot )) );
 	    p1.f.add(v);
 
@@ -63,4 +64,9 @@ public class SpringForce1Particle implements Force
     public void setColor(Color4f c){
     	this.color.set(c);
     }
+
+	public void setStiffness(double d) {
+		// TODO Auto-generated method stub
+		this.STIFFNESS = d;
+	}
 }
