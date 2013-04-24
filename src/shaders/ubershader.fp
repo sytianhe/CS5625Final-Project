@@ -27,6 +27,9 @@ uniform sampler2DRect MaterialParams1Buffer;
 uniform sampler2DRect MaterialParams2Buffer;
 uniform sampler2DRect SilhouetteBuffer;
 uniform sampler2DRect SSAOBuffer;
+uniform sampler2DRect SandDune1Buffer;
+uniform sampler2DRect SandDune2Buffer;
+
 
 uniform bool EnableToonShading;
 uniform bool EnableSSAO;
