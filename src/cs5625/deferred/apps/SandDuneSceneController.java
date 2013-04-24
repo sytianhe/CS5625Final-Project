@@ -21,6 +21,7 @@ import cs5625.deferred.misc.ScenegraphException;
 import cs5625.deferred.misc.Util;
 import cs5625.deferred.physics.Particle;
 import cs5625.deferred.physics.SpringForceParticlePlane3;
+import cs5625.deferred.scenegraph.BranchGeometry;
 import cs5625.deferred.scenegraph.Geometry;
 import cs5625.deferred.scenegraph.LeaveGeometry;
 import cs5625.deferred.scenegraph.MengerSponge;
@@ -78,19 +79,29 @@ public class SandDuneSceneController extends SceneController{
             sphere.setIsPinned(false);
             sphere.getParticle().v.set(5,5,5);
             plane.addInteractionWith(sphere.getParticle());
-            mSceneRoot.addChild(sphere);
+        
 									
-			TrunckGeometry newTrunk = new TrunckGeometry(list);
-			newTrunk.setPosition(new Point3f(-3.0f, 0.0f, 0.0f));
-			newTrunk.setIsPinned(false);
+//			TrunckGeometry newTrunk = new TrunckGeometry(list, 0.3f, 0.1f);
+//			newTrunk.setPosition(new Point3f(-3.0f, 0.0f, 0.0f));
+//			newTrunk.setIsPinned(false);
 			
-			geoList.add(newTrunk);
-			
-			LeaveGeometry newLeaf = new LeaveGeometry(3f, 0.5f);
-			newLeaf.setPosition(new Point3f(0f,1f,0f));
-			newLeaf.setIsPinned(false);
-			//newTrunk.addChild(newLeaf);
-			sphere.addChild(newLeaf);
+//			geoList.add(newTrunk);
+            
+            BranchGeometry newBranch = new BranchGeometry(3f, 1f);
+            //newBranch.setIsPinned(false);
+			mSceneRoot.addChild(newBranch);	
+			newBranch.setPosition(new Point3f(0f,2f,0f));
+			newBranch.setOrientation(new Quat4f(1f, 1f, 0f, (float) (Math.sqrt(2.0)/2f)));
+
+            
+//			LeaveGeometry newLeaf = new LeaveGeometry(3f, 0.5f);
+//			newLeaf.setPosition(new Point3f(0f,1f,0f));
+//			newLeaf.setIsPinned(false);
+//			newTrunk.addChild(newLeaf);
+//			mSceneRoot.addChild(newTrunk);
+
+			//sphere.addChild(newLeaf);
+		    mSceneRoot.addChild(sphere);
 			//geoList.add(newLeaf);
 			mSceneRoot.addGeometry(geoList);
 			            
