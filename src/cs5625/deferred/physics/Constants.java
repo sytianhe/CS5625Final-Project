@@ -34,6 +34,8 @@ public class Constants
     
     /** Edge kinetic friction coefficient. */
     public static final double KINETIC_FRICTION = 0.02;
+
+	public static final double REPULSION_COEFF = 100;
     
     /** RESTITUTION_COEFF */
     public static void set_RESTITUTION_COEFF(double num){
