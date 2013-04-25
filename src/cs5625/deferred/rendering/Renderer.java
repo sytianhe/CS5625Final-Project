@@ -70,12 +70,12 @@ public class Renderer
 	protected final int GBuffer_PositionIndex = 1;
 	protected final int GBuffer_MaterialIndex1 = 2;
 	protected final int GBuffer_MaterialIndex2 = 3;
-	//protected final int GBuffer_GradientsIndex = 4;
+	protected final int GBuffer_GradientsIndex = 4;
 	protected final int GBuffer_SSAOIndex = 5;
 	protected final int GBuffer_FinalSceneIndex = 6;
-	protected final int GBuffer_SandDune1Index = 4;
-	protected final int GBuffer_SandDune2Index = 7;
-	protected final int GBuffer_Count = 8;
+	//protected final int GBuffer_SandDune1Index = 4;
+	//protected final int GBuffer_SandDune2Index = 7;
+	protected final int GBuffer_Count = 7;
 	
 
 	/* The index of the texture to preview in GBufferFBO, or -1 for no preview. */
@@ -198,7 +198,7 @@ public class Renderer
 			
 			
 			/* 2. Compute gradient buffer based on positions and normals, used for toon shading. */
-			//computeGradientBuffer(gl);
+			computeGradientBuffer(gl);
 			computeSSAOBuffer(gl, camera);
 			
 			/* 3. Apply deferred lighting to the g-buffer. At this point, the opaque scene has been rendered. */
@@ -206,11 +206,11 @@ public class Renderer
 
 			/* 4. If we're supposed to preview one gbuffer texture, do that now. 
 			 *    Otherwise, envoke the final render pass (optional post-processing). */
-			if (mPreviewIndex == 2){
-				Util.renderTextureFullscreen(gl, mGBufferFBO.getColorTexture(GBuffer_SandDune1Index));
-				//Util.renderTextureFullscreen(gl, mSandDuneFBO.getColorTexture(SBuffer_SandDune1Index));
-			}
-			else if (mPreviewIndex >= 0 && mPreviewIndex < GBuffer_FinalSceneIndex)
+//			if (mPreviewIndex == 2){
+//				Util.renderTextureFullscreen(gl, mGBufferFBO.getColorTexture(GBuffer_SandDune1Index));
+//				//Util.renderTextureFullscreen(gl, mSandDuneFBO.getColorTexture(SBuffer_SandDune1Index));
+//			}
+			if (mPreviewIndex >= 0 && mPreviewIndex < GBuffer_FinalSceneIndex)
 			{
 				Util.renderTextureFullscreen(gl, mGBufferFBO.getColorTexture(mPreviewIndex));
 			}
@@ -381,42 +381,42 @@ public class Renderer
 	 * Computes position and normal gradients based on the position and normal textures of the GBuffer, for 
 	 * use in edge detection (e.g. toon rendering). 
 	 */
-//	private void computeGradientBuffer(GL2 gl) throws OpenGLException
-//	{
-//		/* Bind silhouette buffer as output. */
-//		mGBufferFBO.bindOne(gl, GBuffer_GradientsIndex);
-//
-//		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-//		gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
-//		
-//		/* Save state before we disable depth testing for blitting. */
-//		gl.glPushAttrib(GL2.GL_ENABLE_BIT);
-//		
-//		/* Disable depth test and blend, since we just want to replace the contents of the framebuffer.
-//		 * Since we are rendering an opaque fullscreen quad here, we don't bother clearing the buffer
-//		 * first. */
-//		gl.glDisable(GL2.GL_DEPTH_TEST);
-//		gl.glDisable(GL2.GL_BLEND);
-//		
-//		/* Bind the diffuse and position textures so the edge-detection shader can read out position and normal data. */
-//		mGBufferFBO.getColorTexture(GBuffer_DiffuseIndex).bind(gl, 0);
-//		mGBufferFBO.getColorTexture(GBuffer_PositionIndex).bind(gl, 1);
-//		
-//		/* Bind silhouette shader and render. */
-//		mSilhouetteShader.bind(gl);
-//		Util.drawFullscreenQuad(gl, mViewportWidth, mViewportHeight);
-//		
-//		/* Unbind everything. */
-//		mSilhouetteShader.unbind(gl);
-//		mGBufferFBO.getColorTexture(GBuffer_DiffuseIndex).unbind(gl);
-//		mGBufferFBO.getColorTexture(GBuffer_PositionIndex).unbind(gl);
-//
-//		mGBufferFBO.unbind(gl);
-//
-//		/* Restore attributes (blending and depth-testing) to as they were before. */
-//		gl.glPopAttrib();
-//	}
-//	
+	private void computeGradientBuffer(GL2 gl) throws OpenGLException
+	{
+		/* Bind silhouette buffer as output. */
+		mGBufferFBO.bindOne(gl, GBuffer_GradientsIndex);
+
+		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
+		
+		/* Save state before we disable depth testing for blitting. */
+		gl.glPushAttrib(GL2.GL_ENABLE_BIT);
+		
+		/* Disable depth test and blend, since we just want to replace the contents of the framebuffer.
+		 * Since we are rendering an opaque fullscreen quad here, we don't bother clearing the buffer
+		 * first. */
+		gl.glDisable(GL2.GL_DEPTH_TEST);
+		gl.glDisable(GL2.GL_BLEND);
+		
+		/* Bind the diffuse and position textures so the edge-detection shader can read out position and normal data. */
+		mGBufferFBO.getColorTexture(GBuffer_DiffuseIndex).bind(gl, 0);
+		mGBufferFBO.getColorTexture(GBuffer_PositionIndex).bind(gl, 1);
+		
+		/* Bind silhouette shader and render. */
+		mSilhouetteShader.bind(gl);
+		Util.drawFullscreenQuad(gl, mViewportWidth, mViewportHeight);
+		
+		/* Unbind everything. */
+		mSilhouetteShader.unbind(gl);
+		mGBufferFBO.getColorTexture(GBuffer_DiffuseIndex).unbind(gl);
+		mGBufferFBO.getColorTexture(GBuffer_PositionIndex).unbind(gl);
+
+		mGBufferFBO.unbind(gl);
+
+		/* Restore attributes (blending and depth-testing) to as they were before. */
+		gl.glPopAttrib();
+	}
+	
 	/**
 	 * Computes SSAO values based on the position and normal textures of the GBuffer. 
 	 */
@@ -492,58 +492,58 @@ public class Renderer
 	 * Computes position and normal gradients based on the position and normal textures of the GBuffer, for 
 	 * use in edge detection (e.g. toon rendering). 
 	 */
-	private void computeSandDuneBuffer(GL2 gl, boolean swap) throws OpenGLException
-	{
-		/* Bind sanddune buffer as output. */
-		if (swap){ mGBufferFBO.bindOne(gl, GBuffer_SandDune1Index); }
-		else { mGBufferFBO.bindOne(gl, GBuffer_SandDune2Index); }
-
-		
-		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
-		
-		/* Save state before we disable depth testing for blitting. */
-		gl.glPushAttrib(GL2.GL_ENABLE_BIT);
-		
-		/* Disable depth test and blend, since we just want to replace the contents of the framebuffer.
-		 * Since we are rendering an opaque fullscreen quad here, we don't bother clearing the buffer
-		 * first. */
-		gl.glDisable(GL2.GL_DEPTH_TEST);
-		gl.glDisable(GL2.GL_BLEND);
-		
-		mInitializeUniformLocation = mSandDuneShader.getUniformLocation(gl, "Initialize");
-		gl.glUniform1i(mInitializeUniformLocation, (mInitialize ? 1: 0) );
-
-		
-		/* Bind previous sandDune buffer. */
-		if (swap){ mGBufferFBO.getColorTexture(GBuffer_SandDune2Index).bind(gl, 0);}
-		else{ mGBufferFBO.getColorTexture(GBuffer_SandDune1Index).bind(gl, 0); }
-		
-		/* Bind sandDune shader and render. */
-		mSandDuneShader.bind(gl);
-		
-		//System.out.println(oldSandDuneTexture);
-		//if (oldSandDuneTexture != null) oldSandDuneTexture.bind(gl, 0);
-
-		Util.drawFullscreenQuad(gl, mViewportWidth, mViewportHeight);
-
-		//Buffer nb =    mSandDuneFBO.getColorTexture(GBuffer_SandDune1Index).copyTextureImage(gl);
-		//this.oldSandDuneTexture = new Texture2D(gl, Format.RGBA, Datatype.FLOAT16, (int) mViewportWidth, (int) mViewportHeight,  nb);
-		
-		/* Unbind everything. */
-		mSandDuneShader.unbind(gl);		
-		if (swap){ mGBufferFBO.getColorTexture(GBuffer_SandDune2Index).unbind(gl);}
-		else{ mGBufferFBO.getColorTexture(GBuffer_SandDune1Index).unbind(gl); }
-
-	//	oldSandDuneTexture.unbind(gl);
-		mGBufferFBO.unbind(gl);
-
-		/* Restore attributes (blending and depth-testing) to as they were before. */
-		gl.glPopAttrib();
-		
-		mWhichSandDune = !mWhichSandDune;
-		mInitialize = true;
-	}
+//	private void computeSandDuneBuffer(GL2 gl, boolean swap) throws OpenGLException
+//	{
+//		/* Bind sanddune buffer as output. */
+//		if (swap){ mGBufferFBO.bindOne(gl, GBuffer_SandDune1Index); }
+//		else { mGBufferFBO.bindOne(gl, GBuffer_SandDune2Index); }
+//
+//		
+//		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+//		gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
+//		
+//		/* Save state before we disable depth testing for blitting. */
+//		gl.glPushAttrib(GL2.GL_ENABLE_BIT);
+//		
+//		/* Disable depth test and blend, since we just want to replace the contents of the framebuffer.
+//		 * Since we are rendering an opaque fullscreen quad here, we don't bother clearing the buffer
+//		 * first. */
+//		gl.glDisable(GL2.GL_DEPTH_TEST);
+//		gl.glDisable(GL2.GL_BLEND);
+//		
+//		mInitializeUniformLocation = mSandDuneShader.getUniformLocation(gl, "Initialize");
+//		gl.glUniform1i(mInitializeUniformLocation, (mInitialize ? 1: 0) );
+//
+//		
+//		/* Bind previous sandDune buffer. */
+//		if (swap){ mGBufferFBO.getColorTexture(GBuffer_SandDune2Index).bind(gl, 0);}
+//		else{ mGBufferFBO.getColorTexture(GBuffer_SandDune1Index).bind(gl, 0); }
+//		
+//		/* Bind sandDune shader and render. */
+//		mSandDuneShader.bind(gl);
+//		
+//		//System.out.println(oldSandDuneTexture);
+//		//if (oldSandDuneTexture != null) oldSandDuneTexture.bind(gl, 0);
+//
+//		Util.drawFullscreenQuad(gl, mViewportWidth, mViewportHeight);
+//
+//		//Buffer nb =    mSandDuneFBO.getColorTexture(GBuffer_SandDune1Index).copyTextureImage(gl);
+//		//this.oldSandDuneTexture = new Texture2D(gl, Format.RGBA, Datatype.FLOAT16, (int) mViewportWidth, (int) mViewportHeight,  nb);
+//		
+//		/* Unbind everything. */
+//		mSandDuneShader.unbind(gl);		
+//		if (swap){ mGBufferFBO.getColorTexture(GBuffer_SandDune2Index).unbind(gl);}
+//		else{ mGBufferFBO.getColorTexture(GBuffer_SandDune1Index).unbind(gl); }
+//
+//	//	oldSandDuneTexture.unbind(gl);
+//		mGBufferFBO.unbind(gl);
+//
+//		/* Restore attributes (blending and depth-testing) to as they were before. */
+//		gl.glPopAttrib();
+//		
+//		mWhichSandDune = !mWhichSandDune;
+//		mInitialize = true;
+//	}
 	
 	/**
 	 * Applies lighting to an already-filled gbuffer to produce the final scene. Output is sent 
@@ -1159,8 +1159,8 @@ public class Renderer
 			gl.glUniform1i(mUberShader.getUniformLocation(gl, "SilhouetteBuffer"), 4);
 			gl.glUniform1i(mUberShader.getUniformLocation(gl, "SSAOBuffer"), 5);
 			
-			gl.glUniform1i(mUberShader.getUniformLocation(gl, "SandDune1Buffer"), 4);
-			gl.glUniform1i(mUberShader.getUniformLocation(gl, "SandDune2Buffer"), 7);
+//			gl.glUniform1i(mUberShader.getUniformLocation(gl, "SandDune1Buffer"), 4);
+//			gl.glUniform1i(mUberShader.getUniformLocation(gl, "SandDune2Buffer"), 7);
 			
 			gl.glUniform3f(mUberShader.getUniformLocation(gl, "SkyColor"), 0.3f, 0.3f, 0.3f);
 			//gl.glUniform3f(mUberShader.getUniformLocation(gl, "SkyColor"), 0.1f, 0.1f, 0.1f);
@@ -1223,11 +1223,11 @@ public class Renderer
 			mSilhouetteShader.unbind(gl);
 
 			/* Load the sandDune shader. */
-			mSandDuneShader = new ShaderProgram(gl, "shaders/sanddune");
-
-			mSandDuneShader.bind(gl);
-			gl.glUniform1i(mSandDuneShader.getUniformLocation(gl, "PreviousSandDuneBuffer"), 0);
-			mSandDuneShader.unbind(gl);
+//			mSandDuneShader = new ShaderProgram(gl, "shaders/sanddune");
+//
+//			mSandDuneShader.bind(gl);
+//			gl.glUniform1i(mSandDuneShader.getUniformLocation(gl, "PreviousSandDuneBuffer"), 0);
+//			mSandDuneShader.unbind(gl);
 			
 			/* Load the bloom shader. */
 			mBloomShader = new ShaderProgram(gl, "shaders/bloom");
