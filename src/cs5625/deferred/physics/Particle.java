@@ -13,7 +13,7 @@ import javax.media.opengl.*;
 public class Particle
 {
 	/** Radius of particle's circle graphic. */
-	private  double PARTICLE_RADIUS = 1;/// (NOT USED)
+	private  double PARTICLE_RADIUS = 0.1;/// (NOT USED)
 
 	/** Display list index. */
 	private static int PARTICLE_DISPLAY_LIST = -1;
@@ -38,6 +38,9 @@ public class Particle
 
 	/** Force accumulator. */
 	public Vector3d f = new Vector3d();
+	
+	/** Another particle to which this particle is pinned. */
+	public Particle p2;
 
 	/** 
 	 * Constructs particle with the specified material/undeformed
@@ -108,6 +111,9 @@ public class Particle
 	public double getRadius() {return PARTICLE_RADIUS ; };
 
 	public void setRadius(double r) {PARTICLE_RADIUS = r ; };	
+	
+	public void setMass(double m) {this.m = m ; };	
+	
 	/** 
 	 * Draws a canonical circular particle.
 	 */

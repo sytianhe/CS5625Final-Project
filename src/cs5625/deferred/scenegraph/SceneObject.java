@@ -1,5 +1,6 @@
 package cs5625.deferred.scenegraph;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,7 +74,7 @@ public class SceneObject implements OpenGLResourceObject
 		
 	}
 	
-	public Particle getParticle(){
+	public Particle getOriginParticle(){
 		return mParticle;
 	}
 	
@@ -109,11 +110,11 @@ public class SceneObject implements OpenGLResourceObject
 	 */
 	public void addToParticleSystem(ParticleSystem PS){
 		PS.addParticle(mParticle);
-		addToParticleSystemHelper(PS);
 		for (SceneObject child : mChildren)
 		{
 			child.addToParticleSystem(PS);
 		}
+		addToParticleSystemHelper(PS);
 	}
 	
 	public void addToParticleSystemHelper(ParticleSystem PS){ }
@@ -292,6 +293,11 @@ public class SceneObject implements OpenGLResourceObject
 	public void setPositionFromControlParticle(){
 		mPosition.set(this.transformPointToParentSpace(transformPointFromWorldSpace( new Point3f(mParticle.x))));
 	}
+	
+	public void setPositionFromControlParticle(Point3f cp, Particle p){
+		cp.set(this.transformPointToParentSpace(transformPointFromWorldSpace( new Point3f(p.x))));
+	}
+	
 	/**
 	 * Sets the position of this object in its parent's space based on the control particle's postion in world space.
 	 */
@@ -299,6 +305,9 @@ public class SceneObject implements OpenGLResourceObject
 		mParticle.x.set(getWorldspacePosition());
 	}
 	
+	public void setPositionFromControlPoint(Particle p, Point3f cp){
+		p.x.set(this.transformPointToWorldSpace(cp));
+	}	
 	
 	/**
 	 * Returns the orientation of this object in its parent's space.

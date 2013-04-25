@@ -35,17 +35,23 @@ public class SpringForceParticleEdge implements Force
 	
 	ParticleSystem PS;
 
-	SpringForceParticleEdge(Particle p1, SpringForce2Particle ff, ParticleSystem PS)
+	public SpringForceParticleEdge(SpringForce2Particle ff, ParticleSystem PS)
 	{
 		this.f = ff;
-		this.p1 = p1;
+		//this.p1 = p1;
 		this.p2 = ff.p1;
 		this.p3 = ff.p2;
 
 		this.PS = PS;
 	}
 
-	public void applyForce()
+	public void applyForce(){
+		for (Particle p : PS.P){
+			applyForce(p, p2, p3);
+		}
+	}
+	
+	public void applyForce(Particle p1, Particle p2, Particle p3 )
 	{
 		if(p1.isPinned() && p2.isPinned() && p3.isPinned()) return;/// no force
 		

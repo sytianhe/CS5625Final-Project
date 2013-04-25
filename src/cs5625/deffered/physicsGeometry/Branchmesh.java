@@ -9,6 +9,7 @@ import com.jogamp.common.nio.Buffers;
 
 import cs5625.deferred.catmullclark.CCSubdiv;
 import cs5625.deferred.datastruct.EdgeDS;
+import cs5625.deferred.scenegraph.Quadmesh;
 
 /**
  * TreeTrunk.java
@@ -19,9 +20,9 @@ import cs5625.deferred.datastruct.EdgeDS;
  * 
  * @author Tianhe Zhang (tz249)
  */
-public class TreeTrunk extends Quadmesh {
+public class Branchmesh extends Quadmesh {
 
-	public TreeTrunk(ArrayList<Point3f> ControlPoints, float topRadius, float bottomRadius) {
+	public Branchmesh(ArrayList<Point3f> ControlPoints, float topRadius, float bottomRadius) {
 
 		// Allocate buffers for all data.
 		mVertexData   = Buffers.newDirectFloatBuffer(3 * 4 * ControlPoints.size());
