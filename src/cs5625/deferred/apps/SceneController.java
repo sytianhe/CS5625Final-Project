@@ -58,8 +58,8 @@ public abstract class SceneController implements MouseListener, MouseMotionListe
 	
 	protected static Timer timer;
 	protected boolean isAnimate = false;
-	private static int N_STEPS_PER_FRAME = 40;
-	public static final float DT = 0.05f;
+	private static int N_STEPS_PER_FRAME = 80;
+	public static final float DT = 0.03f;
 	public ParticleSystem PS;
 	
 	/**
@@ -95,7 +95,9 @@ public abstract class SceneController implements MouseListener, MouseMotionListe
 		//globalController = new TexturesTestSceneController();
 		//globalController = new ShadowMapSceneController();
 		//globalController = new DesertTreeController();
-		globalController = new SandDuneSceneController();
+		//globalController = new SandDuneSceneController();
+		globalController = new TreeSceneController();
+
 	}
 	
 	/*

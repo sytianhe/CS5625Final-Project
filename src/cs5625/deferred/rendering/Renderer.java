@@ -63,7 +63,7 @@ public class Renderer
 	protected FramebufferObject mShadowMapFBO;
 	
 	/* The sanddune map FBO */
-	protected FramebufferObject mSandDuneFBO;
+	//protected FramebufferObject mSandDuneFBO;
 	
 	/* Name the indices in the GBuffer so code is easier to read. */
 	protected final int GBuffer_DiffuseIndex = 0;
@@ -91,7 +91,7 @@ public class Renderer
 
 	/* The "ubershader" used for performing deferred shading on the gbuffer, 
 	 * and the silhouette shader to compute edges for toon rendering. */
-	private ShaderProgram mUberShader, mSilhouetteShader, mSandDuneShader;
+	private ShaderProgram mUberShader, mSilhouetteShader; //, mSandDuneShader;
 	private boolean mEnableToonShading = false;
 	
 	/* Material for rendering generic wireframes and crease edges, and flag to enable/disable that. */
@@ -160,10 +160,10 @@ public class Renderer
 	private int mLightWidthUniformLocation = -1;
 	
 	/* The current sandDune texture */
-	private boolean mWhichSandDune = true;
-	private boolean mInitialize = false;
-	private int mInitializeUniformLocation = -1;
-
+//	private boolean mWhichSandDune = true;
+//	private boolean mInitialize = false;
+//	private int mInitializeUniformLocation = -1;
+//
 	
 	
 	/* The size of the light uniform arrays in the ubershader. */
@@ -544,7 +544,7 @@ public class Renderer
 //		mWhichSandDune = !mWhichSandDune;
 //		mInitialize = true;
 //	}
-	
+
 	/**
 	 * Applies lighting to an already-filled gbuffer to produce the final scene. Output is sent 
 	 * to the main framebuffer of the view/window.

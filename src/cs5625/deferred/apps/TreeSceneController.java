@@ -20,8 +20,7 @@ import cs5625.deferred.materials.UnshadedMaterial;
 import cs5625.deferred.misc.ScenegraphException;
 import cs5625.deferred.misc.Util;
 import cs5625.deferred.physics.Particle;
-import cs5625.deferred.scenegraph.BranchGeometry;
-
+import cs5625.deferred.physics.PenaltyForceParticlePlane3;
 import cs5625.deferred.scenegraph.Geometry;
 import cs5625.deferred.scenegraph.LeaveGeometry;
 import cs5625.deferred.scenegraph.MengerSponge;
@@ -30,12 +29,13 @@ import cs5625.deferred.scenegraph.Quadmesh;
 import cs5625.deferred.scenegraph.TreeTrunk;
 import cs5625.deferred.scenegraph.Trimesh;
 import cs5625.deferred.scenegraph.TrunckGeometry;
+import cs5625.deffered.physicsGeometry.Branch;
 import cs5625.deffered.physicsGeometry.Ground;
 import cs5625.deffered.physicsGeometry.Leaf;
 import cs5625.deffered.physicsGeometry.PhysicsGeometry;
 import cs5625.deffered.physicsGeometry.Sphere;
 
-public class SandDuneSceneController extends SceneController{
+public class TreeSceneController extends SceneController{
 
 	
 	/* Keeps track of camera's orbit position. Latitude and longitude are in degrees. */
@@ -58,58 +58,49 @@ public class SandDuneSceneController extends SceneController{
 
 	public void initializeScene() {
 		try {
+			//SETUP CONTROL POINT FOR LEAF AND STEM .... NEED TO BE SPACED OUT CURRENTLY
 			ArrayList<Point3f>list = new ArrayList<Point3f>();
-			Point3f point = new Point3f();
-			point.set(3f,0f,0f);
-			list.add(new Point3f(point));
-			point.set(3f,1.148f,0f);
-			list.add(new Point3f(point));
-			point.set(2.121f,2.121f,-0.1f);
-			list.add(new Point3f(point));
-			point.set(1.148f,2.771f,-0.15f);
-			list.add(new Point3f(point));
-			point.set(0f,3f,-0.2f);
-			list.add(new Point3f(point));
+			for(int i=0; i< 10; i++){
+				Point3f point = new Point3f();
+				point.set(0f,1.5f*i,0f);
+				list.add(new Point3f(point));
+			}
 
-			ArrayList<Geometry> geoList = new ArrayList<Geometry>();
-
+			//ADD GROUND
 			Ground plane = new Ground();
-			geoList.add(plane);
-
+			mSceneRoot.addChild(plane);
 			
-//            Geometry sphere =  Geometry.load("models/sphere.obj", true, false).get(0);
-//            sphere.setPosition(new Point3f(-2.0f,2.0f,-2.0f));
-//            
-			Sphere sphere = new Sphere(new Point3f(-2.0f,2.0f,-2.0f));
+			//ADD SPHERE
+			Sphere sphere = new Sphere(new Point3f(4.0f,4.0f,4.0f));
             sphere.setIsPinned(false);
-            sphere.getOriginParticle().v.set(5,5,5);
-            plane.addInteractionWith(sphere);
-        
-									
-//			TrunckGeometry newTrunk = new TrunckGeometry(list, 0.3f, 0.1f);
-//			newTrunk.setPosition(new Point3f(-3.0f, 0.0f, 0.0f));
-//			newTrunk.setIsPinned(false);
-			
-//			geoList.add(newTrunk);
-            
-            BranchGeometry newBranch = new BranchGeometry(3f, 1f);
-            //newBranch.setIsPinned(false);
-			mSceneRoot.addChild(newBranch);	
-			newBranch.setPosition(new Point3f(0f,2f,0f));
-			newBranch.setOrientation(new Quat4f(1f, 1f, 0f, (float) (Math.sqrt(2.0)/2f)));
+            sphere.getOriginParticle().v.set(-5,5,-5);
+            mSceneRoot.addChild(sphere);            
+
+            //ADD BRANCH
+            Branch branch = new Branch(list);
+            branch.setPosition(new Point3f(0.0f, 0.0f, 0.0f));
+            branch.setIsPinned(true);
+            mSceneRoot.addChild(branch);
 
             
-//			LeaveGeometry newLeaf = new LeaveGeometry(3f, 0.5f);
-//			newLeaf.setPosition(new Point3f(0f,1f,0f));
-//			newLeaf.setIsPinned(false);
-//			newTrunk.addChild(newLeaf);
-//			mSceneRoot.addChild(newTrunk);
+            //CREATE AND ATTACH LEAVES  UP STEM
+//            for (Point3f pt :  list ){
+//            	if (! pt.equals(list.get(0)) && ! pt.equals(list.get(1))){
+//            		Leaf leaf1 = new Leaf(3f, 0.75f);
+//            		Leaf leaf2 = new Leaf(3f, 0.75f);
+//            		leaf2.setOrientation(new Quat4f(0,1,0,0));
+//            		branch.pinToPhysicsGeometry(leaf1,pt);
+//            		branch.pinToPhysicsGeometry(leaf2,pt);
+//            	}
+//            }
+            
+            Point3f topPoint = list.get(list.size()-1);
+            for (int i = 0; i<8; i++){
+            	Leaf leaf1 = new Leaf(3f, 0.75f);
+            	leaf1.setOrientation(new Quat4f(0,(float) Math.sin((float)i/8.0 *1.0* Math.PI),0,(float) Math.cos((float)i/8.0 *1.0* Math.PI)));
+            	branch.pinToPhysicsGeometry(leaf1,topPoint);
+            }
 
-			//sphere.addChild(newLeaf);
-		    mSceneRoot.addChild(sphere);
-
-			//geoList.add(newLeaf);
-			mSceneRoot.addGeometry(geoList);
 			            
 			/* Add an unattenuated point light to provide overall illumination. */
 			PointLight light = new PointLight();

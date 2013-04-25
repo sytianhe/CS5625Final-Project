@@ -9,7 +9,7 @@ import javax.media.opengl.*;
  * 
  * @author Doug James, January 2007 (Revised Feb 2009)
  */
-public class SpringForceParticlePlane3 implements Force
+public class PenaltyForceParticlePlane3 implements Force
 {	
 	/** Free Point */
 	public Particle p1;
@@ -26,7 +26,7 @@ public class SpringForceParticlePlane3 implements Force
 	
 	ParticleSystem PS;
 
-	public SpringForceParticlePlane3(Particle p1, Particle f1, Particle f2, Particle f3, ParticleSystem ps)
+	public PenaltyForceParticlePlane3(Particle p1, Particle f1, Particle f2, Particle f3, ParticleSystem ps)
 	{
 		this.p1 = p1;
 		this.f1 = f1;
@@ -85,7 +85,7 @@ public class SpringForceParticlePlane3 implements Force
 		
 		//THREE CASES:
 		//CHECK IF PARTICLE IS ABOVE EDGE
-		if(0<=alpha && alpha <=1 && 0<=beta && beta <= 1){
+		if(0<alpha && alpha <1 && 0<beta && beta < 1){
 			
 			//COMPUTE RELATIVE VELOCITY AT POINT ABOVE EDGE
 			Vector3d v = new Vector3d(p1.v);
@@ -102,8 +102,6 @@ public class SpringForceParticlePlane3 implements Force
 			double d = pn.length() - p1.getRadius();
 			//IF CLOSE ENOUGH AND TRAVELING TOWARD, APPLY FORCES
 			if(d<=h){
-//				p1.f.scaleAdd(REL_STRENGTH * Constants.STIFFNESS_STRETCH * (h-d) , n , p1.f);
-//				System.out.println("APPLY SEPERATION FORCE");
 				if (v.dot(n)<0){
 					//REPULSION FORCE
 					p1.f.scaleAdd(REL_STRENGTH * Constants.STIFFNESS_STRETCH * (h-d) + Constants.DAMPING_MASS*v.dot(n), n , p1.f);
@@ -114,34 +112,6 @@ public class SpringForceParticlePlane3 implements Force
 				}
 			}			
 		}
-		
-		//IGNORE EDGES FOR NOW 
-		
-		//CHECK IF PARTICLE IS NEAR THE LEFT EDGE ENDPOINT
-//		else if(p1.x.distance(f1.x)<h){
-//			//COMPUTE NORMAL VECTOR AND RELATIVE VELOCITY OF THE TWO POINTS
-//			n.sub(p1.x,f1.x);
-//			Vector3d v = new Vector3d(p1.v);
-//			v.sub(f1.v);
-//			//SEPERATION BETWEEN POINTS
-//			double d = p1.x.distance(f1.x);
-//			if(v.dot(n)<0){
-//				p1.f.scaleAdd(REL_STRENGTH * Constants.STIFFNESS_STRETCH * (h-d) + Constants.DAMPING_MASS*v.dot(n) , n , p1.f);
-//			}
-//		}
-//		//CHECK IF PARTICLE IS NEAR THE RIGHT EDGE ENDPOINT
-//		else if(p1.x.distance(f2.x)<h){
-//			//COMPUTE NORMAL VECTOR AND RELATIVE VELOCITY OF THE TWO POINTS
-//			n.sub(p1.x,f2.x);
-//			Vector3d v = new Vector3d(p1.v);
-//			v.sub(f2.v);
-//			
-//			//SEPERATION BETWEEN POINTS
-//			double d = p1.x.distance(f2.x);
-//			if(v.dot(n)<0){
-//				p1.f.scaleAdd(REL_STRENGTH * Constants.STIFFNESS_STRETCH * (h-d) + Constants.DAMPING_MASS*v.dot(n) , n , p1.f);
-//			}
-//		}
 	}
 
 	public void display(GL2 gl)

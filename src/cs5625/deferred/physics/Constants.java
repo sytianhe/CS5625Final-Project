@@ -21,7 +21,7 @@ public class Constants
     public static double STIFFNESS_STRETCH = 1000.0; 
 
     /** Spring bending stiffness. */
-    public static double STIFFNESS_BEND    = 4000.0; 
+    public static double STIFFNESS_BEND    = 10000.0; 
     
     /** Edge thickness coefficient. */
     public static final double EDGE_COEFF = 0.01;
