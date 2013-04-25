@@ -29,9 +29,9 @@ public class TrunckGeometry extends Geometry
 		for (Point3f p : list){
 			this.particleList.add(new Particle(new Point3d(p)));
 		}
-		TreeTrunk newleave = new TreeTrunk(list, topwidth, topwidth);
-		newleave.subdivide(numSubdivisions);
-		this.mMeshes.add( newleave );
+		TreeTrunk newTrunk = new TreeTrunk(list, topwidth, topwidth);
+		newTrunk.subdivide(numSubdivisions);
+		this.mMeshes.add( newTrunk );
 		((Mesh) this.mMeshes.get(0)).setMaterial(new BlinnPhongMaterial(new Color3f(0.10f, 0.70f, 0.10f)));		
 	}
 
@@ -51,6 +51,7 @@ public class TrunckGeometry extends Geometry
 		
 		for (int i = 1; i<particleList.size() - 1; i++){
 			SpringForceBending f = new SpringForceBending(particleList.get(i-1), particleList.get(i), particleList.get(i+1));
+			f.setStiffness(1000.0);
 			PS.addForce(f);
 		}
 		

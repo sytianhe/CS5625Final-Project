@@ -34,25 +34,64 @@ public class BranchGeometry extends SceneObject
 		float currentHeight = 0.25f*length;
 		float currentWide = wideLeaf;
 		
-		list.add(new Point3f(0f, 0f, 0f));
-		for (int i = 0; i<num; i++){
-			list.add(new Point3f(0f, currentHeight, 0f));
-			
+		Point3f point = new Point3f();
+		point.set(3f,0f,0f);
+		list.add(new Point3f(point));
+		point.set(3f,1.148f,0f);
+		list.add(new Point3f(point));
+		point.set(2.121f,2.121f,-0.1f);
+		list.add(new Point3f(point));
+		point.set(1.148f,2.771f,-0.15f);
+		list.add(new Point3f(point));
+		point.set(0f,3f,-0.2f);
+		list.add(new Point3f(point));
+		
+		//list.add(new Point3f(0f, 0f, 0f));
+		//for (int i = 0; i<num; i++){
+			//list.add(new Point3f(0f, currentHeight, 0f));
+		for (Point3f ppp: list){	
 			LeaveGeometry newLeaf = new LeaveGeometry(currentWide*3, currentWide);
-			newLeaf.setPosition(new Point3f(0f,currentHeight,0f));
+			newLeaf.setPosition(new Point3f(ppp));
 			
 			LeaveGeometry newLeaf2 = new LeaveGeometry(currentWide*3, currentWide);
-			newLeaf2.setPosition(new Point3f(0f,currentHeight,0f));
+			newLeaf2.setPosition(new Point3f(ppp));
 			newLeaf2.setOrientation(new Quat4f(0f, (float) (Math.sqrt(2.0)/2f), 0f, (float) (Math.sqrt(2.0)/2f)));
 			
 			currentHeight = currentHeight + currentWide;
 			currentWide -= diff;
 
-			this.leaves.add(newLeaf);
-			this.leaves.add(newLeaf2);
+//			this.leaves.add(newLeaf);
+//			this.leaves.add(newLeaf2);
 		}
+
+
 		
 		this.branch = new TrunckGeometry(list, 0.01f, 0.01f);
+        this.branch.setIsPinned(false);
+		this.branch.setOrientation(new Quat4f(1f, 1f, 0f, (float) (Math.sqrt(2.0)/2f)));
+
+		ArrayList<Point3f>list2 = new ArrayList<Point3f>();
+
+		point.set(3f,0f,0f);
+		list2.add(new Point3f(point));
+		point.set(3f,-1.148f,0f);
+		list2.add(new Point3f(point));
+		point.set(2.121f,-2.121f,-0.1f);
+		list2.add(new Point3f(point));
+		point.set(1.148f,-2.771f,-0.15f);
+		list2.add(new Point3f(point));
+		point.set(0f,-3f,-0.2f);
+		list2.add(new Point3f(point));
+		TrunckGeometry newbrunh = new TrunckGeometry(list2, 0.01f, 0.01f);
+		newbrunh.setOrientation(new Quat4f(1f, 1f, 0f, (float) (Math.sqrt(2.0)/2f)));
+		
+		try {
+			this.addChild(this.branch);
+			this.addChild(newbrunh);
+		} catch (ScenegraphException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		try {
 			for (LeaveGeometry leaf:leaves){
@@ -63,12 +102,7 @@ public class BranchGeometry extends SceneObject
 			e1.printStackTrace();
 		}
 
-		try {
-			this.addChild(this.branch);
-		} catch (ScenegraphException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 
 	}
 	@Override
@@ -80,15 +114,6 @@ public class BranchGeometry extends SceneObject
 			child.addToParticleSystem(PS);
 		}
 		
-//		for (int i = list.size()-1; i<list.size(); i++){
-//			SpringForce1Particle ff = new SpringForce1Particle(leaves.get(2*(i-1)).particleList.get(0), this.branch.particleList.get(i).x);
-//			ff.setStiffness(10000.0);
-//			PS.addForce(ff);
-//			
-//			ff = new SpringForce1Particle(leaves.get(2*(i-1)+1).particleList.get(0), this.branch.particleList.get(i).x);
-//			ff.setStiffness(10000.0);
-//			PS.addForce(ff);
-//		}
-
 	}
+	
 }

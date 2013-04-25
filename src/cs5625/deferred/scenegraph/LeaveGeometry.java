@@ -50,8 +50,8 @@ public class LeaveGeometry extends Geometry
 			p.setPin(false);
 			p.setRadius(0.1);
 		}
-		particleList.get(0).setPin(true);
-		particleList.get(4).setPin(true);
+//		particleList.get(0).setPin(true);
+//		particleList.get(4).setPin(true);
 		
 		for (int i = 0; i<4; i++){
 			int j = (i+1)%4;
