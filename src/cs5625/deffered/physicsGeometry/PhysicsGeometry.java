@@ -35,8 +35,7 @@ public class PhysicsGeometry extends Geometry {
 			this.addChild(pg);
 			pg.setPosition(attachmentPoint);
 			pg.setIsPinned(true);
-			//addControlPoint(attachmentPoint);
-			addInteractionWith(pg);
+			//addInteractionWith(pg);
 		} catch (ScenegraphException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

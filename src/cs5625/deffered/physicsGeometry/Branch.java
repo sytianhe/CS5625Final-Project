@@ -41,7 +41,7 @@ public class Branch extends PhysicsGeometry
 		super.addToParticleSystemHelper(PS);
 		for (Particle p: getControlParticles()){
 			p.setPin(false);
-			p.setRadius(0.01);
+			p.setRadius(width);
 		}
 		getControlParticles().get(0).setPin(true);
 		getControlParticles().get(1).setPin(true);
@@ -56,7 +56,7 @@ public class Branch extends PhysicsGeometry
 		}
 		
 		for (int i = 1; i<getControlParticles().size() - 1; i++){
-			SpringForceBendingTheta f = new SpringForceBendingTheta(getControlParticles().get(i-1), getControlParticles().get(i), getControlParticles().get(i+1), new Vector3d(0,0,0) );
+			SpringForceBendingTheta f = new SpringForceBendingTheta(getControlParticles().get(i-1), getControlParticles().get(i), getControlParticles().get(i+1), new Vector3d(0.1,0,0.1) );
 			PS.addForce(f);
 		}
 	}

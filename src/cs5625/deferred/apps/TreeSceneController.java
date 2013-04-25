@@ -83,17 +83,24 @@ public class TreeSceneController extends SceneController{
             mSceneRoot.addChild(branch);
 
             
-            //CREATE AND ATTACH LEAVES 
-            for (Point3f pt :  list ){
-            	if (! pt.equals(list.get(0)) && ! pt.equals(list.get(1))){
-            		Leaf leaf1 = new Leaf(3f, 0.75f);
-            		Leaf leaf2 = new Leaf(3f, 0.75f);
-            		leaf2.setOrientation(new Quat4f(0,1,0,0));
-            		branch.pinToPhysicsGeometry(leaf1,pt);
-            		branch.pinToPhysicsGeometry(leaf2,pt);
-            	}
-            }
+            //CREATE AND ATTACH LEAVES  UP STEM
+//            for (Point3f pt :  list ){
+//            	if (! pt.equals(list.get(0)) && ! pt.equals(list.get(1))){
+//            		Leaf leaf1 = new Leaf(3f, 0.75f);
+//            		Leaf leaf2 = new Leaf(3f, 0.75f);
+//            		leaf2.setOrientation(new Quat4f(0,1,0,0));
+//            		branch.pinToPhysicsGeometry(leaf1,pt);
+//            		branch.pinToPhysicsGeometry(leaf2,pt);
+//            	}
+//            }
             
+            Point3f topPoint = list.get(list.size()-1);
+            for (int i = 0; i<8; i++){
+            	Leaf leaf1 = new Leaf(3f, 0.75f);
+            	leaf1.setOrientation(new Quat4f(0,(float) Math.sin((float)i/8.0 *1.0* Math.PI),0,(float) Math.cos((float)i/8.0 *1.0* Math.PI)));
+            	branch.pinToPhysicsGeometry(leaf1,topPoint);
+            }
+
 			            
 			/* Add an unattenuated point light to provide overall illumination. */
 			PointLight light = new PointLight();
