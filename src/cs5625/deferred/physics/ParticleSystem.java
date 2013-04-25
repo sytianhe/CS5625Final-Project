@@ -166,13 +166,30 @@ public class ParticleSystem
 			/// APPLY FORCES:
 			for(Force force : F) 
 				force.applyForce();
+			
+			
+//			//APPLY ALL PARTICLE PARICLE SEPERATION FORCES
+//			for (Particle p1 : P){
+//				for (Particle p2 : P){
+//					if (! p1.equals(p2) );
+//					PenaltyForce2Particle f = new PenaltyForce2Particle(p1,p2);
+//					f.applyForce();
+//				}
+//			}
+
 
 			// GRAVITY:
 			for(Particle p : P)   p.f.y -= p.m * 10;
 
 			// ADD SOME MASS-PROPORTIONAL DAMPING (DEFAULT IS ZERO)
-			for(Particle p : P) 
+			for(Particle p : P){ 
 				Utils.acc(p.f,  -Constants.DAMPING_MASS * p.m, p.v);
+				//if (p.p2 != null){
+				//	p.p2.f.add(p.f);
+				//}
+					
+			}
+			
 		}
 
 

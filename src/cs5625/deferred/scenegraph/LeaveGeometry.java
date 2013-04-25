@@ -76,20 +76,21 @@ public class LeaveGeometry extends Geometry
 //		ff = new SpringForceBending(particleList.get(2), particleList.get(4), particleList.get(3));
 //		PS.addForce(ff);
 
-
+		for (SceneObject so : this.getChildren()){
+			so.addToParticleSystem(PS);
+		}
+		
 	}
 	
 	@Override
-	public void animate(float dt)
+	public void animateHelper(float dt)
 	{
-		//super.animate(dt);
 		ArrayList<Point3f>controlPoints = new ArrayList<Point3f>();
 		for (Particle p: particleList){
 			Point3f point = new Point3f(p.x);
-			System.out.println("BEFORE TRANSFORM " + point);
-			System.out.println("AFTER TRANSFORM " + this.transformPointFromWorldSpace(point));
 			controlPoints.add(this.transformPointFromWorldSpace(point));
 		}
+		//System.out.println(controlPoints.size());
 		this.mMeshes.clear();
 		TreeLeave newtree = new TreeLeave(controlPoints);
 		newtree.subdivide(numSubdivisions);

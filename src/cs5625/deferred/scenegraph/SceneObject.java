@@ -1,5 +1,6 @@
 package cs5625.deferred.scenegraph;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,14 +57,24 @@ public class SceneObject implements OpenGLResourceObject
 	 */
 	public void animate(float dt)
 	{
-		setPositionFromControlParticle();
+		if (this.mParticle.isPinned())
+			setPositionFromControlPoint();
+		else
+			setPositionFromControlParticle();
+		
+		//do other stuff
+		animateHelper(dt);
+		
 		for (SceneObject child : mChildren)
 		{
 			child.animate(dt);
 		}
 	}
+	public void animateHelper(float dt){
+		
+	}
 	
-	public Particle getParticle(){
+	public Particle getOriginParticle(){
 		return mParticle;
 	}
 	
@@ -103,7 +114,10 @@ public class SceneObject implements OpenGLResourceObject
 		{
 			child.addToParticleSystem(PS);
 		}
+		addToParticleSystemHelper(PS);
 	}
+	
+	public void addToParticleSystemHelper(ParticleSystem PS){ }
 	
 	
 	/**
@@ -277,10 +291,23 @@ public class SceneObject implements OpenGLResourceObject
 	 * Sets the position of this object in its parent's space based on the control particle's postion in world space.
 	 */
 	public void setPositionFromControlParticle(){
-		Point3f pos = new Point3f(mParticle.x);
-		mPosition.set(this.transformPointToParentSpace(transformPointFromWorldSpace(pos)));
+		mPosition.set(this.transformPointToParentSpace(transformPointFromWorldSpace( new Point3f(mParticle.x))));
 	}
 	
+	public void setPositionFromControlParticle(Point3f cp, Particle p){
+		cp.set(this.transformPointToParentSpace(transformPointFromWorldSpace( new Point3f(p.x))));
+	}
+	
+	/**
+	 * Sets the position of this object in its parent's space based on the control particle's postion in world space.
+	 */
+	public void setPositionFromControlPoint(){
+		mParticle.x.set(getWorldspacePosition());
+	}
+	
+	public void setPositionFromControlPoint(Particle p, Point3f cp){
+		p.x.set(this.transformPointToWorldSpace(cp));
+	}	
 	
 	/**
 	 * Returns the orientation of this object in its parent's space.
