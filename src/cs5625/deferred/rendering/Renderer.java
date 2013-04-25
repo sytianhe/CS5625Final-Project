@@ -1302,7 +1302,7 @@ public class Renderer
 		{
 			mGBufferFBO.releaseGPUResources(gl);
 			mShadowMapFBO.releaseGPUResources(gl);
-			mSandDuneFBO.releaseGPUResources(gl);
+			//mSandDuneFBO.releaseGPUResources(gl);
 		}
 		
 		/* Make a new gbuffer with the new size. */
@@ -1310,7 +1310,7 @@ public class Renderer
 		{
 			mGBufferFBO = new FramebufferObject(gl, Format.RGBA, Datatype.FLOAT16, width, height, GBuffer_Count, true, true);
 			mShadowMapFBO = new FramebufferObject(gl, Format.RGBA, Datatype.FLOAT16, width, height, GBuffer_Count, true, false);
-			if (mSandDuneFBO == null) mSandDuneFBO = new FramebufferObject(gl, Format.RGBA, Datatype.FLOAT16, width, height, GBuffer_Count, true, false);
+			//if (mSandDuneFBO == null) mSandDuneFBO = new FramebufferObject(gl, Format.RGBA, Datatype.FLOAT16, width, height, GBuffer_Count, true, false);
 		}
 		catch (OpenGLException err)
 		{
@@ -1331,7 +1331,7 @@ public class Renderer
 		mBloomShader.releaseGPUResources(gl);
 		mVisShader.releaseGPUResources(gl);
 		mShadowMapFBO.releaseGPUResources(gl);
-		mSandDuneShader.releaseGPUResources(gl);
-		mSandDuneFBO.releaseGPUResources(gl);
+		//mSandDuneShader.releaseGPUResources(gl);
+		//mSandDuneFBO.releaseGPUResources(gl);
 	}
 }
