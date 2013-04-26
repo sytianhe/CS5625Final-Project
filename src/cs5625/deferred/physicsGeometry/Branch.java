@@ -1,11 +1,10 @@
-package cs5625.deffered.physicsGeometry;
+package cs5625.deferred.physicsGeometry;
 
 import java.util.ArrayList;
 
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
-import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3d;
 
 import cs5625.deferred.materials.BlinnPhongMaterial;
@@ -22,46 +21,19 @@ import cs5625.deferred.scenegraph.Mesh;
 ;
 
 
-public class Stem extends PhysicsGeometry
+public class Branch extends PhysicsGeometry
 {
-	private int numSubdivisions = 1;
-	private Material material = new BlinnPhongMaterial(new Color3f(110f/255f , 139f/255f, 61f/255f));
-	private float height  = 0.1f;
-	private float width = 0.01f;
+	private int numSubdivisions = 0;
+	private Material material = new BlinnPhongMaterial(new Color3f( 205f/255f , 133f/255f, 63f/255f));
+	private float height  = 0.5f;
+	private float width = 0.1f;
 	
-	public Stem(ArrayList<Point3f>list){
-		ArrayList<Point3f>newList = new ArrayList<Point3f>();
-		for (Point3f p: list){
-			newList.add(new Point3f(p.x, p.y, p.z));
-		}
-		this.addControlPoints(newList);
-		Branchmesh branchmesh = new Branchmesh(newList, height, width);
+	public Branch(ArrayList<Point3f>list){
+		this.addControlPoints(list);
+		Branchmesh branchmesh = new Branchmesh(list, height, width);
 		branchmesh.subdivide(numSubdivisions);
 		this.mMeshes.add( branchmesh );
 		((Mesh) this.mMeshes.get(0)).setMaterial(material);
-		
-//        for (Point3f pt :  newList ){
-//        	if (! pt.equals(newList.get(0)) && ! pt.equals(newList.get(1))){
-//        		Leaf leaf1 = new Leaf(4f, 0.35f);
-//        		Leaf leaf2 = new Leaf(4f, 0.35f);
-//        		leaf2.setOrientation(new Quat4f(0,1,0,0));
-//        		this.pinToPhysicsGeometry(leaf1,pt);
-//        		this.pinToPhysicsGeometry(leaf2,pt);
-//        	}
-//        }
-        for (int i =0; i<newList.size(); i++ ){
-        	//if (i>newList.size()/4){
-        		double a = 0.9;
-        		double b = 0.1;
-        		double temp = (double)((i-4) * 1.0/(newList.size()/2.0) - 1.0);
-        		float temp2 = (float) (Math.sqrt(1.0 - Math.pow(temp/a, 2))*b)*3;
-        		Leaf leaf1 = new Leaf(4f*temp2, 0.5f*temp2);
-        		Leaf leaf2 = new Leaf(4f*temp2, 0.5f*temp2);
-        		leaf2.setOrientation(new Quat4f(0,1,0,0));
-        		this.pinToPhysicsGeometry(leaf1,newList.get(i));
-        		this.pinToPhysicsGeometry(leaf2,newList.get(i));
-        	//}
-        }
 	}
 	
 	@Override
@@ -83,7 +55,7 @@ public class Stem extends PhysicsGeometry
 		}
 		
 		for (int i = 1; i<getControlParticles().size() - 1; i++){
-			SpringForceBendingTheta f = new SpringForceBendingTheta(getControlParticles().get(i-1), getControlParticles().get(i), getControlParticles().get(i+1), new Vector3d(0,0,0) );
+			SpringForceBendingTheta f = new SpringForceBendingTheta(getControlParticles().get(i-1), getControlParticles().get(i), getControlParticles().get(i+1), new Vector3d(-0.05 + Math.random()*0.1,-0.05 + Math.random()*0.1,-0.05 + Math.random()*0.1) );
 			PS.addForce(f);
 		}
 	}

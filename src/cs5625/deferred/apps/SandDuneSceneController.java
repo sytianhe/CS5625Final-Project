@@ -30,10 +30,10 @@ import cs5625.deferred.scenegraph.Quadmesh;
 import cs5625.deferred.scenegraph.TreeTrunk;
 import cs5625.deferred.scenegraph.Trimesh;
 import cs5625.deferred.scenegraph.TrunckGeometry;
-import cs5625.deffered.physicsGeometry.Ground;
-import cs5625.deffered.physicsGeometry.Leaf;
-import cs5625.deffered.physicsGeometry.PhysicsGeometry;
-import cs5625.deffered.physicsGeometry.Sphere;
+import cs5625.deferred.physicsGeometry.Ground;
+import cs5625.deferred.physicsGeometry.Leaf;
+import cs5625.deferred.physicsGeometry.PhysicsGeometry;
+import cs5625.deferred.physicsGeometry.Sphere;
 
 public class SandDuneSceneController extends SceneController{
 

@@ -1,4 +1,4 @@
-package cs5625.deffered.physicsGeometry;
+package cs5625.deferred.physicsGeometry;
 
 import java.io.IOException;
 import java.util.ArrayList;
