@@ -24,7 +24,8 @@ import cs5625.deferred.scenegraph.Mesh;
 public class Branch extends PhysicsGeometry
 {
 	private int numSubdivisions = 0;
-	private Material material = new BlinnPhongMaterial(new Color3f(0.10f, 0.70f, 0.10f));
+
+	private Material material = new BlinnPhongMaterial(new Color3f( 205f/255f , 133f/255f, 63f/255f));
 	private float height  = 0.25f;
 	private float width = 0.1f;
 	
@@ -33,7 +34,7 @@ public class Branch extends PhysicsGeometry
 		Branchmesh branchmesh = new Branchmesh(list, height, width);
 		branchmesh.subdivide(numSubdivisions);
 		this.mMeshes.add( branchmesh );
-		((Mesh) this.mMeshes.get(0)).setMaterial(new BlinnPhongMaterial(new Color3f(0.10f, 0.70f, 0.10f)));
+		((Mesh) this.mMeshes.get(0)).setMaterial(material);
 	}
 	
 	@Override
@@ -55,7 +56,8 @@ public class Branch extends PhysicsGeometry
 		}
 		
 		for (int i = 1; i<getControlParticles().size() - 1; i++){
-			SpringForceBendingTheta f = new SpringForceBendingTheta(getControlParticles().get(i-1), getControlParticles().get(i), getControlParticles().get(i+1), new Vector3d(0,0,0) );
+			SpringForceBendingTheta f = new SpringForceBendingTheta(getControlParticles().get(i-1), getControlParticles().get(i), getControlParticles().get(i+1), new Vector3d(-0.05 + Math.random()*0.1,-0.05 + Math.random()*0.1,-0.05 + Math.random()*0.1) );
+			f.setStiffness(10000.0);
 			PS.addForce(f);
 		}
 	}

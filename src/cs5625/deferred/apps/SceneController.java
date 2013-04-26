@@ -58,8 +58,8 @@ public abstract class SceneController implements MouseListener, MouseMotionListe
 	
 	protected static Timer timer;
 	protected boolean isAnimate = false;
-	private static int N_STEPS_PER_FRAME = 80;
-	public static final float DT = 0.03f;
+	private static int N_STEPS_PER_FRAME = 60;
+	public static final float DT = 0.05f;
 	public ParticleSystem PS;
 	
 	/**

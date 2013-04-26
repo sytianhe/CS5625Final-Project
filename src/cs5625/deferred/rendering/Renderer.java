@@ -1162,7 +1162,7 @@ public class Renderer
 //			gl.glUniform1i(mUberShader.getUniformLocation(gl, "SandDune1Buffer"), 4);
 //			gl.glUniform1i(mUberShader.getUniformLocation(gl, "SandDune2Buffer"), 7);
 			
-			gl.glUniform3f(mUberShader.getUniformLocation(gl, "SkyColor"), 0.3f, 0.3f, 0.3f);
+			gl.glUniform3f(mUberShader.getUniformLocation(gl, "SkyColor"), 102.0f/256f, 1f, 1f);
 			//gl.glUniform3f(mUberShader.getUniformLocation(gl, "SkyColor"), 0.1f, 0.1f, 0.1f);
 			gl.glUniform1i(mUberShader.getUniformLocation(gl, "ShadowMap"), mShadowTextureLocation);
 			mUberShader.unbind(gl);			
