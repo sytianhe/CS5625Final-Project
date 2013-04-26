@@ -25,7 +25,7 @@ public class Branch extends PhysicsGeometry
 {
 	private int numSubdivisions = 0;
 	private Material material = new BlinnPhongMaterial(new Color3f(0.10f, 0.70f, 0.10f));
-	private float height  = 0.5f;
+	private float height  = 0.25f;
 	private float width = 0.1f;
 	
 	public Branch(ArrayList<Point3f>list){

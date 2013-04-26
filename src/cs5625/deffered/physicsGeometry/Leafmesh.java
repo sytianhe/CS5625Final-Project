@@ -43,6 +43,8 @@ public class Leafmesh extends Trimesh {
 		mVertexData.put(list.get(4).y);
 		mVertexData.put(list.get(4).z);
 		
+		
+		
 //		mNormalData.put(0f);
 //		mNormalData.put(0f);
 //		mNormalData.put(0f);
