@@ -14,6 +14,7 @@ public class SpringForceBendingTheta implements Force
     Particle p1;
     Particle p2;
     Vector3d v;
+    double STIFFNESS = 10000.0;
 
     /** 
      * Constructs a bending force affecting the angle implied by the
@@ -47,7 +48,7 @@ public class SpringForceBendingTheta implements Force
 
 	    /// FORCE CONSTANT:
 	    double a_b = a.dot(b) ;
-	    double   k = Constants.STIFFNESS_BEND / L;
+	    double   k = this.STIFFNESS / L;
 	    double   c = 0.5 * k / (A * B);
 
 	    Vector3d f0 = new Vector3d();
@@ -88,5 +89,9 @@ public class SpringForceBendingTheta implements Force
     public boolean contains(Particle p)  
     { 
 	return ((p==p0) || (p==p1) || (p==p2));
+    }
+    
+    public void setStiffness(double s){
+    	this.STIFFNESS = s;
     }
 }

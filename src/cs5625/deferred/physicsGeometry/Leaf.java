@@ -7,6 +7,7 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 
 import cs5625.deferred.materials.BlinnPhongMaterial;
+import cs5625.deferred.materials.LambertianMaterial;
 import cs5625.deferred.materials.Material;
 import cs5625.deferred.materials.UnshadedMaterial;
 import cs5625.deferred.physics.Particle;
@@ -23,7 +24,7 @@ public class Leaf extends PhysicsGeometry
 	private int numSubdivisions = 0;
 	private float height = 0f;
 	private float width = 0f;
-	private Material material = new UnshadedMaterial(new Color3f(0.10f, 0.70f, 0.10f)) ;
+	private Material material = new LambertianMaterial(new Color3f(0.10f, 0.70f, 0.10f)) ;
 	
 	public Leaf(float height, float width){
 		this.height = height;

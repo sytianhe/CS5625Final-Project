@@ -31,7 +31,7 @@ public class TreeSceneController extends SceneController{
 	
 	/* Keeps track of shadow camera's orbit position. */
 	private float mShadowCameraLongitude = -50.0f, mShadowCameraLatitude = -40.0f;
-	private float mShadowCameraRadius = 75.f;
+	private float mShadowCameraRadius = 50.f;
 	
 	/* Used to calculate mouse deltas to orbit the camera in mouseDragged(). */ 
 	private Point mLastMouseDrag;
@@ -131,6 +131,7 @@ public class TreeSceneController extends SceneController{
 
 			
 			light.setPosition(new Point3f(mShadowCamera.getPosition()));
+			//light.setPosition(new Point3f(10f, 10f, 10f));
 			light.setName("CameraLight");
 			mSceneRoot.addChild(light);		
 		}		 	

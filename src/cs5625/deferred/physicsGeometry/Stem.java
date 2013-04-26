@@ -9,6 +9,7 @@ import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3d;
 
 import cs5625.deferred.materials.BlinnPhongMaterial;
+import cs5625.deferred.materials.LambertianMaterial;
 import cs5625.deferred.materials.Material;
 import cs5625.deferred.materials.UnshadedMaterial;
 import cs5625.deferred.physics.Particle;
@@ -25,7 +26,7 @@ import cs5625.deferred.scenegraph.Mesh;
 public class Stem extends PhysicsGeometry
 {
 	private int numSubdivisions = 1;
-	private Material material = new BlinnPhongMaterial(new Color3f(110f/255f , 139f/255f, 61f/255f));
+	private Material material = new LambertianMaterial(new Color3f(110f/255f , 139f/255f, 61f/255f));
 	private float height  = 0.1f;
 	private float width = 0.01f;
 	
@@ -84,6 +85,7 @@ public class Stem extends PhysicsGeometry
 		
 		for (int i = 1; i<getControlParticles().size() - 1; i++){
 			SpringForceBendingTheta f = new SpringForceBendingTheta(getControlParticles().get(i-1), getControlParticles().get(i), getControlParticles().get(i+1), new Vector3d(0,0,0) );
+			f.setStiffness(2500.0);
 			PS.addForce(f);
 		}
 	}
