@@ -41,7 +41,7 @@ public class Branch extends PhysicsGeometry
 		super.addToParticleSystemHelper(PS);
 		for (Particle p: getControlParticles()){
 			p.setPin(false);
-			p.setRadius(width);
+			p.setRadius(5*width);
 		}
 		getControlParticles().get(0).setPin(true);
 		getControlParticles().get(1).setPin(true);

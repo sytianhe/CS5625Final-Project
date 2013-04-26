@@ -35,7 +35,7 @@ public class PhysicsGeometry extends Geometry {
 			this.addChild(pg);
 			pg.setPosition(attachmentPoint);
 			pg.setIsPinned(true);
-			//addInteractionWith(pg);
+			addInteractionWith(pg);
 		} catch (ScenegraphException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -51,7 +51,7 @@ public class PhysicsGeometry extends Geometry {
 		super.addToParticleSystemHelper(PS);
 		for (Point3f cp : controlPoints){
 			Particle p = new Particle( new Point3d(this.transformPointToWorldSpace(cp)));
-			p.setRadius(0.1);
+			p.setRadius(0.2);
 			controlParticles.add(p);
 			PS.addParticle(p);
 		}
@@ -59,8 +59,10 @@ public class PhysicsGeometry extends Geometry {
 		for (PhysicsGeometry pg: this.interactsWith){
 			for (Particle p1 : pg.getControlParticles()){
 				for (Particle p2 : this.getControlParticles()){
-					//PS.addForce(new PenaltyForce2Particle(p1,p2));
+					PS.addForce(new PenaltyForce2Particle(p1,p2));
+					PS.addForce(new PenaltyForce2Particle(pg.getOriginParticle(),p2));
 				}
+				PS.addForce(new PenaltyForce2Particle(pg.getOriginParticle(),this.getOriginParticle()));					
 			}
 		}
 		

@@ -43,7 +43,7 @@ public class Sphere extends PhysicsGeometry {
 //				//PS.addForce(new PenaltyForce2Particle(this.getOriginParticle(), p2 ) );
 //			}
 //		}
-		PS.addForce(new PenaltyForceSphere(this.getOriginParticle(), PS));
+		//PS.addForce(new PenaltyForceSphere(this.getOriginParticle(), PS));
 	}
 
 }
