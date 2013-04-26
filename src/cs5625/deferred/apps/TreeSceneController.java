@@ -104,34 +104,18 @@ public class TreeSceneController extends SceneController{
 			}
 			
             //CREATE STEMS AND LEAVES
-            for (int i = 0; i<10; i++){
+            for (int i = 0; i<20; i++){
 
                 Stem stem = new Stem(list2);
                 // FIND THE RIGHT QUATERNION TO MAINTAIN THE TREE LEAVES FACING UP
                 float rand1 = (float) Math.random();
-                float rand2 = (float) Math.random();
+                float rand2 = (float) Math.random()*0.35f;
 
-                Quat4f rotY = new Quat4f(0,(float) Math.sin(rand1* Math.PI),0,(float) Math.cos(rand1* Math.PI));
-                Quat4f rotYinverse = new Quat4f(); rotYinverse.inverse(rotY);
-                
-                rotY.mul(new Quat4f(0f,0f,1f,0f));
-                rotY.mul(rotYinverse);
-                
-                Vector3f newZ = new Vector3f(rotY.x, rotY.y, rotY.z); 
-                newZ.cross(newZ, new Vector3f(0f,1f,0f));
-                newZ.normalize();
-                
-                newZ.scale((float) Math.sin(rand2* Math.PI));
-                Quat4f xRot = new Quat4f(newZ.x,newZ.y,newZ.z,(float) Math.cos(rand2* Math.PI));
-                xRot.mul( xRot, rotY);
+                Quat4f rotY = new Quat4f(0,(float) Math.sin(rand1* Math.PI),0,(float) Math.cos(rand1* Math.PI));                
+                Quat4f rotZ = new Quat4f(0,0,(float) Math.sin(rand2* Math.PI),(float) Math.cos(rand2* Math.PI));
 
-//                Vector3f axis = new Vector3f((float)Math.random()-0.5f,(float)Math.random()-0.5f,(float)Math.random()-0.5f);
-//                float temp = (float)Math.random();
-//                axis.scale((float) Math.sin(temp* Math.PI));
-//                Quat4f xRot = new Quat4f(axis.x,axis.y,axis.z,(float) Math.cos(temp* Math.PI));
-
-
-            	stem.setOrientation(xRot);
+                rotY.mul(rotZ);
+            	stem.setOrientation(rotY);
                 branch.pinToPhysicsGeometry(stem, topPoint);
             }
 			            
