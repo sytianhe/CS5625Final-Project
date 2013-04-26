@@ -3,37 +3,24 @@ package cs5625.deferred.apps;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.vecmath.AxisAngle4f;
-import javax.vecmath.Color3f;
-import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
+import javax.vecmath.Vector3f;
 
-import cs5625.deferred.catmullclark.CCSubdiv;
-import cs5625.deferred.datastruct.EdgeDS;
-import cs5625.deferred.materials.BlinnPhongMaterial;
-import cs5625.deferred.materials.LambertianMaterial;
-import cs5625.deferred.materials.UnshadedMaterial;
 import cs5625.deferred.misc.ScenegraphException;
 import cs5625.deferred.misc.Util;
-import cs5625.deferred.physics.Particle;
-import cs5625.deferred.physics.PenaltyForceParticlePlane3;
 import cs5625.deferred.scenegraph.Geometry;
-import cs5625.deferred.scenegraph.LeaveGeometry;
-import cs5625.deferred.scenegraph.MengerSponge;
 import cs5625.deferred.scenegraph.PointLight;
 import cs5625.deferred.scenegraph.Quadmesh;
-import cs5625.deferred.scenegraph.TreeTrunk;
 import cs5625.deferred.scenegraph.Trimesh;
-import cs5625.deferred.scenegraph.TrunckGeometry;
 import cs5625.deffered.physicsGeometry.Branch;
 import cs5625.deffered.physicsGeometry.Ground;
 import cs5625.deffered.physicsGeometry.Leaf;
-import cs5625.deffered.physicsGeometry.PhysicsGeometry;
 import cs5625.deffered.physicsGeometry.Sphere;
+import cs5625.deffered.physicsGeometry.Stem;
 
 public class TreeSceneController extends SceneController{
 
@@ -44,7 +31,7 @@ public class TreeSceneController extends SceneController{
 	
 	/* Keeps track of shadow camera's orbit position. */
 	private float mShadowCameraLongitude = -50.0f, mShadowCameraLatitude = -40.0f;
-	private float mShadowCameraRadius = 15.f;
+	private float mShadowCameraRadius = 75.f;
 	
 	/* Used to calculate mouse deltas to orbit the camera in mouseDragged(). */ 
 	private Point mLastMouseDrag;
@@ -60,10 +47,18 @@ public class TreeSceneController extends SceneController{
 		try {
 			//SETUP CONTROL POINT FOR LEAF AND STEM .... NEED TO BE SPACED OUT CURRENTLY
 			ArrayList<Point3f>list = new ArrayList<Point3f>();
+        	ArrayList<Point3f>list2 = new ArrayList<Point3f>();
+//        	for(int j = 0; j<5; j++){
+//				Point3f point = new Point3f();
+//				point.set(0f,1.5f*i,0f);
+//				list2.add(new Point3f(point));
+//        	}
 			for(int i=0; i< 10; i++){
 				Point3f point = new Point3f();
 				point.set(0f,1.5f*i,0f);
 				list.add(new Point3f(point));
+				//list2.add(new Point3f(point));
+
 			}
 
 			//ADD GROUND
@@ -81,8 +76,7 @@ public class TreeSceneController extends SceneController{
             branch.setPosition(new Point3f(0.0f, 0.0f, 0.0f));
             branch.setIsPinned(true);
             mSceneRoot.addChild(branch);
-
-            
+  
             //CREATE AND ATTACH LEAVES  UP STEM
 //            for (Point3f pt :  list ){
 //            	if (! pt.equals(list.get(0)) && ! pt.equals(list.get(1))){
@@ -95,12 +89,51 @@ public class TreeSceneController extends SceneController{
 //            }
             
             Point3f topPoint = list.get(list.size()-1);
-            for (int i = 0; i<8; i++){
-            	Leaf leaf1 = new Leaf(3f, 0.75f);
-            	leaf1.setOrientation(new Quat4f(0,(float) Math.sin((float)i/8.0 *1.0* Math.PI),0,(float) Math.cos((float)i/8.0 *1.0* Math.PI)));
-            	branch.pinToPhysicsGeometry(leaf1,topPoint);
-            }
+//            for (int i = 0; i<8; i++){
+//            	Leaf leaf1 = new Leaf(3f, 0.75f);
+//            	leaf1.setOrientation(new Quat4f(0,(float) Math.sin((float)i/8.0 *1.0* Math.PI),0,(float) Math.cos((float)i/8.0 *1.0* Math.PI)));
+//            	branch.pinToPhysicsGeometry(leaf1,topPoint);
+//            }
 
+			for(int i=0; i< 15; i++){
+				Point3f point = new Point3f();
+				point.set(0f,1.5f*i/5f,0f);
+				//list.add(new Point3f(point));
+				list2.add(new Point3f(point));
+
+			}
+			
+            //CREATE STEMS AND LEAVES
+            for (int i = 0; i<10; i++){
+
+                Stem stem = new Stem(list2);
+                // FIND THE RIGHT QUATERNION TO MAINTAIN THE TREE LEAVES FACING UP
+                float rand1 = (float) Math.random();
+                float rand2 = (float) Math.random();
+
+                Quat4f rotY = new Quat4f(0,(float) Math.sin(rand1* Math.PI),0,(float) Math.cos(rand1* Math.PI));
+                Quat4f rotYinverse = new Quat4f(); rotYinverse.inverse(rotY);
+                
+                rotY.mul(new Quat4f(0f,0f,1f,0f));
+                rotY.mul(rotYinverse);
+                
+                Vector3f newZ = new Vector3f(rotY.x, rotY.y, rotY.z); 
+                newZ.cross(newZ, new Vector3f(0f,1f,0f));
+                newZ.normalize();
+                
+                newZ.scale((float) Math.sin(rand2* Math.PI));
+                Quat4f xRot = new Quat4f(newZ.x,newZ.y,newZ.z,(float) Math.cos(rand2* Math.PI));
+                xRot.mul( xRot, rotY);
+
+//                Vector3f axis = new Vector3f((float)Math.random()-0.5f,(float)Math.random()-0.5f,(float)Math.random()-0.5f);
+//                float temp = (float)Math.random();
+//                axis.scale((float) Math.sin(temp* Math.PI));
+//                Quat4f xRot = new Quat4f(axis.x,axis.y,axis.z,(float) Math.cos(temp* Math.PI));
+
+
+            	stem.setOrientation(xRot);
+                branch.pinToPhysicsGeometry(stem, topPoint);
+            }
 			            
 			/* Add an unattenuated point light to provide overall illumination. */
 			PointLight light = new PointLight();
