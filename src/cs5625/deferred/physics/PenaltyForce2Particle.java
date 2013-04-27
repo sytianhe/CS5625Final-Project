@@ -17,7 +17,7 @@ public class PenaltyForce2Particle implements Force {
 	ArrayList<Particle> PS;
 	
 	/**Strength of repulsion force. */
-	static double c =  0.0001* Constants.STIFFNESS_STRETCH;
+	static double c =   Constants.STIFFNESS_STRETCH;
 	
 	/**Length scale of repuslion force. */
 	static double h =   Constants.EDGE_COEFF;

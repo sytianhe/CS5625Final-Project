@@ -38,12 +38,6 @@ public class Sphere extends PhysicsGeometry {
 	public void addToParticleSystemHelper(ParticleSystem PS){
 		super.addToParticleSystemHelper(PS);
 		this.getOriginParticle().setRadius(1.0);
-//		for (PhysicsGeometry pg : getInteractsWith()){
-//			for (Particle p2 : pg.getControlParticles()){
-//				//PS.addForce(new PenaltyForce2Particle(this.getOriginParticle(), p2 ) );
-//			}
-//		}
-		//PS.addForce(new PenaltyForceSphere(this.getOriginParticle(), PS));
 	}
 
 }

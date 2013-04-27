@@ -27,8 +27,8 @@ public class Stem extends PhysicsGeometry
 {
 	private int numSubdivisions = 1;
 	private Material material = new LambertianMaterial(new Color3f(110f/255f , 139f/255f, 61f/255f));
-	private float height  = 0.1f;
-	private float width = 0.01f;
+	private float bottomtopWidth  = 0.1f;
+	private float topWidth = 0.01f;
 	
 	public Stem(ArrayList<Point3f>list){
 		ArrayList<Point3f>newList = new ArrayList<Point3f>();
@@ -36,7 +36,7 @@ public class Stem extends PhysicsGeometry
 			newList.add(new Point3f(p.x, p.y, p.z));
 		}
 		this.addControlPoints(newList);
-		Branchmesh branchmesh = new Branchmesh(newList, height, width);
+		Branchmesh branchmesh = new Branchmesh(newList, bottomtopWidth, topWidth);
 		branchmesh.subdivide(numSubdivisions);
 		this.mMeshes.add( branchmesh );
 		((Mesh) this.mMeshes.get(0)).setMaterial(material);
@@ -70,7 +70,7 @@ public class Stem extends PhysicsGeometry
 		super.addToParticleSystemHelper(PS);
 		for (Particle p: getControlParticles()){
 			p.setPin(false);
-			p.setRadius(width);
+			p.setRadius(topWidth);
 		}
 		getControlParticles().get(0).setPin(true);
 		getControlParticles().get(1).setPin(true);
@@ -78,9 +78,6 @@ public class Stem extends PhysicsGeometry
 		for (int i = 0; i<getControlParticles().size() - 1; i++){
 			SpringForce2Particle f = new SpringForce2Particle(getControlParticles().get(i), getControlParticles().get(i+1), PS);
 			PS.addForce(f);
-			//PS.addForce(new SpringForceParticleEdge(f, PS));
-			//System.out.println(getControlParticles().get(i));
-			//PS.addForce(new PenaltyForceSphere(getControlParticles().get(i), PS));
 		}
 		
 		for (int i = 1; i<getControlParticles().size() - 1; i++){
@@ -96,7 +93,7 @@ public class Stem extends PhysicsGeometry
 		super.animateHelper(dt);
 
 		this.mMeshes.clear();
-		Branchmesh newtree = new Branchmesh(this.getControlPoints(), height, width);
+		Branchmesh newtree = new Branchmesh(this.getControlPoints(), bottomtopWidth, topWidth);
 		newtree.subdivide(numSubdivisions);
 		this.mMeshes.add( newtree );
 		((Mesh) this.mMeshes.get(0)).setMaterial(material);		
