@@ -15,6 +15,7 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
+import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
 import cs5625.deferred.materials.Material;
@@ -164,6 +165,8 @@ public class Renderer
 	private boolean mWhichSandDune = true;  //true means render to 1
 	private int mInitialize = 1; //tell shader to initialize a blank screen
 	private Texture2D noise;
+	private int mRandSeedSize = 50;
+	
 	
 	/* The size of the light uniform arrays in the ubershader. */
 	private int mMaxLightsInUberShader = 40;
@@ -195,8 +198,9 @@ public class Renderer
 			
 			
 			/* 1.5. Cmpute sand dune buffer */
-			computeSandDuneBuffer(gl);
-			
+			for (int i=0; i<10; i++){
+				computeSandDuneBuffer(gl);
+			}
 			/* 2. Compute gradient buffer based on positions and normals, used for toon shading. */
 			//computeGradientBuffer(gl);
 			computeSSAOBuffer(gl, camera);
@@ -520,15 +524,21 @@ public class Renderer
 		}
 		else{
 			//mGBufferFBO.getColorTexture(GBuffer_DiffuseIndex).bind(gl, 0); // bind anything
-			 noise = Texture2D.load(gl, "textures/perlin_noise.png", true);
-			 noise.bind(gl, 0);
+			noise = Texture2D.load(gl, "textures/perlin_noise.png", true);
+			noise.bind(gl, 0);
 		}
 
 		/* Bind sandDune shader and render. */
 		mSandDuneShader.bind(gl);
 		
-		gl.glUniform1i( mSandDuneShader.getUniformLocation(gl, "Initialize"), mInitialize);
-		gl.glUniform1i( mSandDuneShader.getUniformLocation(gl, "whichBuffer"), (mWhichSandDune ? 1 : 0));		
+		gl.glUniform1i( mSandDuneShader.getUniformLocation(gl, "initialize"), mInitialize);
+		gl.glUniform1i( mSandDuneShader.getUniformLocation(gl, "whichBuffer"), (mWhichSandDune ? 1 : 0));
+		gl.glUniform1i( mSandDuneShader.getUniformLocation(gl, "randSeedLength"), mRandSeedSize );
+		int mRandSeedUniformLocation = mSandDuneShader.getUniformLocation(gl, "randSeed");
+		for (int i = 0; i < mRandSeedSize; i++) {
+			gl.glUniform2f(mRandSeedUniformLocation + i, (float) Math.random(), (float) Math.random());
+		}
+		
 
 		Util.drawFullscreenQuad(gl, mViewportWidth, mViewportHeight);
 
@@ -541,7 +551,7 @@ public class Renderer
 			else mGBufferFBO.getColorTexture(GBuffer_SandDune1Index).unbind(gl);
 		}
 		else{
-			//mGBufferFBO.getColorTexture(GBuffer_DiffuseIndex).unbind(gl); // bind anything
+			//mGBufferFBO.getColorTexture(GBuffer_DiffuseIndex).unbind(gl); // unbind whatever we bound above
 			noise.unbind(gl);
 		}
 		
@@ -549,9 +559,10 @@ public class Renderer
 		
 		/* Restore attributes (blending and depth-testing) to as they were before. */
 		gl.glPopAttrib();
-		
+				
 		mInitialize = 0 ;  //turn off initialization
 		mWhichSandDune = !mWhichSandDune;
+
 		
 	}
 
@@ -1310,6 +1321,7 @@ public class Renderer
 		/* Store viewport size. */
 		mViewportWidth = width;
 		mViewportHeight = height;
+		mInitialize = 1;
 		
 		/* If we already had a gbuffer, release it. */
 		if (mGBufferFBO != null)
@@ -1321,7 +1333,7 @@ public class Renderer
 		/* Make a new gbuffer with the new size. */
 		try
 		{
-			mGBufferFBO = new FramebufferObject(gl, Format.RGBA, Datatype.FLOAT16, width, height, GBuffer_Count, true, true);
+			mGBufferFBO = new FramebufferObject(gl, Format.RGBA, Datatype.FLOAT32, width, height, GBuffer_Count, true, true);
 			mShadowMapFBO = new FramebufferObject(gl, Format.RGBA, Datatype.FLOAT16, width, height, GBuffer_Count, true, false);
 		}
 		catch (OpenGLException err)
