@@ -10,6 +10,7 @@ import javax.vecmath.Vector3d;
 import cs5625.deferred.materials.BlinnPhongMaterial;
 import cs5625.deferred.materials.Material;
 import cs5625.deferred.materials.UnshadedMaterial;
+import cs5625.deferred.materials.VertexLambertianMaterial;
 import cs5625.deferred.physics.Particle;
 import cs5625.deferred.physics.ParticleSystem;
 import cs5625.deferred.physics.PenaltyForceSphere;
@@ -23,9 +24,9 @@ import cs5625.deferred.scenegraph.Mesh;
 
 public class Branch extends PhysicsGeometry
 {
-	private int numSubdivisions = 0;
+	private int numSubdivisions = 2;
 
-	private Material material = new BlinnPhongMaterial(new Color3f( 205f/255f , 133f/255f, 63f/255f));
+	private Material material = new VertexLambertianMaterial(new Color3f( 205f/255f , 133f/255f, 63f/255f), (float)Math.random(), (float)Math.random());
 	private float height  = 0.25f;
 	private float width = 0.1f;
 	
@@ -71,6 +72,7 @@ public class Branch extends PhysicsGeometry
 		Branchmesh newtree = new Branchmesh(this.getControlPoints(), height, width);
 		newtree.subdivide(numSubdivisions);
 		this.mMeshes.add( newtree );
-		((Mesh) this.mMeshes.get(0)).setMaterial(material);		
+		((Mesh) this.mMeshes.get(0)).setMaterial(material);	
+		((VertexLambertianMaterial) material).setPhi((float)Math.random());
 	}
 }
