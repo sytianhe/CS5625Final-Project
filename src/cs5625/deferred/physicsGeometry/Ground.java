@@ -1,4 +1,4 @@
-package cs5625.deffered.physicsGeometry;
+package cs5625.deferred.physicsGeometry;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,11 +38,14 @@ public class Ground extends PhysicsGeometry {
 	
 	public void addToParticleSystemHelper(ParticleSystem PS){
 		super.addToParticleSystemHelper(PS);
-		for(Particle p : getControlParticles()){
-			PS.addForce(new PenaltyForceParticlePlane3(p, getControlParticles().get(0), getControlParticles().get(1), getControlParticles().get(2), PS )  );
-			PS.addForce(new PenaltyForceParticlePlane3(p, getControlParticles().get(2), getControlParticles().get(3), getControlParticles().get(0), PS )  );
+		for (PhysicsGeometry pg : getInteractsWith()){
+			for(Particle p : pg.getControlParticles()){
+				PS.addForce(new PenaltyForceParticlePlane3(p, getControlParticles().get(0), getControlParticles().get(1), getControlParticles().get(2), PS )  );
+				PS.addForce(new PenaltyForceParticlePlane3(p, getControlParticles().get(2), getControlParticles().get(3), getControlParticles().get(0), PS )  );
+			}
+			PS.addForce(new PenaltyForceParticlePlane3(pg.getOriginParticle(), getControlParticles().get(0), getControlParticles().get(1), getControlParticles().get(2), PS ) );
+			PS.addForce(new PenaltyForceParticlePlane3(pg.getOriginParticle(), getControlParticles().get(2), getControlParticles().get(3), getControlParticles().get(0), PS ) );
 		}
-		
 	}
 
 

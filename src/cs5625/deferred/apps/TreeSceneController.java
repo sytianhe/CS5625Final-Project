@@ -16,11 +16,11 @@ import cs5625.deferred.scenegraph.Geometry;
 import cs5625.deferred.scenegraph.PointLight;
 import cs5625.deferred.scenegraph.Quadmesh;
 import cs5625.deferred.scenegraph.Trimesh;
-import cs5625.deffered.physicsGeometry.Branch;
-import cs5625.deffered.physicsGeometry.Ground;
-import cs5625.deffered.physicsGeometry.Leaf;
-import cs5625.deffered.physicsGeometry.Sphere;
-import cs5625.deffered.physicsGeometry.Stem;
+import cs5625.deferred.physicsGeometry.Branch;
+import cs5625.deferred.physicsGeometry.Ground;
+import cs5625.deferred.physicsGeometry.Leaf;
+import cs5625.deferred.physicsGeometry.Sphere;
+import cs5625.deferred.physicsGeometry.Stem;
 
 public class TreeSceneController extends SceneController{
 
@@ -69,13 +69,16 @@ public class TreeSceneController extends SceneController{
 			Sphere sphere = new Sphere(new Point3f(4.0f,4.0f,4.0f));
             sphere.setIsPinned(false);
             sphere.getOriginParticle().v.set(-5,5,-5);
-            mSceneRoot.addChild(sphere);            
+            mSceneRoot.addChild(sphere);    
+            plane.addInteractionWith(sphere);
 
-            //ADD BRANCH
+            //ADD MAIN TRUNK
             Branch branch = new Branch(list);
             branch.setPosition(new Point3f(0.0f, 0.0f, 0.0f));
             branch.setIsPinned(true);
             mSceneRoot.addChild(branch);
+            
+            branch.addInteractionWith(sphere);
   
             //CREATE AND ATTACH LEAVES  UP STEM
 //            for (Point3f pt :  list ){

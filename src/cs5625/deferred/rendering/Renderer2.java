@@ -1,6 +1,5 @@
 package cs5625.deferred.rendering;
 
-import java.io.IOException;
 import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
-import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
 import cs5625.deferred.materials.Material;
@@ -53,7 +51,7 @@ import cs5625.deferred.scenegraph.SceneObject;
  * @author Asher Dunn (ad488), Sean Ryan (ser99), Ivaylo Boyadzhiev (iib2), John DeCorato (jd537)
  * @date 2013-01-29
  */
-public class Renderer
+public class Renderer2
 {
 	/* Viewport attributes. */
 	protected float mViewportWidth, mViewportHeight;
@@ -65,19 +63,19 @@ public class Renderer
 	protected FramebufferObject mShadowMapFBO;
 	
 	/* The sanddune map FBO */
-	protected FramebufferObject mSandDuneFBO;
+	//protected FramebufferObject mSandDuneFBO;
 	
 	/* Name the indices in the GBuffer so code is easier to read. */
 	protected final int GBuffer_DiffuseIndex = 0;
 	protected final int GBuffer_PositionIndex = 1;
 	protected final int GBuffer_MaterialIndex1 = 2;
 	protected final int GBuffer_MaterialIndex2 = 3;
-	//protected final int GBuffer_GradientsIndex = 4;
+	protected final int GBuffer_GradientsIndex = 4;
 	protected final int GBuffer_SSAOIndex = 5;
 	protected final int GBuffer_FinalSceneIndex = 6;
-	protected final int GBuffer_SandDune1Index = 4;
-	protected final int GBuffer_SandDune2Index = 7;
-	protected final int GBuffer_Count = 8;
+	//protected final int GBuffer_SandDune1Index = 4;
+	//protected final int GBuffer_SandDune2Index = 7;
+	protected final int GBuffer_Count = 7;
 	
 
 	/* The index of the texture to preview in GBufferFBO, or -1 for no preview. */
@@ -93,7 +91,7 @@ public class Renderer
 
 	/* The "ubershader" used for performing deferred shading on the gbuffer, 
 	 * and the silhouette shader to compute edges for toon rendering. */
-	private ShaderProgram mUberShader, mSilhouetteShader , mSandDuneShader;
+	private ShaderProgram mUberShader, mSilhouetteShader; //, mSandDuneShader;
 	private boolean mEnableToonShading = false;
 	
 	/* Material for rendering generic wireframes and crease edges, and flag to enable/disable that. */
@@ -162,10 +160,10 @@ public class Renderer
 	private int mLightWidthUniformLocation = -1;
 	
 	/* The current sandDune texture */
-	private boolean mWhichSandDune = true;  //true means render to 1
-	private int mInitialize = 1; //tell shader to initialize a blank screen
-	private Texture2D noise;
-	private int mRandSeedSize = 50;
+//	private boolean mWhichSandDune = true;
+//	private boolean mInitialize = false;
+//	private int mInitializeUniformLocation = -1;
+//
 	
 	
 	/* The size of the light uniform arrays in the ubershader. */
@@ -192,17 +190,15 @@ public class Renderer
 				fillGBuffer(gl, sceneRoot, shadowCamera);
 			}
 			
+			/* 0. Cmpute sand dune buffer */
+			//computeSandDuneBuffer(gl,mWhichSandDune);
 			
 			/* 1. Fill the gbuffer given this scene and camera. */ 
 			fillGBuffer(gl, sceneRoot, camera);
 			
 			
-			/* 1.5. Cmpute sand dune buffer */
-			for (int i=0; i<10; i++){
-				computeSandDuneBuffer(gl);
-			}
 			/* 2. Compute gradient buffer based on positions and normals, used for toon shading. */
-			//computeGradientBuffer(gl);
+			computeGradientBuffer(gl);
 			computeSSAOBuffer(gl, camera);
 			
 			/* 3. Apply deferred lighting to the g-buffer. At this point, the opaque scene has been rendered. */
@@ -210,13 +206,11 @@ public class Renderer
 
 			/* 4. If we're supposed to preview one gbuffer texture, do that now. 
 			 *    Otherwise, envoke the final render pass (optional post-processing). */
-			if (mPreviewIndex == 2){
-				Util.renderTextureFullscreen(gl, mGBufferFBO.getColorTexture(GBuffer_SandDune1Index));
-			}
-			else if (mPreviewIndex == 3){
-				Util.renderTextureFullscreen(gl, mGBufferFBO.getColorTexture(GBuffer_SandDune2Index));
-			}
-			else if (mPreviewIndex >= 0 && mPreviewIndex < GBuffer_FinalSceneIndex)
+//			if (mPreviewIndex == 2){
+//				Util.renderTextureFullscreen(gl, mGBufferFBO.getColorTexture(GBuffer_SandDune1Index));
+//				//Util.renderTextureFullscreen(gl, mSandDuneFBO.getColorTexture(SBuffer_SandDune1Index));
+//			}
+			if (mPreviewIndex >= 0 && mPreviewIndex < GBuffer_FinalSceneIndex)
 			{
 				Util.renderTextureFullscreen(gl, mGBufferFBO.getColorTexture(mPreviewIndex));
 			}
@@ -390,7 +384,7 @@ public class Renderer
 	private void computeGradientBuffer(GL2 gl) throws OpenGLException
 	{
 		/* Bind silhouette buffer as output. */
-		//mGBufferFBO.bindOne(gl, GBuffer_GradientsIndex);
+		mGBufferFBO.bindOne(gl, GBuffer_GradientsIndex);
 
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
@@ -497,74 +491,59 @@ public class Renderer
 	/**
 	 * Computes position and normal gradients based on the position and normal textures of the GBuffer, for 
 	 * use in edge detection (e.g. toon rendering). 
-	 * @throws IOException 
 	 */
-	private void computeSandDuneBuffer(GL2 gl) throws OpenGLException, IOException
-	{
-		/* Bind sanddune buffer as output. */
-		if (mWhichSandDune){ mGBufferFBO.bindOne(gl, GBuffer_SandDune1Index); }
-		else { mGBufferFBO.bindOne(gl, GBuffer_SandDune2Index); }
-		
-		//gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
-		
-		/* Save state before we disable depth testing for blitting. */
-		gl.glPushAttrib(GL2.GL_ENABLE_BIT);
-		
-		/* Disable depth test and blend, since we just want to replace the contents of the framebuffer.
-		 * Since we are rendering an opaque fullscreen quad here, we don't bother clearing the buffer
-		 * first. */
-		gl.glDisable(GL2.GL_DEPTH_TEST);
-		gl.glDisable(GL2.GL_BLEND);
-
-		//Bind to from previous SandDune buffer for sampling. 
-		if (mInitialize == 0){
-			if (mWhichSandDune ) mGBufferFBO.getColorTexture(GBuffer_SandDune2Index).bind(gl,0);
-			else mGBufferFBO.getColorTexture(GBuffer_SandDune1Index).bind(gl,0);
-		}
-		else{
-			//mGBufferFBO.getColorTexture(GBuffer_DiffuseIndex).bind(gl, 0); // bind anything
-			noise = Texture2D.load(gl, "textures/perlin_noise.png", true);
-			noise.bind(gl, 0);
-		}
-
-		/* Bind sandDune shader and render. */
-		mSandDuneShader.bind(gl);
-		
-		gl.glUniform1i( mSandDuneShader.getUniformLocation(gl, "initialize"), mInitialize);
-		gl.glUniform1i( mSandDuneShader.getUniformLocation(gl, "whichBuffer"), (mWhichSandDune ? 1 : 0));
-		gl.glUniform1i( mSandDuneShader.getUniformLocation(gl, "randSeedLength"), mRandSeedSize );
-		int mRandSeedUniformLocation = mSandDuneShader.getUniformLocation(gl, "randSeed");
-		for (int i = 0; i < mRandSeedSize; i++) {
-			gl.glUniform2f(mRandSeedUniformLocation + i, (float) Math.random(), (float) Math.random());
-		}
-		
-
-		Util.drawFullscreenQuad(gl, mViewportWidth, mViewportHeight);
-
-		/* Unbind the shader. */
-		mSandDuneShader.unbind(gl);		
-		
-		//UnBind from previous SandDune buffer. 
-		if (mInitialize == 0){
-			if (mWhichSandDune ) mGBufferFBO.getColorTexture(GBuffer_SandDune2Index).unbind(gl);
-			else mGBufferFBO.getColorTexture(GBuffer_SandDune1Index).unbind(gl);
-		}
-		else{
-			//mGBufferFBO.getColorTexture(GBuffer_DiffuseIndex).unbind(gl); // unbind whatever we bound above
-			noise.unbind(gl);
-		}
-		
-		mGBufferFBO.unbind(gl);
-		
-		/* Restore attributes (blending and depth-testing) to as they were before. */
-		gl.glPopAttrib();
-				
-		mInitialize = 0 ;  //turn off initialization
-		mWhichSandDune = !mWhichSandDune;
-
-		
-	}
+//	private void computeSandDuneBuffer(GL2 gl, boolean swap) throws OpenGLException
+//	{
+//		/* Bind sanddune buffer as output. */
+//		if (swap){ mGBufferFBO.bindOne(gl, GBuffer_SandDune1Index); }
+//		else { mGBufferFBO.bindOne(gl, GBuffer_SandDune2Index); }
+//
+//		
+//		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+//		gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
+//		
+//		/* Save state before we disable depth testing for blitting. */
+//		gl.glPushAttrib(GL2.GL_ENABLE_BIT);
+//		
+//		/* Disable depth test and blend, since we just want to replace the contents of the framebuffer.
+//		 * Since we are rendering an opaque fullscreen quad here, we don't bother clearing the buffer
+//		 * first. */
+//		gl.glDisable(GL2.GL_DEPTH_TEST);
+//		gl.glDisable(GL2.GL_BLEND);
+//		
+//		mInitializeUniformLocation = mSandDuneShader.getUniformLocation(gl, "Initialize");
+//		gl.glUniform1i(mInitializeUniformLocation, (mInitialize ? 1: 0) );
+//
+//		
+//		/* Bind previous sandDune buffer. */
+//		if (swap){ mGBufferFBO.getColorTexture(GBuffer_SandDune2Index).bind(gl, 0);}
+//		else{ mGBufferFBO.getColorTexture(GBuffer_SandDune1Index).bind(gl, 0); }
+//		
+//		/* Bind sandDune shader and render. */
+//		mSandDuneShader.bind(gl);
+//		
+//		//System.out.println(oldSandDuneTexture);
+//		//if (oldSandDuneTexture != null) oldSandDuneTexture.bind(gl, 0);
+//
+//		Util.drawFullscreenQuad(gl, mViewportWidth, mViewportHeight);
+//
+//		//Buffer nb =    mSandDuneFBO.getColorTexture(GBuffer_SandDune1Index).copyTextureImage(gl);
+//		//this.oldSandDuneTexture = new Texture2D(gl, Format.RGBA, Datatype.FLOAT16, (int) mViewportWidth, (int) mViewportHeight,  nb);
+//		
+//		/* Unbind everything. */
+//		mSandDuneShader.unbind(gl);		
+//		if (swap){ mGBufferFBO.getColorTexture(GBuffer_SandDune2Index).unbind(gl);}
+//		else{ mGBufferFBO.getColorTexture(GBuffer_SandDune1Index).unbind(gl); }
+//
+//	//	oldSandDuneTexture.unbind(gl);
+//		mGBufferFBO.unbind(gl);
+//
+//		/* Restore attributes (blending and depth-testing) to as they were before. */
+//		gl.glPopAttrib();
+//		
+//		mWhichSandDune = !mWhichSandDune;
+//		mInitialize = true;
+//	}
 
 	/**
 	 * Applies lighting to an already-filled gbuffer to produce the final scene. Output is sent 
@@ -1177,13 +1156,13 @@ public class Renderer
 			gl.glUniform1i(mUberShader.getUniformLocation(gl, "PositionBuffer"), 1);
 			gl.glUniform1i(mUberShader.getUniformLocation(gl, "MaterialParams1Buffer"), 2);
 			gl.glUniform1i(mUberShader.getUniformLocation(gl, "MaterialParams2Buffer"), 3);
-			//gl.glUniform1i(mUberShader.getUniformLocation(gl, "SilhouetteBuffer"), 4);
+			gl.glUniform1i(mUberShader.getUniformLocation(gl, "SilhouetteBuffer"), 4);
 			gl.glUniform1i(mUberShader.getUniformLocation(gl, "SSAOBuffer"), 5);
 			
-			gl.glUniform1i(mUberShader.getUniformLocation(gl, "SandDune1Buffer"), 4);
-			gl.glUniform1i(mUberShader.getUniformLocation(gl, "SandDune2Buffer"), 7);
-
-			gl.glUniform3f(mUberShader.getUniformLocation(gl, "SkyColor"), 102.0f/256f, 1f, 1f);
+//			gl.glUniform1i(mUberShader.getUniformLocation(gl, "SandDune1Buffer"), 4);
+//			gl.glUniform1i(mUberShader.getUniformLocation(gl, "SandDune2Buffer"), 7);
+			
+			gl.glUniform3f(mUberShader.getUniformLocation(gl, "SkyColor"), 0.0f, 0.0f, 0.3f);
 			//gl.glUniform3f(mUberShader.getUniformLocation(gl, "SkyColor"), 0.1f, 0.1f, 0.1f);
 			gl.glUniform1i(mUberShader.getUniformLocation(gl, "ShadowMap"), mShadowTextureLocation);
 			mUberShader.unbind(gl);			
@@ -1244,15 +1223,11 @@ public class Renderer
 			mSilhouetteShader.unbind(gl);
 
 			/* Load the sandDune shader. */
-			
-			
-			mSandDuneShader = new ShaderProgram(gl, "shaders/sanddune");
-			
-			mSandDuneShader.bind(gl);
-			gl.glUniform1i(mSandDuneShader.getUniformLocation(gl, "PreviousSandDuneBuffer"), 0);
-			mSandDuneShader.unbind(gl);
-			
-
+//			mSandDuneShader = new ShaderProgram(gl, "shaders/sanddune");
+//
+//			mSandDuneShader.bind(gl);
+//			gl.glUniform1i(mSandDuneShader.getUniformLocation(gl, "PreviousSandDuneBuffer"), 0);
+//			mSandDuneShader.unbind(gl);
 			
 			/* Load the bloom shader. */
 			mBloomShader = new ShaderProgram(gl, "shaders/bloom");
@@ -1321,20 +1296,21 @@ public class Renderer
 		/* Store viewport size. */
 		mViewportWidth = width;
 		mViewportHeight = height;
-		mInitialize = 1;
 		
 		/* If we already had a gbuffer, release it. */
 		if (mGBufferFBO != null)
 		{
 			mGBufferFBO.releaseGPUResources(gl);
 			mShadowMapFBO.releaseGPUResources(gl);
+			//mSandDuneFBO.releaseGPUResources(gl);
 		}
 		
 		/* Make a new gbuffer with the new size. */
 		try
 		{
-			mGBufferFBO = new FramebufferObject(gl, Format.RGBA, Datatype.FLOAT32, width, height, GBuffer_Count, true, true);
+			mGBufferFBO = new FramebufferObject(gl, Format.RGBA, Datatype.FLOAT16, width, height, GBuffer_Count, true, true);
 			mShadowMapFBO = new FramebufferObject(gl, Format.RGBA, Datatype.FLOAT16, width, height, GBuffer_Count, true, false);
+			//if (mSandDuneFBO == null) mSandDuneFBO = new FramebufferObject(gl, Format.RGBA, Datatype.FLOAT16, width, height, GBuffer_Count, true, false);
 		}
 		catch (OpenGLException err)
 		{
@@ -1355,6 +1331,7 @@ public class Renderer
 		mBloomShader.releaseGPUResources(gl);
 		mVisShader.releaseGPUResources(gl);
 		mShadowMapFBO.releaseGPUResources(gl);
-		mSandDuneShader.releaseGPUResources(gl);
+		//mSandDuneShader.releaseGPUResources(gl);
+		//mSandDuneFBO.releaseGPUResources(gl);
 	}
 }

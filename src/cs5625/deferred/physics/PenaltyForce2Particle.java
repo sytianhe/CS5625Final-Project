@@ -17,7 +17,7 @@ public class PenaltyForce2Particle implements Force {
 	ArrayList<Particle> PS;
 	
 	/**Strength of repulsion force. */
-	static double c =  0.0001* Constants.STIFFNESS_STRETCH;
+	static double c =   Constants.STIFFNESS_STRETCH;
 	
 	/**Length scale of repuslion force. */
 	static double h =   Constants.EDGE_COEFF;
@@ -32,18 +32,10 @@ public class PenaltyForce2Particle implements Force {
 		this.p2=p2;		
 	}
 
-//	//@Override
-//	public void applyForce() {
-//		for (Particle p1 : particles1){
-//			for (Particle p2 : particles2){
-//				applyForce(p1,p2);
-//			}
-//		}
-//	}
-	
 
 	
 	public void applyForce() {		
+		if (p1.isPinned() || p2.isPinned()) return ;
 		double r = p1.x.distance(p2.x) - p1.getRadius() - p2.getRadius();
 		if (r<h ){
 			sep.sub(p1.x,p2.x);

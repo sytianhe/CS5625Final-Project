@@ -31,29 +31,22 @@ public class SpringForceParticleEdge implements Force
 	double h = Constants.EDGE_COEFF;
 	
 	/** Penalty force strength, relative to spring stiffness coefficient. */
-	double REL_STRENGTH = 3;
+	double REL_STRENGTH = 20;
 	
 	ParticleSystem PS;
 
-	public SpringForceParticleEdge(SpringForce2Particle ff, ParticleSystem PS)
+	public SpringForceParticleEdge(Particle p1, SpringForce2Particle ff, ParticleSystem PS)
 	{
 		this.f = ff;
-		//this.p1 = p1;
+		this.p1 = p1;
 		this.p2 = ff.p1;
 		this.p3 = ff.p2;
 
 		this.PS = PS;
 	}
 
-	public void applyForce(){
-		for (Particle p : PS.P){
-			applyForce(p, p2, p3);
-		}
-	}
-	
-	public void applyForce(Particle p1, Particle p2, Particle p3 )
+	public void applyForce()
 	{
-		if(p1.isPinned() && p2.isPinned() && p3.isPinned()) return;/// no force
 		
 		//EVALUATE SEPERATION VECTORS
 		Vector3d a = new Vector3d();
@@ -99,12 +92,21 @@ public class SpringForceParticleEdge implements Force
 			if(d<=h){
 				if (v.dot(n)<0){
 					//REPULSION FORCE
-					p1.f.scaleAdd(REL_STRENGTH * Constants.STIFFNESS_STRETCH * (h-d) + Constants.DAMPING_MASS*v.dot(n), n , p1.f);
+					Vector3d f = new Vector3d(n);
+					n.scale(REL_STRENGTH * Constants.STIFFNESS_STRETCH * Math.pow((h-d),2));
+					p1.f.add(f, p1.f);
+					p2.f.scaleAdd(-alpha, f, p2.f);
+					p3.f.scaleAdd(-(1-alpha),f, p3.f);
 				}
 				if (bn.length()>0 && p1.f.dot(n)<0){	
 					//KINETIC FRICTION FORCE
-					p1.f.scaleAdd(Constants.KINETIC_FRICTION * p1.f.dot(n) , bn, p1.f);			
+					Vector3d f = new Vector3d(bn);
+					f.scale(Constants.KINETIC_FRICTION * p1.f.dot(n));
+					p1.f.add(f, p1.f);	
+					p2.f.scaleAdd(-alpha , f, p1.f);
+					p3.f.scaleAdd(-(1-alpha),f, p3.f);
 				}
+				
 			}			
 		}
 		//CHECK IF PARTICLE IS NEAR THE LEFT EDGE ENDPOINT
@@ -115,7 +117,10 @@ public class SpringForceParticleEdge implements Force
 			v.sub(p2.v);
 			//SEPERATION BETWEEN POINTS
 			if(v.dot(n)<0){
-				p1.f.scaleAdd(REL_STRENGTH * Constants.STIFFNESS_STRETCH * (h-dl) + Constants.DAMPING_MASS*v.dot(n) , n , p1.f);
+				Vector3d f = new Vector3d(n);
+				f.scale(REL_STRENGTH * Constants.STIFFNESS_STRETCH * Math.pow((h-dl),2)+ Constants.DAMPING_MASS*v.dot(n));
+				p1.f.add(f , p1.f);
+				p2.f.scaleAdd(-1, f, p2.f);
 			}
 		}
 		//CHECK IF PARTICLE IS NEAR THE RIGHT EDGE ENDPOINT
@@ -127,7 +132,11 @@ public class SpringForceParticleEdge implements Force
 			
 			//SEPERATION BETWEEN POINTS
 			if(v.dot(n)<0){
-				p1.f.scaleAdd(REL_STRENGTH * Constants.STIFFNESS_STRETCH * (h-dr) + Constants.DAMPING_MASS*v.dot(n) , n , p1.f);
+				Vector3d f = new Vector3d(n);
+				f.scale(REL_STRENGTH * Constants.STIFFNESS_STRETCH * Math.pow((h-dr),2)+ Constants.DAMPING_MASS*v.dot(n));
+				p1.f.add(f , p1.f);
+				p3.f.scaleAdd(-1, f, p3.f);
+
 			}
 		}
 	}

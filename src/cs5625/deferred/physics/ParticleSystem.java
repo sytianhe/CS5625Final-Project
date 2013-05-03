@@ -159,7 +159,7 @@ public class ParticleSystem
 	{						
 
 		{/// GATHER BASIC FORCES (NO NEED TO MODIFY):
-
+			
 			/// CLEAR FORCE ACCUMULATORS:
 			for(Particle p : P)  p.f.set(0,0,0);
 

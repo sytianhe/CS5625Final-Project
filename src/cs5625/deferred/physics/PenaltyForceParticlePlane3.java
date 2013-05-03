@@ -22,7 +22,7 @@ public class PenaltyForceParticlePlane3 implements Force
 	double h = 0.1* Constants.EDGE_COEFF;
 	
 	/** Penalty force strength, relative to spring stiffness coefficient. */
-	double REL_STRENGTH = 1000;
+	double REL_STRENGTH = 100;
 	
 	ParticleSystem PS;
 
