@@ -20,19 +20,20 @@ uniform bool whichBuffer;
 uniform vec2 randSeed[MAX_RAND_SEED];  // Pseudo random number seeds for random number generat.
 uniform int randSeedLength; // Number of random seeds.  Should be the same as 
 
-const float eps = 0.001;					// accuracy of floating point comparision
-const vec2 wind = vec2(1.0,0.0);			// x-direction scaled by transport length
+const float eps = 0.001;
+const vec2 wind = vec2(3.0,0.0);			// x-direction scaled by transport length
 const float aspectRatio = 10.0; 			// Thickness of sand "slab"
-const float angleOfRepose1 = 3.0; 			// approx 33.7 degrees
+const float angleOfRepose1 = 6.0; 			// approx 33.7 degrees
 const float angleOfRepose2 = 2.5;	 		// approx 25.2 degrees
 const float shadowZoneAngle = 1.5;			// approx 15 degrees
-const float LT = 2.0;  					 	// transport length
-const float LN = 4.0; 					 	// Neighborhood radius
+const float LT = 1.0;  					 	// transport length
+const float LN = 3.0; 					 	// Neighborhood radius
 const float shearVelocityLinear = 0.2;  	// Linear wind shear coefficient for computing probability that grain moves past site
 const float shearVelocityNonLinear = 0.002; //  Nonlinear wind shearing coefficient for computing probability that grain moves past site
-const float erosionProb = 0.8;         	// Probability that a grain of sand moves from it's current location
+const float erosionProb = 0.5;         	// Probability that a grain of sand moves from it's current location
 const float depositionProbSoft = 0.6; 		// Probability that transported land lands at a neighboring point that is already sandy 
 const float depositionProbHard = 0.4; 		// Probability that transported land lands at a neighboring point that is bare
+
 
 
 /**
@@ -73,9 +74,9 @@ float rand(vec2 seed){
  /**
  * Samples from old dune buffer and returns depth and grains set aside for transport.
  */
- vec2 sample(vec2 coord)
+ vec4 sample(vec2 coord)
  {
-	 return texture2DRect(PreviousSandDuneBuffer, coord).xy; 
+	 return texture2DRect(PreviousSandDuneBuffer, coord); 
  }
 
  /**
@@ -129,9 +130,19 @@ float rand(vec2 seed){
 	return (hNeighbor1 > h + shadowZoneAngle/aspectRatio) && (hNeighbor2 > h + 2.0*shadowZoneAngle/aspectRatio);
  }
  
- bool avalanch()
+  /**
+  * Compute gradiant of height field at current location (using center difference)
+  */
+ vec2 grad()
  {
- 	return false;
+  	vec2 center = vec2(gl_FragCoord.xy);
+  	float h = sample(center).x;
+ 	vec2 g = vec2(0.0);
+ 	
+ 	g.x = (sample( center + vec2(1.0,0.0) ).x - sample( center + vec2(-1.0,0.0) ).x) / 2.0;
+ 	g.y = (sample( center + vec2(0.0,1.0) ).x - sample( center + vec2(0.0,-1.0) ).x) / 2.0;
+ 	
+ 	return g;
  }
  
  
@@ -139,10 +150,11 @@ float rand(vec2 seed){
 void main()
 {
 
+	gl_FragData[0] = vec4(0.0);
+
+
 	if(initialize == 1 ){
 		//INITIALIZE SIMULATION TO RANDOM CONFIGURATION 
-		//gl_FragData[0] = vec4(0.0);
-		//gl_FragData[0].x =  rand(randSeed[0]) ;  
 		if (gl_FragCoord.x < 200.0){
 			gl_FragData[0] = vec4(1.0,0.0,0.0,0.0);
 		}
@@ -159,11 +171,21 @@ void main()
 		if ( (center - wind).x >= 0.0 && (center - wind).y >= 0.0 ){
 			nSaltationGrainsComing = sample(mod2Screen(center - wind)).y ;
 		}
-	//	if ( (center - wind).x <= 0.0  ){
-	//		nSaltationGrainsComing = sample(mod2Screen( vec2(ScreenSize.x, center.y) )).y ;
-	//	}
 		float nSaltationGrainsGoing = 0.0;
 		bool inShadow = isInShadow() ;
+	
+		//ACCUMULATE TOPPLED GRAINS FROM PREVIOUS ITERATION
+		for (float i=- 1.0; i<= 1.0; i = i+2.0){
+			for (float j=- 1.0; j<= 1.0; j = j+2.0){
+				vec2 neighbor = center + vec2(i,j);
+				vec2 pointer = sample(neighbor).zw;
+				//IF GRAD POINTS FROM NEIGHBOR TO CENTER, THEN ADD A GRAIN
+				if( abs(pointer.x - i)<eps && (pointer.y - j)<eps ){
+					h += 1.0/aspectRatio;
+				} 
+			}
+		}
+	
 	
 		//CHECK IF THERES A SALTATION EVENT AT THIS SITE.  IF SO, FREE  TO THE Y COMPONENT FOR ACCUMULATION IN THE NEXT PASS
 		if( h >= 1.0/aspectRatio - eps && !inShadow && rand(randSeed[0]) < erosionProb ){
@@ -206,9 +228,30 @@ void main()
 			}
 		}		
 		
-		//PROCESS TOPPLING
+		//RELEASE GRAIN IN CASE THE SAND PILE GETS TOO STEEP
+		//IF GRADIANT IS SUFFICIENTLY LARGE, TOPPLE GRAIN IN THE DIRECTION OF STEEPEST DESCENT
+		//ONLY TOPPLE IN ONE DIRECTION
+		vec2 g = grad();
+		if (length(g) > angleOfRepose1/aspectRatio ){
+			//REMOVE A GRAIN 
+			h -= 1.0/aspectRatio;
+			
+			//AND LET NEIGHBOR KNOW THAT A GRAIN IS COMMING ITS WAY
+			//SAVE RELATIVE LOCATION OF WHERE THE GRAIN IS GOING
+			if (g.x > 1.0/aspectRatio ){
+				gl_FragData[0].z = -1.0;
+			}
+			else if (g.x < -1.0/aspectRatio ){
+				gl_FragData[0].z = 1.0;
+			}
+			if (g.y > 1.0/aspectRatio ){
+				gl_FragData[0].w = -1.0;
+			}
+			else if (g.y < -1.0/aspectRatio ){
+				gl_FragData[0].w = 1.0;
+			}
+		}
 		
-		gl_FragData[0] = vec4(0.0);
 		gl_FragData[0].x = h ;
 		gl_FragData[0].y =  nSaltationGrainsGoing;		
 	}

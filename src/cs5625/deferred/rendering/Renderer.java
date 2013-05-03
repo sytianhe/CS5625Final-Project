@@ -1,7 +1,6 @@
 package cs5625.deferred.rendering;
 
 import java.io.IOException;
-import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +14,6 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
-import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
 import cs5625.deferred.materials.Material;
@@ -65,19 +63,20 @@ public class Renderer
 	protected FramebufferObject mShadowMapFBO;
 	
 	/* The sanddune map FBO */
-	protected FramebufferObject mSandDuneFBO;
+	protected FramebufferObject mSBufferFBO;
 	
 	/* Name the indices in the GBuffer so code is easier to read. */
 	protected final int GBuffer_DiffuseIndex = 0;
 	protected final int GBuffer_PositionIndex = 1;
 	protected final int GBuffer_MaterialIndex1 = 2;
 	protected final int GBuffer_MaterialIndex2 = 3;
-	//protected final int GBuffer_GradientsIndex = 4;
+	protected final int GBuffer_GradientsIndex = 4;
 	protected final int GBuffer_SSAOIndex = 5;
 	protected final int GBuffer_FinalSceneIndex = 6;
-	protected final int GBuffer_SandDune1Index = 4;
-	protected final int GBuffer_SandDune2Index = 7;
-	protected final int GBuffer_Count = 8;
+	protected final int GBuffer_Count = 7;
+	
+	protected final int SBuffer_SandDune1Index = 0;
+	protected final int SBuffer_SandDune2Index = 1;
 	
 
 	/* The index of the texture to preview in GBufferFBO, or -1 for no preview. */
@@ -198,7 +197,7 @@ public class Renderer
 			
 			
 			/* 1.5. Cmpute sand dune buffer */
-			for (int i=0; i<10; i++){
+			for (int i=0; i<20; i++){
 				computeSandDuneBuffer(gl);
 			}
 			/* 2. Compute gradient buffer based on positions and normals, used for toon shading. */
@@ -211,10 +210,7 @@ public class Renderer
 			/* 4. If we're supposed to preview one gbuffer texture, do that now. 
 			 *    Otherwise, envoke the final render pass (optional post-processing). */
 			if (mPreviewIndex == 2){
-				Util.renderTextureFullscreen(gl, mGBufferFBO.getColorTexture(GBuffer_SandDune1Index));
-			}
-			else if (mPreviewIndex == 3){
-				Util.renderTextureFullscreen(gl, mGBufferFBO.getColorTexture(GBuffer_SandDune2Index));
+				Util.renderTextureFullscreen(gl, mSBufferFBO.getColorTexture(SBuffer_SandDune1Index));
 			}
 			else if (mPreviewIndex >= 0 && mPreviewIndex < GBuffer_FinalSceneIndex)
 			{
@@ -502,8 +498,8 @@ public class Renderer
 	private void computeSandDuneBuffer(GL2 gl) throws OpenGLException, IOException
 	{
 		/* Bind sanddune buffer as output. */
-		if (mWhichSandDune){ mGBufferFBO.bindOne(gl, GBuffer_SandDune1Index); }
-		else { mGBufferFBO.bindOne(gl, GBuffer_SandDune2Index); }
+		if (mWhichSandDune){ mSBufferFBO.bindOne(gl, SBuffer_SandDune1Index); }
+		else { mSBufferFBO.bindOne(gl, SBuffer_SandDune2Index); }
 		
 		//gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
@@ -519,8 +515,8 @@ public class Renderer
 
 		//Bind to from previous SandDune buffer for sampling. 
 		if (mInitialize == 0){
-			if (mWhichSandDune ) mGBufferFBO.getColorTexture(GBuffer_SandDune2Index).bind(gl,0);
-			else mGBufferFBO.getColorTexture(GBuffer_SandDune1Index).bind(gl,0);
+			if (mWhichSandDune ) mSBufferFBO.getColorTexture(SBuffer_SandDune2Index).bind(gl,0);
+			else mSBufferFBO.getColorTexture(SBuffer_SandDune1Index).bind(gl,0);
 		}
 		else{
 			//mGBufferFBO.getColorTexture(GBuffer_DiffuseIndex).bind(gl, 0); // bind anything
@@ -547,15 +543,14 @@ public class Renderer
 		
 		//UnBind from previous SandDune buffer. 
 		if (mInitialize == 0){
-			if (mWhichSandDune ) mGBufferFBO.getColorTexture(GBuffer_SandDune2Index).unbind(gl);
-			else mGBufferFBO.getColorTexture(GBuffer_SandDune1Index).unbind(gl);
+			if (mWhichSandDune ) mSBufferFBO.getColorTexture(SBuffer_SandDune2Index).unbind(gl);
+			else mSBufferFBO.getColorTexture(SBuffer_SandDune1Index).unbind(gl);
 		}
 		else{
-			//mGBufferFBO.getColorTexture(GBuffer_DiffuseIndex).unbind(gl); // unbind whatever we bound above
 			noise.unbind(gl);
 		}
 		
-		mGBufferFBO.unbind(gl);
+		mSBufferFBO.unbind(gl);
 		
 		/* Restore attributes (blending and depth-testing) to as they were before. */
 		gl.glPopAttrib();
@@ -1328,13 +1323,15 @@ public class Renderer
 		{
 			mGBufferFBO.releaseGPUResources(gl);
 			mShadowMapFBO.releaseGPUResources(gl);
+			mSBufferFBO.releaseGPUResources(gl);
 		}
 		
 		/* Make a new gbuffer with the new size. */
 		try
 		{
-			mGBufferFBO = new FramebufferObject(gl, Format.RGBA, Datatype.FLOAT32, width, height, GBuffer_Count, true, true);
+			mGBufferFBO = new FramebufferObject(gl, Format.RGBA, Datatype.FLOAT16, width, height, GBuffer_Count, true, true);
 			mShadowMapFBO = new FramebufferObject(gl, Format.RGBA, Datatype.FLOAT16, width, height, GBuffer_Count, true, false);
+			mSBufferFBO = new FramebufferObject(gl, Format.RGBA, Datatype.FLOAT32, width, height, GBuffer_Count, true, true);
 		}
 		catch (OpenGLException err)
 		{
@@ -1356,5 +1353,6 @@ public class Renderer
 		mVisShader.releaseGPUResources(gl);
 		mShadowMapFBO.releaseGPUResources(gl);
 		mSandDuneShader.releaseGPUResources(gl);
+		mSBufferFBO.releaseGPUResources(gl);
 	}
 }
