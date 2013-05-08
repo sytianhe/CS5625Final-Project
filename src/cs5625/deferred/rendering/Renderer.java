@@ -197,7 +197,7 @@ public class Renderer
 			
 			
 			/* 1.5. Cmpute sand dune buffer */
-			for (int i=0; i<20; i++){
+			for (int i=0; i<1; i++){
 				computeSandDuneBuffer(gl);
 			}
 			/* 2. Compute gradient buffer based on positions and normals, used for toon shading. */

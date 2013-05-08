@@ -58,15 +58,18 @@ public class TreeSceneController extends SceneController{
             plane.addInteractionWith(sphere);
             
 			//SETUP CONTROL POINT FOR LEAF AND STEM .... NEED TO BE SPACED OUT CURRENTLY
-			ArrayList<Point3f>list = new ArrayList<Point3f>(); // List of control points for the trunk
-        	ArrayList<Point3f>list2 = new ArrayList<Point3f>();// List of control points for the fronds
+			ArrayList<Point3f>list = new ArrayList<Point3f>();
+        	ArrayList<Point3f>list2 = new ArrayList<Point3f>();
 
+			for(int i=0; i< 10; i++){
+				Point3f point = new Point3f();
+				point.set(0f,1.5f*i,0f);
+				list.add(new Point3f(point));
+			}
+			
 			for(int i=0; i< 15; i++){
 				Point3f point = new Point3f();
-				point.set(0f,1f*i,0f);
-				
-				list.add(new Point3f(point));
-				point.scale(0.3f);
+				point.set(0f,1.5f*i/5f,0f);
 				list2.add(new Point3f(point));
 			}
 			
@@ -76,10 +79,10 @@ public class TreeSceneController extends SceneController{
             branch.setIsPinned(true);
             mSceneRoot.addChild(branch);
             
-            //ADD INTERACTION WITH THE SPHERE
             branch.addInteractionWith(sphere);
             
             Point3f topPoint = list.get(list.size()-1);
+			
             //CREATE STEMS AND LEAVES
             for (int i = 0; i<15; i++){
                 Stem stem = new Stem(list2);

@@ -146,10 +146,6 @@ public class Branchmesh extends Quadmesh {
 
 			}
 		}
-		//		mPolygonData.put(0);
-		//		mPolygonData.put(1);
-		//		mPolygonData.put(2);
-		//		mPolygonData.put(3);
 
 		mPolygonData.put(4 * ControlPoints.size()-1);
 		mPolygonData.put(4 * ControlPoints.size()-2);
@@ -165,15 +161,4 @@ public class Branchmesh extends Quadmesh {
 
 	}
 
-//	public void subdivide(int numberofSub){
-//		for (int i = 0; i< numberofSub; i++){
-//			EdgeDS edgeDS = new EdgeDS(this);
-//			CCSubdiv ccSubdiv = new CCSubdiv(edgeDS);
-//			Mesh newMesh = (Quadmesh)ccSubdiv.getNewMesh();
-//			this.setVertexData(newMesh.getVertexData());
-//			this.setEdgeData(newMesh.getEdgeData());
-//			this.setNormalData(newMesh.getNormalData());
-//			this.setPolygonData(newMesh.getPolygonData());
-//		}
-//	}
 }

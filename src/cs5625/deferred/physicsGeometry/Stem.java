@@ -40,8 +40,8 @@ public class Stem extends PhysicsGeometry
     		double b = 0.1;
     		double temp = (double)((i-4) * 1.0/(newList.size()/2.0) - 1.0);
     		float temp2 = (float) (Math.sqrt(1.0 - Math.pow(temp/a, 2))*b)*3;
-    		Leaf2 leaf1 = new Leaf2(4f*temp2, 0.5f*temp2);
-    		Leaf2 leaf2 = new Leaf2(4f*temp2, 0.5f*temp2);
+    		Leaf2 leaf1 = new Leaf2(5f*temp2, 0.5f*temp2);
+    		Leaf2 leaf2 = new Leaf2(5f*temp2, 0.5f*temp2);
     		leaf2.setOrientation(new Quat4f(0,1,0,0));
     		this.pinToPhysicsGeometry(leaf1,newList.get(i));
     		this.pinToPhysicsGeometry(leaf2,newList.get(i));
