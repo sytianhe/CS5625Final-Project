@@ -1,6 +1,7 @@
 package cs5625.deferred.apps;
 
 import java.awt.Point;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import javax.vecmath.Quat4f;
 
 import cs5625.deferred.misc.ScenegraphException;
 import cs5625.deferred.misc.Util;
+import cs5625.deferred.physics.ParticleSystem;
 import cs5625.deferred.physicsGeometry.Branch;
 import cs5625.deferred.physicsGeometry.Ground;
 import cs5625.deferred.physicsGeometry.Sphere;
@@ -30,7 +32,7 @@ public class TreeSceneController extends SceneController{
 	
 	/* Used to calculate mouse deltas to orbit the camera in mouseDragged(). */ 
 	private Point mLastMouseDrag;
-
+	
 	public void initializeScene() {
 		try {
 			//ADD LIGHT
@@ -104,6 +106,12 @@ public class TreeSceneController extends SceneController{
 		}
 		
 		this.hasShadows = true;
+		try {
+			mSceneRoot.addChild(mCamera);
+		} catch (ScenegraphException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		/* Initialize camera position. */
 		updateCamera();
@@ -115,6 +123,7 @@ public class TreeSceneController extends SceneController{
 	 */
 	protected void updateCamera()
 	{
+
 		/* Compose the "horizontal" and "vertical" rotations. */
 		Quat4f longitudeQuat = new Quat4f();
 		longitudeQuat.set(new AxisAngle4f(0.0f, 1.0f, 0.0f, mCameraLongitude * (float)Math.PI / 180.0f));
@@ -135,6 +144,87 @@ public class TreeSceneController extends SceneController{
 		mCameraRadius += mouseWheel.getUnitsToScroll();
 		updateCamera();
 		requiresRender();
+	}
+	
+	/**
+	 * Override this in your SceneController subclass to respond to this type of user action.
+	 * By default, the following keys will control the renderer in the specified way:
+	 * '1', ..., '6': Specifies a gbuffer texture to preview.
+	 * '7': Visualize the normals.
+	 * '8': Visualize the tangents, only works for anisotropic ward objects.
+	 * '9': Visualize the bitangents, only works for anisotropic ward objects.
+	 * '0': Stop displaying a gbuffer texture or visualization.
+	 * 't': Toggle toon shading.
+	 * 'w': Toggle wireframes.
+	 * 'b': Toggle bloom post-processing.
+	 * 'v'/'V': Decrease/Increase the bloom variance.
+	 * 'c'/'C': Decrease/Increase the bloom threshold.
+	 * 'x'/'X': Decrease/Increase the bloom width.
+	 */
+	@Override
+	public void keyPressed(KeyEvent key)
+	{
+		char c = key.getKeyChar();
+		if (c == 'j')
+		{
+			System.out.println("pressing " + c);
+			mCamera.keyUP = true;
+//			mCameraRadius += 1.5;
+//			updateCamera();
+//			requiresRender();
+			
+
+		}
+		else if (c == 'k')
+		{
+			mCameraRadius -= 1.5;
+			updateCamera();
+			requiresRender();
+		}
+		else if (c == 'h')
+		{
+			/* Zoom in and out by the scroll wheel. */
+			mCameraLongitude += 1.5;
+			updateCamera();
+			requiresRender();
+		}
+		else if (c == 'l')
+		{
+			/* Zoom in and out by the scroll wheel. */
+			mCameraLongitude -= 1.5;
+			updateCamera();
+			requiresRender();
+		}
+		
+	}
+	
+	public void keyReleased(KeyEvent key) {
+		char c = key.getKeyChar();
+		if (c == 'j')
+		{
+			mCamera.keyUP = false;
+		}
+//		else if (c == 'k')
+//		{
+//			/* Zoom in and out by the scroll wheel. */
+//			mCameraRadius -= 0.5;
+//			updateCamera();
+//			requiresRender();
+//		}
+//		else if (c == 'h')
+//		{
+//			/* Zoom in and out by the scroll wheel. */
+//			mCameraLongitude += 0.5;
+//			updateCamera();
+//			requiresRender();
+//		}
+//		else if (c == 'l')
+//		{
+//			/* Zoom in and out by the scroll wheel. */
+//			mCameraLongitude -= 0.5;
+//			updateCamera();
+//			requiresRender();
+//		}
 	}
 
 	@Override

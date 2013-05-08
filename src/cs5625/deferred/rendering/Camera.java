@@ -1,6 +1,7 @@
 package cs5625.deferred.rendering;
 
 import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
 
 import cs5625.deferred.scenegraph.SceneObject;
 
@@ -22,9 +23,15 @@ public class Camera extends SceneObject
 	/* Perspective camera attributes. */
 	private float mFOV = 45.0f;
 	private float mNear = 0.1f;
-	private float mFar = 100.0f;
+	private float mFar = 1000.0f;
 	
 	private boolean mIsShadowMapCamera = false;
+	
+	/* Key controls */
+	public boolean keyUP;
+	public boolean keyDOWN;
+	public boolean keyLEFT;
+	public boolean keyRIGHT;
 	
 	/**
 	 * Returns the camera field of view angle, in degrees.
@@ -116,4 +123,10 @@ public class Camera extends SceneObject
 				0f, 0f, -(mFar + mNear) / (mFar - mNear), -2 * mFar * mNear / (mFar - mNear),
 				0f, 0f, -1f, 0f);
 	}
+	@Override
+	public void animateHelper(float dt){
+		if(keyUP == true){
+			this.mPosition.add(new Vector3f(0,0,1.5f));			
+		}
+	}	
 }

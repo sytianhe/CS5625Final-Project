@@ -137,6 +137,7 @@ public abstract class SceneController implements MouseListener, MouseMotionListe
 	        PS = new ParticleSystem();
 	        mSceneRoot.addToParticleSystem(PS);
 		}
+
 		//Perform several small time steps per iteration
 		float dt = DT / N_STEPS_PER_FRAME;
 		for(int i =0; i< N_STEPS_PER_FRAME; i++){
