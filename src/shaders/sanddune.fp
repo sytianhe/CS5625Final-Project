@@ -155,7 +155,7 @@ void main()
 
 	if(initialize == 1 ){
 		//INITIALIZE SIMULATION TO RANDOM CONFIGURATION 
-		if (gl_FragCoord.x < 200.0){
+		if (gl_FragCoord.x < 100.0 ){
 			gl_FragData[0] = vec4(1.0,0.0,0.0,0.0);
 		}
 	}	

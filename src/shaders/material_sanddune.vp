@@ -1,0 +1,44 @@
+/**
+ * material_lambertian.vp
+ * 
+ * Vertex shader shader which writes material information needed for Lambertian shading to
+ * the gbuffer.
+ * 
+ * Written for Cornell CS 5625 (Interactive Computer Graphics).
+ * Copyright (c) 2012, Computer Science Department, Cornell University.
+ * 
+ * @author Asher Dunn (ad488)
+ * @date 2012-03-27
+ */
+
+/* Pass eyespace position and normal, and texcoord, to the fragment shader. */
+varying vec3 EyespacePosition;
+varying vec3 EyespaceNormal;
+varying vec2 TexCoord;
+
+/* Textures and flags for whether they exist. */
+uniform sampler2DRect SandDuneHeightMap;
+uniform bool HasSandDuneHeightMap;
+
+void main()
+{
+
+	vec4 newVertexPos;
+	vec4 dv;
+	float h = 1.0;
+	
+	if (HasSandDuneHeightMap){
+		dv = texture2DRect(SandDuneHeightMap,gl_MultiTexCoord0.xy);
+		newVertexPos = vec4(0.0, h * dv.x , 0.0, 0.0) + gl_Vertex;
+		//newVertexPos = vec4(0.0, h * gl_MultiTexCoord0.x + h * gl_MultiTexCoord0.y , 0.0, 0.0) + gl_Vertex; 
+	}
+	else {
+		newVertexPos = vec4(0.0,-5, 0.0, 0.0) + gl_Vertex; 
+	}
+	
+		
+	gl_Position = gl_ModelViewProjectionMatrix * newVertexPos;
+	EyespacePosition = vec3(gl_ModelViewMatrix * newVertexPos);
+	EyespaceNormal = normalize(gl_NormalMatrix * gl_Normal);	
+	TexCoord = vec2(gl_MultiTexCoord0);
+}

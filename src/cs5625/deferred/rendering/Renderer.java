@@ -187,19 +187,21 @@ public class Renderer
 			/* Reset lights array. It will be re-filled as the scene is traversed. */
 			mLights.clear();
 			
-			if (shadowCamera != null) {
-				fillGBuffer(gl, sceneRoot, shadowCamera);
+			/* 0.5. Compute sand dune buffer */
+			for (int i=0; i<1; i++){
+				computeSandDuneBuffer(gl);
 			}
+			
+		
 			
 			
 			/* 1. Fill the gbuffer given this scene and camera. */ 
 			fillGBuffer(gl, sceneRoot, camera);
 			
-			
-			/* 1.5. Cmpute sand dune buffer */
-			for (int i=0; i<1; i++){
-				computeSandDuneBuffer(gl);
+			if (shadowCamera != null) {
+				fillGBuffer(gl, sceneRoot, shadowCamera);
 			}
+
 			/* 2. Compute gradient buffer based on positions and normals, used for toon shading. */
 			//computeGradientBuffer(gl);
 			computeSSAOBuffer(gl, camera);
@@ -866,7 +868,7 @@ public class Renderer
 	void bindRequiredMeshAttributes(GL2 gl, Mesh mesh) throws OpenGLException
 	{
 		ShaderProgram shader = mesh.getMaterial().getShaderProgram();
-		
+
 		for (String attrib : mesh.getMaterial().getRequiredVertexAttributes())
 		{
 			/* Ignore attributes which aren't actually used in the shader. */
@@ -1150,6 +1152,15 @@ public class Renderer
 
 	
 	/**
+	 * Returns reference to SBuffer.  
+	 * This is primarily for binding the sanddune material to the sanddune height 
+	 * map maintained by this buffer. 
+	 */
+	public FramebufferObject getSandDuneFrameBufferObject(){
+		return mSBufferFBO;
+	}
+	
+	/**
 	 * Performs one-time initialization of OpenGL state and shaders used by this renderer.
 	 * @param drawable The OpenGL drawable this renderer will be rendering to.
 	 */
@@ -1179,7 +1190,6 @@ public class Renderer
 			gl.glUniform1i(mUberShader.getUniformLocation(gl, "SandDune2Buffer"), 7);
 
 			gl.glUniform3f(mUberShader.getUniformLocation(gl, "SkyColor"), 102.0f/256f, 1f, 1f);
-			//gl.glUniform3f(mUberShader.getUniformLocation(gl, "SkyColor"), 0.1f, 0.1f, 0.1f);
 			gl.glUniform1i(mUberShader.getUniformLocation(gl, "ShadowMap"), mShadowTextureLocation);
 			mUberShader.unbind(gl);			
 			
@@ -1289,6 +1299,8 @@ public class Renderer
 			/* Load the material used to render mesh edges (e.g. creases for subdivs). */
 			mWireframeMaterial = new UnshadedMaterial(new Color3f(0.8f, 0.8f, 0.8f));
 			mWireframeMarkedEdgeMaterial = new UnshadedMaterial(new Color3f(1.0f, 0.0f, 1.0f));
+			
+			resize(drawable,100,100);
 			
 			/* Make sure nothing went wrong. */
 			OpenGLException.checkOpenGLError(gl);

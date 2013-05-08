@@ -70,7 +70,7 @@ public class CCSubdiv {
 			
 			texCoordBuf.put(targetTexture.x);
 			texCoordBuf.put(targetTexture.y);
-			
+						
 			targetNormal.normalize();
 			normalBuf.put(targetNormal.x);
 			normalBuf.put(targetNormal.y);
@@ -102,8 +102,9 @@ public class CCSubdiv {
 				Point3f v3Position = new Point3f(vertexBuf.get(3*v3), vertexBuf.get(3*v3+1), vertexBuf.get(3*v3+2));
 				Point3f v4Position = new Point3f(vertexBuf.get(3*v4), vertexBuf.get(3*v4+1), vertexBuf.get(3*v4+2));
 				
-				Point2f v3TexCoord = new Point2f(texCoordBuf.get(2*v3), vertexBuf.get(2*v3+1));
-				Point2f v4TexCoord = new Point2f(texCoordBuf.get(2*v4), vertexBuf.get(2*v4+1));
+				
+				Point2f v3TexCoord = new Point2f(texCoordBuf.get(2*v3), texCoordBuf.get(2*v3+1));
+				Point2f v4TexCoord = new Point2f(texCoordBuf.get(2*v4), texCoordBuf.get(2*v4+1));
 
 				Vector3f v3Normal = new Vector3f(normalBuf.get(3*v3), normalBuf.get(3*v3+1), normalBuf.get(3*v3+2));
 				Vector3f v4Normal = new Vector3f(normalBuf.get(3*v4), normalBuf.get(3*v4+1), normalBuf.get(3*v4+2));
@@ -127,7 +128,7 @@ public class CCSubdiv {
 				targetNormal.add(v4Normal);
 				targetNormal.scale(0.25f);
 			}
-			else{ // IF ON A CREASE EDGE
+			else{ // IF ON A CREASE EDGE OR A BOUNDARY
 				VertexAttributeData vDatav1 = edgeDS.getVertexData(v1).mData;
 				VertexAttributeData vDatav2 = edgeDS.getVertexData(v2).mData;
 				
@@ -149,6 +150,7 @@ public class CCSubdiv {
 			vertexBuf.put(targetPosition.y);
 			vertexBuf.put(targetPosition.z);
 			
+			//PROBLEM ??? 
 			texCoordBuf.put(targetTexture.x);
 			texCoordBuf.put(targetTexture.y);	
 			
@@ -203,7 +205,7 @@ public class CCSubdiv {
 					PolygonData face = edgeDS.getPolygonData(faceID);
 					int v = face.getNewFaceVertexID();
 					Point3f vPosition = new Point3f(vertexBuf.get(3*v), vertexBuf.get(3*v+1), vertexBuf.get(3*v+2));
-					Point2f vTexCoord = new Point2f(texCoordBuf.get(2*v), vertexBuf.get(2*v+1));
+					Point2f vTexCoord = new Point2f(texCoordBuf.get(2*v), texCoordBuf.get(2*v+1));
 					Vector3f vNormal = new Vector3f(normalBuf.get(3*v), normalBuf.get(3*v+1), normalBuf.get(3*v+2));
 
 					targetPosition.scaleAdd(beta,vPosition, targetPosition);
@@ -213,9 +215,10 @@ public class CCSubdiv {
 			}
 			
 			// On an edge
-			else if (creaseEdges.size() == 2){
+			else if (creaseEdges.size() == 2 ){
 				targetPosition.scale(0.75f);
 				targetTexture.scale(0.75f);
+				targetNormal.scale(0.75f);
 				
 				//NEW VERTEX 1
 				int newVertexId;
