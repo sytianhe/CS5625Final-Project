@@ -7,8 +7,6 @@ import javax.vecmath.Vector3f;
 
 import com.jogamp.common.nio.Buffers;
 
-import cs5625.deferred.catmullclark.CCSubdiv;
-import cs5625.deferred.datastruct.EdgeDS;
 import cs5625.deferred.scenegraph.Quadmesh;
 
 /**

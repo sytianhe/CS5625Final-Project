@@ -8,19 +8,14 @@ import java.util.ArrayList;
 import javax.vecmath.AxisAngle4f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
-import javax.vecmath.Vector3f;
 
 import cs5625.deferred.misc.ScenegraphException;
 import cs5625.deferred.misc.Util;
-import cs5625.deferred.scenegraph.Geometry;
-import cs5625.deferred.scenegraph.PointLight;
-import cs5625.deferred.scenegraph.Quadmesh;
-import cs5625.deferred.scenegraph.Trimesh;
 import cs5625.deferred.physicsGeometry.Branch;
 import cs5625.deferred.physicsGeometry.Ground;
-import cs5625.deferred.physicsGeometry.Leaf;
 import cs5625.deferred.physicsGeometry.Sphere;
 import cs5625.deferred.physicsGeometry.Stem;
+import cs5625.deferred.scenegraph.PointLight;
 
 public class TreeSceneController extends SceneController{
 
@@ -35,31 +30,21 @@ public class TreeSceneController extends SceneController{
 	
 	/* Used to calculate mouse deltas to orbit the camera in mouseDragged(). */ 
 	private Point mLastMouseDrag;
-	private Trimesh triMesh;
-	private Geometry geo;
-	
-	/* Used to calculate subdivision surfaces. */
-	private Quadmesh visibleMesh;
-	
-	private int numberofSub = 2;
 
 	public void initializeScene() {
 		try {
-			//SETUP CONTROL POINT FOR LEAF AND STEM .... NEED TO BE SPACED OUT CURRENTLY
-			ArrayList<Point3f>list = new ArrayList<Point3f>();
-        	ArrayList<Point3f>list2 = new ArrayList<Point3f>();
-//        	for(int j = 0; j<5; j++){
-//				Point3f point = new Point3f();
-//				point.set(0f,1.5f*i,0f);
-//				list2.add(new Point3f(point));
-//        	}
-			for(int i=0; i< 10; i++){
-				Point3f point = new Point3f();
-				point.set(0f,1.5f*i,0f);
-				list.add(new Point3f(point));
-				//list2.add(new Point3f(point));
+			//ADD LIGHT
+			/* Add an unattenuated point light to provide overall illumination. */
+			PointLight light = new PointLight();
 
-			}
+			light.setConstantAttenuation(1.0f);
+			light.setLinearAttenuation(0.0f);
+			light.setQuadraticAttenuation(0.0f);
+
+			
+			light.setPosition(new Point3f(mShadowCamera.getPosition()));
+			light.setName("CameraLight");
+			mSceneRoot.addChild(light);	
 
 			//ADD GROUND
 			Ground plane = new Ground();
@@ -71,41 +56,30 @@ public class TreeSceneController extends SceneController{
             sphere.getOriginParticle().v.set(-5,5,-5);
             mSceneRoot.addChild(sphere);    
             plane.addInteractionWith(sphere);
+            
+			//SETUP CONTROL POINT FOR LEAF AND STEM .... NEED TO BE SPACED OUT CURRENTLY
+			ArrayList<Point3f>list = new ArrayList<Point3f>(); // List of control points for the trunk
+        	ArrayList<Point3f>list2 = new ArrayList<Point3f>();// List of control points for the fronds
 
+			for(int i=0; i< 15; i++){
+				Point3f point = new Point3f();
+				point.set(0f,1f*i,0f);
+				
+				list.add(new Point3f(point));
+				point.scale(0.3f);
+				list2.add(new Point3f(point));
+			}
+			
             //ADD MAIN TRUNK
             Branch branch = new Branch(list);
             branch.setPosition(new Point3f(0.0f, 0.0f, 0.0f));
             branch.setIsPinned(true);
             mSceneRoot.addChild(branch);
             
+            //ADD INTERACTION WITH THE SPHERE
             branch.addInteractionWith(sphere);
-  
-            //CREATE AND ATTACH LEAVES  UP STEM
-//            for (Point3f pt :  list ){
-//            	if (! pt.equals(list.get(0)) && ! pt.equals(list.get(1))){
-//            		Leaf leaf1 = new Leaf(3f, 0.75f);
-//            		Leaf leaf2 = new Leaf(3f, 0.75f);
-//            		leaf2.setOrientation(new Quat4f(0,1,0,0));
-//            		branch.pinToPhysicsGeometry(leaf1,pt);
-//            		branch.pinToPhysicsGeometry(leaf2,pt);
-//            	}
-//            }
             
             Point3f topPoint = list.get(list.size()-1);
-//            for (int i = 0; i<8; i++){
-//            	Leaf leaf1 = new Leaf(3f, 0.75f);
-//            	leaf1.setOrientation(new Quat4f(0,(float) Math.sin((float)i/8.0 *1.0* Math.PI),0,(float) Math.cos((float)i/8.0 *1.0* Math.PI)));
-//            	branch.pinToPhysicsGeometry(leaf1,topPoint);
-//            }
-
-			for(int i=0; i< 15; i++){
-				Point3f point = new Point3f();
-				point.set(0f,1.5f*i/5f,0f);
-				//list.add(new Point3f(point));
-				list2.add(new Point3f(point));
-
-			}
-			
             //CREATE STEMS AND LEAVES
             for (int i = 0; i<15; i++){
                 Stem stem = new Stem(list2);
@@ -119,20 +93,7 @@ public class TreeSceneController extends SceneController{
                 rotY.mul(rotZ);
             	stem.setOrientation(rotY);
                 branch.pinToPhysicsGeometry(stem, topPoint);
-            }
-			            
-			/* Add an unattenuated point light to provide overall illumination. */
-			PointLight light = new PointLight();
-
-			light.setConstantAttenuation(1.0f);
-			light.setLinearAttenuation(0.0f);
-			light.setQuadraticAttenuation(0.0f);
-
-			
-			light.setPosition(new Point3f(mShadowCamera.getPosition()));
-			//light.setPosition(new Point3f(10f, 10f, 10f));
-			light.setName("CameraLight");
-			mSceneRoot.addChild(light);		
+            }	
 		}		 	
 		catch (ScenegraphException e) {
 			// TODO Auto-generated catch block

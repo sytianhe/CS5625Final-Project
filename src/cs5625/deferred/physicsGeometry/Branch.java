@@ -3,19 +3,14 @@ package cs5625.deferred.physicsGeometry;
 import java.util.ArrayList;
 
 import javax.vecmath.Color3f;
-import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3d;
 
 import cs5625.deferred.materials.BlinnPhongMaterial;
 import cs5625.deferred.materials.Material;
-import cs5625.deferred.materials.UnshadedMaterial;
-import cs5625.deferred.materials.VertexLambertianMaterial;
 import cs5625.deferred.physics.Particle;
 import cs5625.deferred.physics.ParticleSystem;
-import cs5625.deferred.physics.PenaltyForceSphere;
 import cs5625.deferred.physics.SpringForce2Particle;
-import cs5625.deferred.physics.SpringForceBending;
 import cs5625.deferred.physics.SpringForceBendingTheta;
 import cs5625.deferred.physics.SpringForceParticleEdge;
 import cs5625.deferred.scenegraph.Mesh;

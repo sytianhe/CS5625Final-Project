@@ -14,7 +14,7 @@ import cs5625.deferred.scenegraph.Mesh;
 
 public class Leaf2 extends PhysicsGeometry
 {
-	private int numSubdivisions = 0;
+	private int numSubdivisions = 1;
 	private float width = 0f;
 	private Material material = new LambertianMaterial(new Color3f(0.10f, 0.70f, 0.10f)) ;
 	
