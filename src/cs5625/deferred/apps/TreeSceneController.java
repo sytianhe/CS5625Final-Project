@@ -107,8 +107,7 @@ public class TreeSceneController extends SceneController{
 			}
 			
             //CREATE STEMS AND LEAVES
-            for (int i = 0; i<20; i++){
-
+            for (int i = 0; i<15; i++){
                 Stem stem = new Stem(list2);
                 // FIND THE RIGHT QUATERNION TO MAINTAIN THE TREE LEAVES FACING UP
                 float rand1 = (float) Math.random();
