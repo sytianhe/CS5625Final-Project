@@ -22,7 +22,7 @@ public class Camera extends SceneObject
 	/* Perspective camera attributes. */
 	private float mFOV = 45.0f;
 	private float mNear = 0.1f;
-	private float mFar = 100.0f;
+	private float mFar = 1000.0f;
 	
 	private boolean mIsShadowMapCamera = false;
 	

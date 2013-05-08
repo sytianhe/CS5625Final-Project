@@ -47,7 +47,7 @@ public class TreeSceneController extends SceneController{
 			mSceneRoot.addChild(light);	
 
 			//ADD GROUND
-			Ground plane = new Ground();
+			Ground plane = new Ground(mRenderer.getSandDuneFrameBufferObject());
 			mSceneRoot.addChild(plane);
 			
 			//ADD SPHERE
