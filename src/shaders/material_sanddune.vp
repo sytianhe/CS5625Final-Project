@@ -17,25 +17,19 @@ varying vec3 EyespaceNormal;
 varying vec2 TexCoord;
 
 /* Textures and flags for whether they exist. */
-uniform sampler2DRect SandDuneHeightMap;
+uniform sampler2D SandDuneHeightMap;
 uniform bool HasSandDuneHeightMap;
 
 void main()
 {
 
 	vec4 newVertexPos;
-	vec4 dv;
-	float h = 1.0;
+	float h = 2.0;
 	
 	if (HasSandDuneHeightMap){
-		dv = texture2DRect(SandDuneHeightMap,gl_MultiTexCoord0.xy);
-		newVertexPos = vec4(0.0, h * dv.x , 0.0, 0.0) + gl_Vertex;
-		//newVertexPos = vec4(0.0, h * gl_MultiTexCoord0.x + h * gl_MultiTexCoord0.y , 0.0, 0.0) + gl_Vertex; 
+		vec4 dv = texture2D(SandDuneHeightMap,gl_MultiTexCoord0.xy);
+		newVertexPos = vec4(0.0, h * (dv.x-0.5) , 0.0, 0.0) + gl_Vertex;
 	}
-	else {
-		newVertexPos = vec4(0.0,-5, 0.0, 0.0) + gl_Vertex; 
-	}
-	
 		
 	gl_Position = gl_ModelViewProjectionMatrix * newVertexPos;
 	EyespacePosition = vec3(gl_ModelViewMatrix * newVertexPos);

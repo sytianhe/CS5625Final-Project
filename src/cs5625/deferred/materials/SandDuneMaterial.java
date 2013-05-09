@@ -2,6 +2,7 @@ package cs5625.deferred.materials;
 import java.io.IOException;
 
 import javax.media.opengl.GL2;
+import javax.media.opengl.glu.GLU;
 import javax.vecmath.Color3f;
 
 import cs5625.deferred.misc.OpenGLException;
@@ -15,6 +16,7 @@ public class SandDuneMaterial extends Material{
 	/* Setup framebuffer objects for generating dynamic height maps */
 	/* The sanddune map FBO */
 	protected FramebufferObject mSBufferFBO;
+	private Texture2D mTexture = null;
 	
 	protected final int SBuffer_SandDune1Index = 0;
 	protected final int SBuffer_SandDune2Index = 1;
@@ -34,9 +36,21 @@ public class SandDuneMaterial extends Material{
 	}
 
 	/* Constructor with reference to sand dune frame buffer object storing height map. */
-	public SandDuneMaterial(FramebufferObject fbo)
+	public SandDuneMaterial(FramebufferObject fbo) 
 	{
 		setSandDuneFBO(fbo);
+		
+		GL2 gl = GLU.getCurrentGL().getGL2();
+		try {
+			mTexture = Texture2D.load(gl, "textures/brick1.png", false);
+		} catch (OpenGLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 	
 	public Color3f getDiffuseColor()
@@ -68,18 +82,22 @@ public class SandDuneMaterial extends Material{
 	@Override
 	public void bind(GL2 gl) throws OpenGLException
 	{
+		
 		/* Bind shader and any textures, and update uniforms. */
 		getShaderProgram().bind(gl);
-			
+					
 		gl.glUniform3f(mDiffuseUniformLocation, mDiffuseColor.x, mDiffuseColor.y, mDiffuseColor.z);
 				
-		if (mSBufferFBO == null) {
-			gl.glUniform1i(mHasSandDuneFBOUniformLocation, 0);
-		}
-		else {
-			gl.glUniform1i(mHasSandDuneFBOUniformLocation, 1);
-			mSBufferFBO.getColorTexture(SBuffer_SandDune1Index).bind(gl,0);
-		}
+
+		gl.glUniform1i(mHasSandDuneFBOUniformLocation, 1);
+		mTexture.bind(gl, 0);
+//		if (mSBufferFBO == null) {
+//			gl.glUniform1i(mHasSandDuneFBOUniformLocation, 0);
+//		}
+//		else {
+//			gl.glUniform1i(mHasSandDuneFBOUniformLocation, 1);
+//			mSBufferFBO.getColorTexture(SBuffer_SandDune1Index).bind(gl,0);
+//		}
 	}
 	
 	@Override
@@ -92,7 +110,6 @@ public class SandDuneMaterial extends Material{
 		
 		/* These are only set once, so set them here. */
 		shader.bind(gl);
-		
 		gl.glUniform1i(shader.getUniformLocation(gl, "SandDuneHeightMap"), 0);
 		shader.unbind(gl);
 	}
@@ -103,8 +120,8 @@ public class SandDuneMaterial extends Material{
 		/* Unbind everything bound in bind(). */
 		getShaderProgram().unbind(gl);
 		
-		// TODO PA3 Prereq: Unbind any used textures.		
-		if (mSBufferFBO != null) mSBufferFBO.getColorTexture(SBuffer_SandDune1Index).unbind(gl);
+		//if (mSBufferFBO != null) mSBufferFBO.getColorTexture(SBuffer_SandDune1Index).unbind(gl);
+		mTexture.unbind(gl);
 	}
 	
 }
