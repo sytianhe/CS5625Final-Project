@@ -3,12 +3,17 @@ package cs5625.deferred.apps;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.media.opengl.GL2;
+import javax.media.opengl.glu.GLU;
 import javax.vecmath.AxisAngle4f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
 
+import cs5625.deferred.materials.Texture2D;
+import cs5625.deferred.misc.OpenGLException;
 import cs5625.deferred.misc.ScenegraphException;
 import cs5625.deferred.misc.Util;
 import cs5625.deferred.physicsGeometry.Branch;
@@ -33,6 +38,9 @@ public class TreeSceneController extends SceneController{
 
 	public void initializeScene() {
 		try {
+			
+			GL2 gl = GLU.getCurrentGL().getGL2();
+
 			//ADD LIGHT
 			/* Add an unattenuated point light to provide overall illumination. */
 			PointLight light = new PointLight();
@@ -77,6 +85,8 @@ public class TreeSceneController extends SceneController{
             Branch branch = new Branch(list);
             branch.setPosition(new Point3f(0.0f, 0.0f, 0.0f));
             branch.setIsPinned(true);
+			branch.setDiffuseTexture(Texture2D.load(gl, "textures/bark1.jpg",false));
+
             mSceneRoot.addChild(branch);
             
             branch.addInteractionWith(sphere);
@@ -99,6 +109,13 @@ public class TreeSceneController extends SceneController{
             }	
 		}		 	
 		catch (ScenegraphException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    catch (OpenGLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

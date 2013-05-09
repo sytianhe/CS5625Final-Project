@@ -91,7 +91,7 @@ public class SpringForce2Particle implements Force
 			double dvDot = v.dot(p2.v) - v.dot(p1.v);
 
 			double k = this.STIFFNESS;
-			v.scale( k * ((L-L0)  + 0.1*dvDot ) );
+			v.scale( k * ((L-L0)  + 0.5*dvDot ) );
 
 			p1.f.add(v);
 			v.negate();
