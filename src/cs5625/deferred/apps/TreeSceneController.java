@@ -14,6 +14,7 @@ import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
 
 import cs5625.deferred.materials.ParallaxMapMaterial;
+
 import cs5625.deferred.materials.Texture2D;
 import cs5625.deferred.misc.OpenGLException;
 import cs5625.deferred.misc.ScenegraphException;
@@ -42,6 +43,9 @@ public class TreeSceneController extends SceneController{
 	
 	public void initializeScene() {
 		try {
+			
+			GL2 gl = GLU.getCurrentGL().getGL2();
+
 			//ADD LIGHT
 			/* Add an unattenuated point light to provide overall illumination. */
 			PointLight light = new PointLight();
@@ -86,6 +90,8 @@ public class TreeSceneController extends SceneController{
             Branch branch = new Branch(list);
             branch.setPosition(new Point3f(0.0f, 0.0f, 0.0f));
             branch.setIsPinned(true);
+			//branch.setDiffuseTexture(Texture2D.load(gl, "textures/bark1.jpg",false));
+
             mSceneRoot.addChild(branch);
             
             branch.addInteractionWith(sphere);
@@ -107,7 +113,6 @@ public class TreeSceneController extends SceneController{
                 branch.pinToPhysicsGeometry(stem, topPoint);
             }	
             
-            GL2 gl = GLU.getCurrentGL().getGL2();
             //TESTING PARALLAX MAPPING:
 		    ParallaxMapMaterial normalMaterial2 = new ParallaxMapMaterial();
 			Texture2D brickTexture = Texture2D.load(gl, "textures/lion.jpg");

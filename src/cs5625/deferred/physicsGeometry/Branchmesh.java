@@ -3,6 +3,7 @@ package cs5625.deferred.physicsGeometry;
 import java.util.ArrayList;
 
 import javax.vecmath.Point3f;
+import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
 import com.jogamp.common.nio.Buffers;
@@ -69,7 +70,7 @@ public class Branchmesh extends Quadmesh {
 				mNormalData.put(normalDir.x);
 				mNormalData.put(normalDir.y);
 				mNormalData.put(normalDir.z);
-
+				
 				mVertexData.put(ControlPoints.get(i).x + tangent.x);
 				mVertexData.put(ControlPoints.get(i).y + tangent.y);
 				mVertexData.put(ControlPoints.get(i).z + tangent.z);
@@ -91,7 +92,7 @@ public class Branchmesh extends Quadmesh {
 				mNormalData.put(- tangentDir.y);
 				mNormalData.put(- tangentDir.z);
 			}
-			else if (i == ControlPoints.size()-1){
+			else if (i == ControlPoints.size()-1){  //TOP CONTROL POINT IS SPECIAL (!!!)
 				temp.set(ControlPoints.get(i));
 				temp.sub(ControlPoints.get(i-1));
 				temp.normalize();
@@ -132,6 +133,28 @@ public class Branchmesh extends Quadmesh {
 				mNormalData.put(normalDir.x);
 				mNormalData.put(normalDir.y);
 				mNormalData.put(normalDir.z);
+			}
+			
+			//ADD TEXTURE COORDINATES.  THE BOUND TEXTURE WILL BE MAPPED TO EACH FACE OF THE BRANCH (BEFORE SUBDIVISION)
+			if (i % 2 == 0){
+				mTexCoordData.put(0f);
+				mTexCoordData.put(0f);
+				mTexCoordData.put(1f);
+				mTexCoordData.put(0f);
+				mTexCoordData.put(0f);
+				mTexCoordData.put(0f);
+				mTexCoordData.put(1f);
+				mTexCoordData.put(0f);
+			}
+			else{
+				mTexCoordData.put(0f);
+				mTexCoordData.put(1f);
+				mTexCoordData.put(1f);
+				mTexCoordData.put(1f);
+				mTexCoordData.put(0f);
+				mTexCoordData.put(1f);
+				mTexCoordData.put(1f);
+				mTexCoordData.put(1f);
 			}
 		}
 
