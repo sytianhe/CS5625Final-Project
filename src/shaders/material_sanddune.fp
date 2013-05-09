@@ -19,7 +19,7 @@ const int LAMBERTIAN_MATERIAL_ID = 2;
 uniform vec3 DiffuseColor;
 
 /* Textures and flags for whether they exist. */
-uniform sampler2DRect SandDuneHeightMap;
+uniform sampler2D SandDuneHeightMap;
 uniform bool HasSandDuneHeightMap;
 
 /* Fragment position, normal, and texcoord passed from the vertex shader. */
@@ -38,8 +38,12 @@ void main()
 	
 	vec2 enc = encode(normalize(EyespaceNormal));
 	
-	gl_FragData[0] = vec4(DiffuseColor, enc.x);
-	gl_FragData[0].xy = TexCoord;
+	if (HasSandDuneHeightMap) {
+		gl_FragData[0] = vec4(texture2D(SandDuneHeightMap, TexCoord).y * DiffuseColor, enc.x);
+	}
+	else {
+		gl_FragData[0] = vec4(DiffuseColor, enc.x);
+	}	
 	gl_FragData[1] = vec4(EyespacePosition, enc.y);
 	gl_FragData[2] = vec4(float(LAMBERTIAN_MATERIAL_ID), 0.0, 0.0, 0.0);
 	gl_FragData[3] = vec4(0.0);

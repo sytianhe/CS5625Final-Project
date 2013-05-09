@@ -24,7 +24,7 @@ public class Ground extends PhysicsGeometry {
 	public Ground(FramebufferObject fbo){
 		try {
 			Mesh groundMesh = Ground.load("models/bigplane.obj", false, true).get(0).getMeshes().get(0);
-			((Quadmesh) groundMesh).subdivide(7);
+			((Quadmesh) groundMesh).subdivide(5);
 			groundMesh.setMaterial(new SandDuneMaterial(fbo));
 			this.addMesh(groundMesh);
 			
