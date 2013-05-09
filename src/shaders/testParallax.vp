@@ -1,0 +1,43 @@
+/**
+ * material_normal_map.vp
+ * 
+ * Vertex shader shader which writes material information needed for Normal Map shading to
+ * the gbuffer.
+ * 
+ * Written for Cornell CS 5625 (Interactive Computer Graphics).
+ * Copyright (c) 2012, Computer Science Department, Cornell University.
+ * 
+ * @author Asher Dunn (ad488), John DeCorato (jd537), Sean Ryan (ser99), Ivo Boyadzhiev (iib2)
+ * @date 2013-02-2012
+ */
+ 
+ #version 110
+
+attribute vec4 VertexTangent;
+
+varying vec3 EyespacePosition;
+varying vec3 EyespaceNormal;
+varying vec2 TexCoord;
+
+varying vec3 EyespaceTangent;
+varying vec3 EyespaceBiTangent;
+varying float handedness;
+
+void main() {
+	/* Standard vertex transform */
+	gl_Position = ftransform();
+	
+	/* TODO PA2: Transform stuff into eye space and store in varyings.
+	 *           You must also construct the Bitangent from the VertexTangent attribute.
+	 *           Note that VertexTangent.xyz is the tangent and VertexTangent.w is the handedness of the bitangent.
+	 */
+
+	EyespacePosition = vec3(gl_ModelViewMatrix * gl_Vertex);
+	EyespaceNormal = normalize(gl_NormalMatrix * gl_Normal);
+	
+	EyespaceTangent = normalize(gl_NormalMatrix * VertexTangent.xyz);
+	EyespaceBiTangent = normalize(VertexTangent.w*cross(EyespaceNormal, EyespaceTangent));
+	handedness = VertexTangent.w;
+	
+	TexCoord = vec2(gl_MultiTexCoord0);
+}

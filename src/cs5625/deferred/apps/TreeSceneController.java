@@ -4,12 +4,18 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.media.opengl.GL2;
+import javax.media.opengl.glu.GLU;
 import javax.vecmath.AxisAngle4f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
 
+import cs5625.deferred.materials.ParallaxMapMaterial;
+import cs5625.deferred.materials.Texture2D;
+import cs5625.deferred.misc.OpenGLException;
 import cs5625.deferred.misc.ScenegraphException;
 import cs5625.deferred.misc.Util;
 import cs5625.deferred.physics.ParticleSystem;
@@ -17,6 +23,7 @@ import cs5625.deferred.physicsGeometry.Branch;
 import cs5625.deferred.physicsGeometry.Ground;
 import cs5625.deferred.physicsGeometry.Sphere;
 import cs5625.deferred.physicsGeometry.Stem;
+import cs5625.deferred.scenegraph.Geometry;
 import cs5625.deferred.scenegraph.PointLight;
 
 public class TreeSceneController extends SceneController{
@@ -99,8 +106,34 @@ public class TreeSceneController extends SceneController{
             	stem.setOrientation(rotY);
                 branch.pinToPhysicsGeometry(stem, topPoint);
             }	
+            
+            GL2 gl = GLU.getCurrentGL().getGL2();
+            //TESTING PARALLAX MAPPING:
+		    ParallaxMapMaterial normalMaterial2 = new ParallaxMapMaterial();
+			Texture2D brickTexture = Texture2D.load(gl, "textures/lion.jpg");
+			Texture2D brickSpecularTexture = Texture2D.load(gl, "textures/Specular_example.jpg");
+			Texture2D brickNormalTexture = Texture2D.load(gl, "textures/stoneBrickNormal.jpg");
+			Texture2D brickHeightTexture = Texture2D.load(gl, "textures/lion_bump.jpg");
+			normalMaterial2.setDiffuseTexture(brickTexture);
+			normalMaterial2.setSpecularTexture(brickSpecularTexture);
+			normalMaterial2.setNormalTexture(brickNormalTexture);
+			normalMaterial2.setHeightTexture(brickHeightTexture);
+			
+			//mSceneRoot.addGeometry(Geometry.load("models/default-scene.obj", true, true));
+			ArrayList<Geometry> temp = new ArrayList <Geometry>();
+			temp.addAll( Geometry.load("models/cube.obj", true, true));
+			mSceneRoot.addChild(temp.get(0));
+			temp.get(0).setPosition(new Point3f(0, 5f, -5f));
+			temp.get(0).calculateTangentVectorsForAllGeometry();
+			temp.get(0).getMeshes().get(0).setMaterial(normalMaterial2);
 		}		 	
 		catch (ScenegraphException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (OpenGLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

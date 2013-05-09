@@ -129,8 +129,8 @@ public abstract class Mesh implements OpenGLResourceObject
 		
 		matQ.getRow(0, tangent);
 		matQ.getRow(1, bi_tangent);
-		tangent.normalize();
-		bi_tangent.normalize();
+//		tangent.normalize();
+//		bi_tangent.normalize();
 		
 		/* Accumulate into temporary arrays. */
 		tan1[3 * i1 + 0] += tangent.getElement(0);
