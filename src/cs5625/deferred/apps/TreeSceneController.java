@@ -22,6 +22,7 @@ import cs5625.deferred.misc.Util;
 import cs5625.deferred.physics.ParticleSystem;
 import cs5625.deferred.physicsGeometry.Branch;
 import cs5625.deferred.physicsGeometry.Ground;
+import cs5625.deferred.physicsGeometry.PalmTree;
 import cs5625.deferred.physicsGeometry.Sphere;
 import cs5625.deferred.physicsGeometry.Stem;
 import cs5625.deferred.scenegraph.Geometry;
@@ -70,48 +71,54 @@ public class TreeSceneController extends SceneController{
             mSceneRoot.addChild(sphere);    
             plane.addInteractionWith(sphere);
             
-			//SETUP CONTROL POINT FOR LEAF AND STEM .... NEED TO BE SPACED OUT CURRENTLY
-			ArrayList<Point3f>list = new ArrayList<Point3f>();
-        	ArrayList<Point3f>list2 = new ArrayList<Point3f>();
+            Texture2D barkTexture = Texture2D.load(gl, "textures/bark1.jpg",false);
+            PalmTree tree = new PalmTree(10f, 0.5f, 0.4f, 0f, 10f, 15, 15,3, barkTexture);
+            tree.setPosition(new Point3f(0.0f, 0.0f, 0.0f));
+            mSceneRoot.addChild(tree);
 
-			for(int i=0; i< 10; i++){
-				Point3f point = new Point3f();
-				point.set(0f,1.5f*i,0f);
-				list.add(new Point3f(point));
-			}
-			
-			for(int i=0; i< 15; i++){
-				Point3f point = new Point3f();
-				point.set(0f,1.5f*i/5f,0f);
-				list2.add(new Point3f(point));
-			}
-			
-            //ADD MAIN TRUNK
-            Branch branch = new Branch(list);
-            branch.setPosition(new Point3f(0.0f, 0.0f, 0.0f));
-            branch.setIsPinned(true);
-			//branch.setDiffuseTexture(Texture2D.load(gl, "textures/bark1.jpg",false));
-
-            mSceneRoot.addChild(branch);
             
-            branch.addInteractionWith(sphere);
-            
-            Point3f topPoint = list.get(list.size()-1);
-			
-            //CREATE STEMS AND LEAVES
-            for (int i = 0; i<15; i++){
-                Stem stem = new Stem(list2);
-                // FIND THE RIGHT QUATERNION TO MAINTAIN THE TREE LEAVES FACING UP
-                float rand1 = (float) Math.random();
-                float rand2 = (float) Math.random()*0.35f;
-
-                Quat4f rotY = new Quat4f(0,(float) Math.sin(rand1* Math.PI),0,(float) Math.cos(rand1* Math.PI));                
-                Quat4f rotZ = new Quat4f(0,0,(float) Math.sin(rand2* Math.PI),(float) Math.cos(rand2* Math.PI));
-
-                rotY.mul(rotZ);
-            	stem.setOrientation(rotY);
-                branch.pinToPhysicsGeometry(stem, topPoint);
-            }	
+//			//SETUP CONTROL POINT FOR LEAF AND STEM .... NEED TO BE SPACED OUT CURRENTLY
+//			ArrayList<Point3f>list = new ArrayList<Point3f>();
+//        	ArrayList<Point3f>list2 = new ArrayList<Point3f>();
+//
+//			for(int i=0; i< 10; i++){
+//				Point3f point = new Point3f();
+//				point.set(0f,1.5f*i,0f);
+//				list.add(new Point3f(point));
+//			}
+//			
+//			for(int i=0; i< 15; i++){
+//				Point3f point = new Point3f();
+//				point.set(0f,1.5f*i/5f,0f);
+//				list2.add(new Point3f(point));
+//			}
+//			
+//            //ADD MAIN TRUNK
+//            Branch branch = new Branch(list);
+//            branch.setPosition(new Point3f(0.0f, 0.0f, 0.0f));
+//            branch.setIsPinned(true);
+//			branch.setDiffuseTexture(Texture2D.load(gl, "textures/bark1.jpg",false));
+//
+//            mSceneRoot.addChild(branch);
+//            
+//            branch.addInteractionWith(sphere);
+//            
+//            Point3f topPoint = list.get(list.size()-1);
+//			
+//            //CREATE STEMS AND LEAVES
+//            for (int i = 0; i<15; i++){
+//                Stem stem = new Stem(list2);
+//                // FIND THE RIGHT QUATERNION TO MAINTAIN THE TREE LEAVES FACING UP
+//                float rand1 = (float) Math.random();
+//                float rand2 = (float) Math.random()*0.35f;
+//
+//                Quat4f rotY = new Quat4f(0,(float) Math.sin(rand1* Math.PI),0,(float) Math.cos(rand1* Math.PI));                
+//                Quat4f rotZ = new Quat4f(0,0,(float) Math.sin(rand2* Math.PI),(float) Math.cos(rand2* Math.PI));
+//
+//                rotY.mul(rotZ);
+//            	stem.setOrientation(rotY);
+//                branch.pinToPhysicsGeometry(stem, topPoint);
+//            }	
             
             //TESTING PARALLAX MAPPING:
 		    ParallaxMapMaterial normalMaterial2 = new ParallaxMapMaterial();

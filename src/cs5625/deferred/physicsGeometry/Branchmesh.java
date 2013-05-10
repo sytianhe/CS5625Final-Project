@@ -21,7 +21,7 @@ import cs5625.deferred.scenegraph.Quadmesh;
  */
 public class Branchmesh extends Quadmesh {
 
-	public Branchmesh(ArrayList<Point3f> ControlPoints, float topRadius, float bottomRadius) {
+	public Branchmesh(ArrayList<Point3f> ControlPoints, float bottomRadius , float topRadius ) {
 
 		// Allocate buffers for all data.
 		mVertexData   = Buffers.newDirectFloatBuffer(3 * 4 * ControlPoints.size());
@@ -30,9 +30,13 @@ public class Branchmesh extends Quadmesh {
 		mPolygonData  = Buffers.newDirectIntBuffer(4 * 4 * (ControlPoints.size() -1 ) + 4); //+1 for the top and bottom
 
 		// Getting normals
-		for(int i = 0; i<ControlPoints.size(); i++){
-			float radius = (1f-i*1f/ControlPoints.size())*(topRadius - bottomRadius) + bottomRadius;
-
+		int n = ControlPoints.size();
+		for(int i = 0; i<n; i++){
+			//linear interpolation
+			float radius = (1f-i*1f/ControlPoints.size())*(  bottomRadius -  topRadius ) + topRadius;
+			//nonlinear interpolation
+			//float radius =  topRadius + (  bottomRadius - topRadius )  * (1.5f + (float) Math.atan( -i + n/8 ) ) / 1.5f; 
+			
 			Vector3f normal = new Vector3f();
 			Vector3f tangent = new Vector3f();
 			Vector3f normalDir = new Vector3f();

@@ -21,18 +21,18 @@ import cs5625.deferred.scenegraph.Mesh;
 
 public class Branch extends PhysicsGeometry
 {
-	private int numSubdivisions = 3;
+	private int numSubdivisions = 1;
 
-	//private Material material = new VertexLambertianMaterial(new Color3f( 205f/255f , 133f/255f, 63f/255f), (float)Math.random(), (float)Math.random());
-	private float height  = 0.25f;
-	private float width = 0.1f;
-	private BlinnPhongMaterial material = new BlinnPhongMaterial(new Color3f( 205f/255f , 133f/255f, 63f/255f));
-	private float bottomRadius  = 0.25f;
-	private float topRadius = 0.1f;
+	//private BlinnPhongMaterial material = new BlinnPhongMaterial(new Color3f( 205f/255f , 133f/255f, 63f/255f));
+	private BlinnPhongMaterial material = new BlinnPhongMaterial(new Color3f( 1f , 1f, 1f));
+	private float baseRadius  = 0.25f;
+	private float tipRadius = 0.1f;
 	
-	public Branch(ArrayList<Point3f>list){
+	public Branch(ArrayList<Point3f>list,float baseRadius, float tipRadious ){
 		this.addControlPoints(list);
-		Branchmesh branchmesh = new Branchmesh(list, bottomRadius, topRadius);		
+		this.baseRadius = baseRadius;
+		this.tipRadius = tipRadius;
+		Branchmesh branchmesh = new Branchmesh(list, baseRadius, tipRadius);		
 		branchmesh.subdivide(numSubdivisions);
 		this.mMeshes.add( branchmesh );
 		((Mesh) this.mMeshes.get(0)).setMaterial(material);
@@ -43,8 +43,9 @@ public class Branch extends PhysicsGeometry
 		super.addToParticleSystemHelper(PS);
 		for (Particle p: getControlParticles()){
 			p.setPin(false);
-			p.setRadius(bottomRadius);
+			p.setRadius(baseRadius);
 		}
+		//Make the branch rigid 
 		getControlParticles().get(0).setPin(true);
 		getControlParticles().get(1).setPin(true);
 		
@@ -80,7 +81,7 @@ public class Branch extends PhysicsGeometry
 		super.animateHelper(dt);
 
 		this.mMeshes.clear();
-		Branchmesh newtree = new Branchmesh(this.getControlPoints(), bottomRadius, topRadius);
+		Branchmesh newtree = new Branchmesh(this.getControlPoints(), baseRadius, tipRadius);
 		newtree.subdivide(numSubdivisions);
 		this.mMeshes.add( newtree );
 		((Mesh) this.mMeshes.get(0)).setMaterial(material);	
