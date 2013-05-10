@@ -16,6 +16,7 @@ import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
+import cs5625.deferred.materials.LambertianMaterial;
 import cs5625.deferred.materials.Material;
 import cs5625.deferred.materials.Texture2D;
 import cs5625.deferred.materials.Texture.Datatype;
@@ -24,6 +25,9 @@ import cs5625.deferred.materials.UnshadedMaterial;
 import cs5625.deferred.misc.OpenGLException;
 import cs5625.deferred.misc.ScenegraphException;
 import cs5625.deferred.misc.Util;
+import cs5625.deferred.physics.Particle;
+import cs5625.deferred.physicsGeometry.PhysicsGeometry;
+import cs5625.deferred.physicsGeometry.Sphere;
 import cs5625.deferred.scenegraph.Geometry;
 import cs5625.deferred.scenegraph.Light;
 import cs5625.deferred.scenegraph.Mesh;
@@ -170,6 +174,11 @@ public class Renderer
 	/* The size of the light uniform arrays in the ubershader. */
 	private int mMaxLightsInUberShader = 40;
 	
+	
+	/* Enable phsics sphere rendering .*/
+	private boolean mShowPenaltyForces = false;
+	private Mesh sphereMesh;
+
 	
 	/**
 	 * Renders a single frame of the scene. This is the main method of the Renderer class.
@@ -733,8 +742,33 @@ public class Renderer
 		if (obj instanceof Geometry)
 		{
 			for (Mesh mesh : ((Geometry)obj).getMeshes())
-			{
+			{				
+				if (mShowPenaltyForces){
+					if(obj instanceof PhysicsGeometry){
+						PhysicsGeometry physobj = (PhysicsGeometry) obj;
+						gl.glPushMatrix();
+						float sc = (float) physobj.getOriginParticle().getRadius();
+						gl.glScalef(sc,sc,sc);
+						renderMesh(gl, sphereMesh);
+						gl.glPopMatrix();
+						for (int i=0; i < physobj.getControlParticles().size() ; i++){
+							Point3f cp  = physobj.getControlPoints().get(i);
+							Particle p = physobj.getControlParticles().get(i);
+							gl.glPushMatrix();
+							gl.glTranslatef(cp.x, cp.y, cp.z);
+							gl.glScaled(p.getRadius(), p.getRadius(), p.getRadius());
+							renderMesh(gl, sphereMesh);
+							gl.glPopMatrix();							
+						}
+
+						
+						
+					}
+				}
+				//else {
 				renderMesh(gl, mesh);
+				//}
+
 			}
 		}
 		else if (obj instanceof Light)
@@ -809,7 +843,7 @@ public class Renderer
 						  mesh.getVerticesPerPolygon() * mesh.getPolygonCount(), 
 						  GL2.GL_UNSIGNED_INT, 
 						  mesh.getPolygonData());
-				
+		
 		/* Deactivate material and restore state. */
 		mesh.getMaterial().unbind(gl);
 
@@ -1300,7 +1334,12 @@ public class Renderer
 			mWireframeMaterial = new UnshadedMaterial(new Color3f(0.8f, 0.8f, 0.8f));
 			mWireframeMarkedEdgeMaterial = new UnshadedMaterial(new Color3f(1.0f, 0.0f, 1.0f));
 			
+			sphereMesh = Sphere.load("models/lowpolysphere.obj", true, false).get(0).getMeshes().get(0);
+			sphereMesh.setMaterial(new LambertianMaterial(new Color3f(0.5f,0.5f,0.5f)));
+			
+			/* Do a resize to instatiate framebuffer objecs. */
 			resize(drawable,100,100);
+			
 			
 			/* Make sure nothing went wrong. */
 			OpenGLException.checkOpenGLError(gl);
