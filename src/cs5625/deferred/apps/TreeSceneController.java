@@ -40,7 +40,7 @@ public class TreeSceneController extends SceneController{
 	
 	/* Used to calculate mouse deltas to orbit the camera in mouseDragged(). */ 
 	private Point mLastMouseDrag;
-	
+		
 	public void initializeScene() {
 		try {
 			
@@ -131,6 +131,12 @@ public class TreeSceneController extends SceneController{
 			temp.get(0).setPosition(new Point3f(0, 5f, -5f));
 			temp.get(0).calculateTangentVectorsForAllGeometry();
 			temp.get(0).getMeshes().get(0).setMaterial(normalMaterial2);
+			
+			Sphere sphere2 = new Sphere(new Point3f(0.0f,0.0f,0.0f));
+            sphere2.setIsPinned(true);
+            sphere2.setName("targetMark");
+            sphere2.getOriginParticle().v.set(0,0,0);
+            mSceneRoot.addChild(sphere2);
 		}		 	
 		catch (ScenegraphException e) {
 			// TODO Auto-generated catch block
@@ -207,11 +213,6 @@ public class TreeSceneController extends SceneController{
 		{
 			System.out.println("pressing " + c);
 			mCamera.keyUP = true;
-//			mCameraRadius += 1.5;
-//			updateCamera();
-//			requiresRender();
-			
-
 		}
 		else if (c == 'k')
 		{
@@ -233,7 +234,46 @@ public class TreeSceneController extends SceneController{
 			updateCamera();
 			requiresRender();
 		}
-		
+		else if (c == 'u')
+		{
+			// move the target to the left
+			Point3f currentPos = new Point3f(((Geometry)mSceneRoot.findDescendantByName("targetMark")).getPosition());
+			currentPos.add(new Point3f(-1.5f, 0, 0));
+			((Geometry)mSceneRoot.findDescendantByName("targetMark")).setPosition(currentPos);
+			updateCamera();
+			requiresRender();
+		}
+		else if (c == 'p')
+		{
+			// move the target to the left
+			Point3f currentPos = new Point3f(((Geometry)mSceneRoot.findDescendantByName("targetMark")).getPosition());
+			currentPos.add(new Point3f(1.5f, 0, 0));
+			((Geometry)mSceneRoot.findDescendantByName("targetMark")).setPosition(currentPos);
+			updateCamera();
+			requiresRender();
+		}
+		else if (c == 'i')
+		{
+			// move the target to the left
+			Point3f currentPos = new Point3f(((Geometry)mSceneRoot.findDescendantByName("targetMark")).getPosition());
+			currentPos.add(new Point3f(0, 0, -1.5f));
+			((Geometry)mSceneRoot.findDescendantByName("targetMark")).setPosition(currentPos);
+			updateCamera();
+			requiresRender();
+		}
+		else if (c == 'o')
+		{
+			// move the target to the left
+			Point3f currentPos = new Point3f(((Geometry)mSceneRoot.findDescendantByName("targetMark")).getPosition());
+			currentPos.add(new Point3f(0, 0, 1.5f));
+			((Geometry)mSceneRoot.findDescendantByName("targetMark")).setPosition(currentPos);
+			updateCamera();
+			requiresRender();
+		}
+		else if (c == '/')
+		{
+			
+		}
 	}
 	
 	public void keyReleased(KeyEvent key) {
