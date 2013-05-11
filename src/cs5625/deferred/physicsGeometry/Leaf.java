@@ -47,8 +47,8 @@ public class Leaf extends PhysicsGeometry
 		super.addToParticleSystemHelper(PS);
 		
 		for (Particle p: this.getControlParticles()){
-			p.setPin(false);
-			p.setMass(0.25);
+			//p.setPin(false);
+			//p.setMass(0.25);
 			p.setRadius(0.01);
 		}
 		

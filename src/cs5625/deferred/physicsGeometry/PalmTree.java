@@ -29,7 +29,7 @@ public class PalmTree extends PhysicsGeometry {
 	private int levelOfDetail; 
 	private Texture2D barkTexture;
 	public Branch trunk;
-	public SpringForce1Particle targetf;
+	public SpringForce2Particle targetf;
 	public boolean alreadyAdd = false;
 
 	
@@ -58,7 +58,6 @@ public class PalmTree extends PhysicsGeometry {
 		
 		//SETUP CONTROL POINT FOR LEAF AND STEM .... NEED TO BE SPACED OUT CURRENTLY
 		ArrayList<Point3f>trunkList = new ArrayList<Point3f>();
-    	ArrayList<Point3f>frondsList = new ArrayList<Point3f>();
 
     	//GENERATE CONTROL POINTS FOR THE TRUNK 
 		for(int i=0; i< nTrunkControlPoints; i++){
@@ -66,13 +65,7 @@ public class PalmTree extends PhysicsGeometry {
 			point.set(0f,1.5f*i,0f);
 			trunkList.add(new Point3f(point));
 		}
-		
-		//GENERATE CONTROL POINT FOR THE FRONDS 
-		for(int i=0; i< nLeavesPerFrond; i++){
-			Point3f point = new Point3f();
-			point.set(0f,1.5f*i/5f,0f);
-			frondsList.add(new Point3f(point));
-		}
+
 		
         //ADD MAIN TRUNK
         trunk = new Branch(trunkList, baseWidth, topWidth);
@@ -83,7 +76,7 @@ public class PalmTree extends PhysicsGeometry {
 		
         //CREATE FRONDS
         for (int i = 0; i<nFronds; i++){
-            Stem stem = new Stem(frondsList);
+            Stem stem = new Stem(nLeavesPerFrond);
             // FIND THE RIGHT QUATERNION TO MAINTAIN THE PalmTree LEAVES FACING UP
             float rand1 = (float) Math.random();
             float rand2 = (float) Math.random()*0.35f;
@@ -101,18 +94,20 @@ public class PalmTree extends PhysicsGeometry {
 	public void addForce(Particle p, ParticleSystem PS){
 		if(!alreadyAdd){
 			System.out.println("add");
-			targetf = new SpringForce1Particle(trunk.topPoint(), p.x);
+			targetf = new SpringForce2Particle(trunk.topPoint(), p, 3.0, PS);
 			System.out.println(p.x);
-			targetf.setStiffness(10);
+			targetf.setStiffness(100);
 			PS.addForce(targetf);
 			alreadyAdd = true;
 		}
 	}
 	
 	public void removeForce(Particle p, ParticleSystem PS){
-		System.out.println("remove");
-		PS.removeForce(targetf);
-		alreadyAdd = false;
+		if (alreadyAdd){
+			System.out.println("remove");
+			PS.removeForce(targetf);
+			alreadyAdd = false;
+		}
 		//p.setPin(false);
 	}
 }

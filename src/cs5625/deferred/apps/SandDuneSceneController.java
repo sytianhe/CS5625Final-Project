@@ -73,7 +73,7 @@ public class SandDuneSceneController extends SceneController{
 
 			ArrayList<Geometry> geoList = new ArrayList<Geometry>();
 
-			Ground plane = new Ground(mRenderer.getSandDuneFrameBufferObject());
+			Ground plane = new Ground(mRenderer);
 			geoList.add(plane);
 
 			

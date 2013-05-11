@@ -14,7 +14,7 @@ public class SpringForceBendingTheta implements Force
     Particle p1;
     Particle p2;
     Vector3d v;
-    double STIFFNESS = 10000.0;
+    double STIFFNESS = Constants.STIFFNESS_BEND;
 
     /** 
      * Constructs a bending force affecting the angle implied by the

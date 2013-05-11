@@ -1,0 +1,16 @@
+/**
+ * silhouette.vp
+ * 
+ * Vertex shader for calculating silhouette edges as described in Decaudin's 1996 paper.
+ * 
+ * Written for Cornell CS 5625 (Interactive Computer Graphics).
+ * Copyright (c) 2012, Computer Science Department, Cornell University.
+ * 
+ * @author Asher Dunn (ad488)
+ * @date 2012-04-01
+ */
+
+void main()
+{
+	gl_Position = ftransform();
+}

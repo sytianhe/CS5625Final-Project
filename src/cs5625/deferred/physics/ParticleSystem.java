@@ -138,7 +138,6 @@ public class ParticleSystem
 			p.x.set(p.x0);
 			p.v.set(0,0,0);
 			p.f.set(0,0,0);
-			p.setHighlight(false);
 		}
 
 		/// WORKAROUND FOR DANGLING MOUSE-SPRING FORCES AFTER PS-INTERNAL RESETS:
@@ -158,6 +157,10 @@ public class ParticleSystem
 	public synchronized void advanceTime(double dt)
 	{						
 
+//		System.out.println("N PARTUCLE: " +  P.size() );
+//		System.out.println("N FORCES : " +  F.size() );
+		
+		
 		{/// GATHER BASIC FORCES (NO NEED TO MODIFY):
 			
 			/// CLEAR FORCE ACCUMULATORS:
@@ -178,11 +181,10 @@ public class ParticleSystem
 //			}
 
 
-			// GRAVITY:
-			for(Particle p : P)   p.f.y -= p.m * 10;
 
 			// ADD SOME MASS-PROPORTIONAL DAMPING (DEFAULT IS ZERO)
 			for(Particle p : P){ 
+				p.f.y -= Constants.GRAVITY * p.m;
 				Utils.acc(p.f,  -Constants.DAMPING_MASS * p.m, p.v);
 				//if (p.p2 != null){
 				//	p.p2.f.add(p.f);
@@ -236,21 +238,6 @@ public class ParticleSystem
 
 		time += dt;
 	}
-
-	/**
-	 * Displays Particle and Force objects.
-	 */
-	public synchronized void display(GL2 gl) 
-	{
-		for(Force force : F) {
-			force.display(gl);
-		}
-
-		for(Particle particle : P) {
-			particle.display(gl);
-		}
-	}
-
 }
 
 /**

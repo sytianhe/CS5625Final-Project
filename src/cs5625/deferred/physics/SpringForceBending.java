@@ -12,7 +12,7 @@ public class SpringForceBending implements Force {
 	Particle p0;
 	Particle p1;
 	Particle p2;
-	public double STIFFNESS = 1000.0;
+	public double STIFFNESS = Constants.STIFFNESS_BEND;
 	/**
 	 * Constructs a bending force affecting the angle implied by the
 	 * three-particle chain, p0-p1-p2.
