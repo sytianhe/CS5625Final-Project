@@ -99,7 +99,8 @@ public class TreeSceneController extends SceneController{
 			ArrayList<Geometry> temp = new ArrayList <Geometry>();
 			temp.addAll( Geometry.load("models/cube.obj", true, true));
 			mSceneRoot.addChild(temp.get(0));
-			temp.get(0).setPosition(new Point3f(0, 5f, -5f));
+			temp.get(0).setScale(300);
+			temp.get(0).setPosition(new Point3f(0, 0, 0));
 			temp.get(0).calculateTangentVectorsForAllGeometry();
 			temp.get(0).getMeshes().get(0).setMaterial(normalMaterial2);
 			

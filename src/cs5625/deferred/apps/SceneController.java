@@ -386,14 +386,32 @@ public abstract class SceneController implements MouseListener, MouseMotionListe
 				stopAnimation();
 			}
 		}
-		else if (c == '.')
+		else if (c == '.'){
+			mRenderer.setFog(!mRenderer.getFog());
+			requiresRender();
+		}
+		
+		else if (c == 'q')
 		{
-			PS = new ParticleSystem();
+			mRenderer.setFogThreshold(Math.max(0.0f, mRenderer.getFogThreshold() - 0.025f));
+			System.out.println("Fog Threshold: " + mRenderer.getFogThreshold());
+			requiresRender();
+		}
+		else if (c == 'Q')
+		{
+			mRenderer.setFogThreshold(mRenderer.getFogThreshold() + 0.025f);
+			System.out.println("Fog Threshold: " + mRenderer.getFogThreshold());
+			requiresRender();
+		}
+		
+//		else if (c == '.')
+//		{
+//			PS = new ParticleSystem();
 //			mSceneRoot = new SceneObject();
 //			isAnimate = false;
 //			timer = new Timer( (int) (1000 *  DT), this);
-			globalController = new SandDuneSceneController();
-		}
+//			globalController = new SandDuneSceneController();
+//		}
 	}
 
 	/**
