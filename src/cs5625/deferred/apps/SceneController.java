@@ -139,7 +139,7 @@ public abstract class SceneController implements MouseListener, MouseMotionListe
 		}
 
 		//Perform several small time steps per iteration
-		float dt = DT / N_STEPS_PER_FRAME;
+		float dt = DT / N_STEPS_PER_FRAME ;
 		for(int i =0; i< N_STEPS_PER_FRAME; i++){
 			PS.advanceTime(dt);
 		}

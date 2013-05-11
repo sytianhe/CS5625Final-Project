@@ -21,19 +21,19 @@ uniform vec2 randSeed[MAX_RAND_SEED];  // Pseudo random number seeds for random 
 uniform int randSeedLength; // Number of random seeds.  Should be the same as 
 
 const float eps = 0.001;
-const vec2 wind = vec2(2.0,0.0);			// x-direction scaled by transport length
+const vec2 wind = vec2(3.0,0.0);			// x-direction scaled by transport length
 const float aspectRatio = 10.0; 			// Thickness of sand "slab"
-const float angleOfRepose1 = 10.0; 			// approx 33.7 degrees
+const float angleOfRepose1 = 6.0; 			// approx 33.7 degrees
 const float angleOfRepose2 = 2.5;	 		// approx 25.2 degrees
-const float shadowZoneAngle = 2.0;			// approx 15 degrees
-const float LT = 2.0;  					 	// transport length
-const float LN = 4.0; 					 	// Neighborhood radius
+const float shadowZoneAngle = 1.5;			// approx 15 degrees
+const float LT = 1.0;  					 	// transport length
+const float LN = 3.0; 					 	// Neighborhood radius
 const float shearVelocityLinear = 0.2;  	// Linear wind shear coefficient for computing probability that grain moves past site
 const float shearVelocityNonLinear = 0.002; //  Nonlinear wind shearing coefficient for computing probability that grain moves past site
-const float erosionProb = 0.2;         	    // Probability that a grain of sand moves from it's current location
+const float erosionProb = 0.5;         	// Probability that a grain of sand moves from it's current location
 const float depositionProbSoft = 0.6; 		// Probability that transported land lands at a neighboring point that is already sandy 
 const float depositionProbHard = 0.4; 		// Probability that transported land lands at a neighboring point that is bare
-const float maxHeight = 10.0;                // Maximum height of sand piles
+
 
 
 /**
@@ -50,8 +50,8 @@ float rand(vec2 seed){
  */
  vec2 mod2Screen(vec2 coord)
  {
-  	return coord;
  	//return vec2( mod(coord.x, float(ScreenSize.x)), mod(coord.y, float(ScreenSize.y)));  
+ 	return coord;
  	//vec2 newCoord = vec2(coord.x/float(ScreenSize.x), coord.y/float(ScreenSize.y)   )
  	//return vec2( mod(coord.x, float(ScreenSize.x)), mod(coord.y, float(ScreenSize.y))); 
  	vec2 newCoord = coord;
@@ -125,7 +125,7 @@ float rand(vec2 seed){
  {
  	float h = sample(gl_FragCoord.xy).x;
 	float hNeighbor1 = sample( mod2Screen(gl_FragCoord.xy - wind) ).x ;
-	float hNeighbor2 = sample( mod2Screen( gl_FragCoord.xy - vec2(wind.x*2.0,wind.y*2.0) * wind ) ).x ;
+	float hNeighbor2 = sample( mod2Screen( gl_FragCoord.xy - vec2(2.0,2.0) * wind ) ).x ;
 
 	return (hNeighbor1 > h + shadowZoneAngle/aspectRatio) && (hNeighbor2 > h + 2.0*shadowZoneAngle/aspectRatio);
  }
@@ -252,7 +252,7 @@ void main()
 			}
 		}
 		
-		gl_FragData[0].x = min(max(h,0.0), maxHeight) ;
+		gl_FragData[0].x = h ;
 		gl_FragData[0].y =  nSaltationGrainsGoing;		
 	}
 }

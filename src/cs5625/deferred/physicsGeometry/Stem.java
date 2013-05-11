@@ -23,28 +23,41 @@ public class Stem extends PhysicsGeometry
 	private Material material = new LambertianMaterial(new Color3f(110f/255f , 139f/255f, 61f/255f));
 	private float bottomtopWidth  = 0.1f;
 	private float topWidth = 0.01f;
+	private int nLeavesPerFrond;
 	
-	public Stem(ArrayList<Point3f>list){
-		ArrayList<Point3f>newList = new ArrayList<Point3f>();
-		for (Point3f p: list){
-			newList.add(new Point3f(p.x, p.y, p.z));
+	public Stem(int nLeavesPerFrond){
+		
+		this.nLeavesPerFrond = nLeavesPerFrond;
+		
+		//GENERATE CONTROL POINT FOR THE FRONDS 
+    	//ArrayList<Point3f>frondsList = new ArrayList<Point3f>();
+		for(int i=0; i< nLeavesPerFrond; i++){
+			Point3f point = new Point3f();
+			point.set(0f,1.5f*i/5f,0f);
+			//frondsList.add(new Point3f(point));
+			this.addControlPoint(new Point3f(point));
 		}
-		this.addControlPoints(newList);
-		Branchmesh branchmesh = new Branchmesh(newList, bottomtopWidth, topWidth);
+		
+		//ArrayList<Point3f>newList = new ArrayList<Point3f>();
+		//for (Point3f p: frondsList){
+		//	newList.add(new Point3f(p.x, p.y, p.z));
+		//}
+		//.addControlPoints(newList);
+		Branchmesh branchmesh = new Branchmesh(this.getControlPoints(), bottomtopWidth, topWidth);
 		branchmesh.subdivide(numSubdivisions);
 		this.mMeshes.add( branchmesh );
 		((Mesh) this.mMeshes.get(0)).setMaterial(material);
 		
-        for (int i =0; i<newList.size(); i++ ){
-    		double a = 0.9;
+        for (int i =0; i<getControlPoints().size(); i++ ){
+    		double a = 2.0;
     		double b = 0.1;
-    		double temp = (double)((i-4) * 1.0/(newList.size()/2.0) - 1.0);
+    		double temp = (double)((i-4) * 1.0/(getControlPoints().size()/2.0) - 1.0);
     		float temp2 = (float) (Math.sqrt(1.0 - Math.pow(temp/a, 2))*b)*3;
     		Leaf2 leaf1 = new Leaf2(5f*temp2, 0.5f*temp2);
     		Leaf2 leaf2 = new Leaf2(5f*temp2, 0.5f*temp2);
     		leaf2.setOrientation(new Quat4f(0,1,0,0));
-    		this.pinToPhysicsGeometry(leaf1,newList.get(i));
-    		this.pinToPhysicsGeometry(leaf2,newList.get(i));
+    		this.pinToPhysicsGeometry(leaf1,getControlPoints().get(i));
+    		this.pinToPhysicsGeometry(leaf2,getControlPoints().get(i));
         }
 	}
 	
@@ -65,7 +78,7 @@ public class Stem extends PhysicsGeometry
 		
 		for (int i = 1; i<getControlParticles().size() - 1; i++){
 			SpringForceBendingTheta f = new SpringForceBendingTheta(getControlParticles().get(i-1), getControlParticles().get(i), getControlParticles().get(i+1), new Vector3d(0,0,0) );
-			f.setStiffness(2500.0);
+			//f.setStiffness(2500.0);
 			PS.addForce(f);
 		}
 	}

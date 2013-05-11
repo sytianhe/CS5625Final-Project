@@ -61,7 +61,6 @@ public class Branch extends PhysicsGeometry
 		for (int i = 1; i<getControlParticles().size() - 1; i++){
 			SpringForceBendingTheta f = new SpringForceBendingTheta(getControlParticles().get(i-1), getControlParticles().get(i), getControlParticles().get(i+1), new Vector3d(-0.05 + Math.random()*0.1,-0.05 + Math.random()*0.1,-0.05 + Math.random()*0.1) );
 			//SpringForceBending f = new SpringForceBending(getControlParticles().get(i-1), getControlParticles().get(i), getControlParticles().get(i+1));
-			f.setStiffness(10000.0);
 			PS.addForce(f);
 		}
 		

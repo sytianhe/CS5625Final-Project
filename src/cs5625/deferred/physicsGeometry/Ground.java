@@ -15,17 +15,18 @@ import cs5625.deferred.physics.Particle;
 import cs5625.deferred.physics.ParticleSystem;
 import cs5625.deferred.physics.PenaltyForceParticlePlane3;
 import cs5625.deferred.rendering.FramebufferObject;
+import cs5625.deferred.rendering.Renderer;
 import cs5625.deferred.scenegraph.Geometry;
 import cs5625.deferred.scenegraph.Mesh;
 import cs5625.deferred.scenegraph.Quadmesh;
 
 public class Ground extends PhysicsGeometry {
 		
-	public Ground(FramebufferObject fbo){
+	public Ground(Renderer mRenderer){
 		try {
 			Mesh groundMesh = Ground.load("models/bigplane.obj", false, true).get(0).getMeshes().get(0);
-			((Quadmesh) groundMesh).subdivide(5);
-			groundMesh.setMaterial(new SandDuneMaterial(fbo));
+			((Quadmesh) groundMesh).subdivide(8);
+			groundMesh.setMaterial(new SandDuneMaterial(mRenderer));
 			this.addMesh(groundMesh);
 			
 			addControlPoint( new Point3f(100,0,0)); 

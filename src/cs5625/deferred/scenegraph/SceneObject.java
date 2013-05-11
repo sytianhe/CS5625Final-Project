@@ -103,6 +103,10 @@ public class SceneObject implements OpenGLResourceObject
 	{
 		mParticle.setPin(p);
 	}
+	public boolean isPinned()
+	{
+		return this.mParticle.isPinned();
+	}
 	
 	/**
 	 * Recursively add sceneObject particles (for physics simulation to the Particle System

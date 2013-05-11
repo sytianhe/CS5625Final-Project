@@ -7,6 +7,10 @@ package cs5625.deferred.physics;
  */
 public class Constants
 {
+
+	/**Collision restitution coefficient. */
+	public static double GRAVITY = 10.0;	
+	
 	/**Collision restitution coefficient. */
 	public static double RESTITUTION_COEFF = 0.5;
 	
@@ -14,14 +18,14 @@ public class Constants
     public static double DAMPING_MASS      = 0.5; // default 1.0
 
     /** Mass of a particle. */
-    public static double PARTICLE_MASS     = 1.0;
+    public static double PARTICLE_MASS     = 2.0;
 
     /** Spring stretching stiffness. */
     //public static double STIFFNESS_STRETCH = 10000.0; 
-    public static double STIFFNESS_STRETCH = 1000.0; 
+    public static double STIFFNESS_STRETCH = 3000.0; 
 
     /** Spring bending stiffness. */
-    public static double STIFFNESS_BEND    = 5000.0;//10000.0; 
+    public static double STIFFNESS_BEND    = 100000.0;//10000.0; 
     
     /** Edge thickness coefficient. */
     public static final double EDGE_COEFF = 0.02;
@@ -33,7 +37,7 @@ public class Constants
     public static final double STATIC_FRICTION = 0.01;
     
     /** Edge kinetic friction coefficient. */
-    public static final double KINETIC_FRICTION = 0.01;
+    public static final double KINETIC_FRICTION = 0.1;
 
 	public static final double REPULSION_COEFF = 100;
     

@@ -12,8 +12,9 @@ public class SpringForce2Particle implements Force
 {
 	public Particle p1;
 	public Particle p2;
+	public double L0 = 0;
 	public Color4f color = new Color4f(1f, 239f/255f, 160f/255f, 1f);//spaghetti color
-	public double STIFFNESS = 1000.0;
+	public double STIFFNESS = Constants.STIFFNESS_STRETCH;
 
 	ParticleSystem PS;
 
@@ -24,7 +25,24 @@ public class SpringForce2Particle implements Force
 		this.p1 = p1;
 		this.p2 = p2;
 		this.PS = PS;
+		
+		
+		//GET REST LENGTH
+		Vector3d v = new Vector3d();
+		v.sub(p2.x0, p1.x0);
+		L0 = v.length();
 	}
+	
+	public SpringForce2Particle(Particle p1, Particle p2, double restLength, ParticleSystem PS){
+		if(p1==null || p2==null) throw new NullPointerException("p1="+p1+", p2="+p2);
+
+		this.p1 = p1;
+		this.p2 = p2;
+		this.PS = PS;
+		
+		L0 = restLength;
+	}
+
 
 	//     SpaceTimeBound getSpaceTimeBound(double dt)
 	//     {
@@ -76,10 +94,6 @@ public class SpringForce2Particle implements Force
 
 		{
 			Vector3d v = new Vector3d();
-
-			/// REST LENGTH:
-			v.sub(p2.x0, p1.x0);
-			double L0 = v.length();
 
 			/// CURRENT LENGTH:
 			v.sub(p2.x, p1.x);

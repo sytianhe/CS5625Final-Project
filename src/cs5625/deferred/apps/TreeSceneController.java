@@ -61,24 +61,24 @@ public class TreeSceneController extends SceneController{
 			mSceneRoot.addChild(light);	
 
 			//ADD GROUND
-			Ground plane = new Ground(mRenderer.getSandDuneFrameBufferObject());
+			Ground plane = new Ground(mRenderer);
 			mSceneRoot.addChild(plane);
 			
 			//ADD SPHERE
-			Sphere sphere = new Sphere(new Point3f(4.0f,4.0f,4.0f));
+			Sphere sphere = new Sphere(new Point3f(5.0f,5.0f,5.0f));
             sphere.setIsPinned(false);
             sphere.getOriginParticle().v.set(-5,5,-5);
             mSceneRoot.addChild(sphere);    
             plane.addInteractionWith(sphere);
             
             Texture2D barkTexture = Texture2D.load(gl, "textures/bark1.jpg",false);
-            tree = new PalmTree(10f, 0.5f, 0.4f, 0f, 10f, 15, 15,3, barkTexture);
+            tree = new PalmTree(10f, 0.7f, 0.4f, 0f, 10f, 10, 10,2, barkTexture);
             tree.setPosition(new Point3f(0.0f, 0.0f, 0.0f));
             mSceneRoot.addChild(tree);
             
-            PalmTree tree2 = new PalmTree(10f, 0.5f, 0.4f, 0f, 10f, 15, 15,3, barkTexture);
-            tree2.setPosition(new Point3f(5.0f, 0.0f, 0.0f));
-            mSceneRoot.addChild(tree2);
+//            PalmTree tree2 = new PalmTree(10f, 0.5f, 0.4f, 0f, 10f, 15, 15,3, barkTexture);
+//            tree2.setPosition(new Point3f(5.0f, 0.0f, 0.0f));
+//            mSceneRoot.addChild(tree2);
             
 //            PalmTree tree3 = new PalmTree(10f, 0.5f, 0.4f, 0f, 10f, 15, 15,3, barkTexture);
 //            tree3.setPosition(new Point3f(0.0f, 0.0f, 5.0f));
@@ -94,7 +94,7 @@ public class TreeSceneController extends SceneController{
 			normalMaterial2.setSpecularTexture(brickSpecularTexture);
 			normalMaterial2.setNormalTexture(brickNormalTexture);
 			normalMaterial2.setHeightTexture(brickHeightTexture);
-			
+
 			//mSceneRoot.addGeometry(Geometry.load("models/default-scene.obj", true, true));
 			ArrayList<Geometry> temp = new ArrayList <Geometry>();
 			temp.addAll( Geometry.load("models/cube.obj", true, true));
@@ -103,11 +103,15 @@ public class TreeSceneController extends SceneController{
 			temp.get(0).setPosition(new Point3f(0, 0, 0));
 			temp.get(0).calculateTangentVectorsForAllGeometry();
 			temp.get(0).getMeshes().get(0).setMaterial(normalMaterial2);
-			
-			target = new Sphere(new Point3f(0.0f,0.0f,0.0f));
+
+			target = new Sphere(new Point3f(1.0f,1.0f,0.0f));
 			target.setIsPinned(true);
 			target.setName("targetMark");
 			target.getOriginParticle().v.set(0,0,0);
+			
+            plane.addInteractionWith(target);
+
+			
             mSceneRoot.addChild(target);
 		}		 	
 		catch (ScenegraphException e) {
@@ -217,7 +221,7 @@ public class TreeSceneController extends SceneController{
 		}
 		else if (c == 'p')
 		{
-			// move the target to the left
+			// move the target to the right
 			Point3f currentPos = new Point3f(((Geometry)mSceneRoot.findDescendantByName("targetMark")).getPosition());
 			currentPos.add(new Point3f(1.5f, 0, 0));
 			((Geometry)mSceneRoot.findDescendantByName("targetMark")).setPosition(currentPos);
@@ -226,7 +230,7 @@ public class TreeSceneController extends SceneController{
 		}
 		else if (c == 'i')
 		{
-			// move the target to the left
+			// move the target to the down
 			Point3f currentPos = new Point3f(((Geometry)mSceneRoot.findDescendantByName("targetMark")).getPosition());
 			currentPos.add(new Point3f(0, 0, -1.5f));
 			((Geometry)mSceneRoot.findDescendantByName("targetMark")).setPosition(currentPos);
@@ -235,7 +239,7 @@ public class TreeSceneController extends SceneController{
 		}
 		else if (c == 'o')
 		{
-			// move the target to the left
+			// move the target to the up
 			Point3f currentPos = new Point3f(((Geometry)mSceneRoot.findDescendantByName("targetMark")).getPosition());
 			currentPos.add(new Point3f(0, 0, 1.5f));
 			((Geometry)mSceneRoot.findDescendantByName("targetMark")).setPosition(currentPos);
@@ -245,6 +249,14 @@ public class TreeSceneController extends SceneController{
 		else if (c == '/')
 		{
 			tree.addForce(target.getOriginParticle(), PS);
+		}	
+		else if (c == '!')
+		{
+			if (target.isPinned())
+			{
+				target.setIsPinned(false);
+			}
+			else target.setIsPinned(true);
 		}
 	}
 	
