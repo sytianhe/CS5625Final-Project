@@ -3,14 +3,10 @@ package cs5625.deferred.physicsGeometry;
 import java.io.IOException;
 
 import javax.vecmath.Color3f;
-import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 
 import cs5625.deferred.materials.LambertianMaterial;
-import cs5625.deferred.physics.Particle;
 import cs5625.deferred.physics.ParticleSystem;
-import cs5625.deferred.physics.PenaltyForce2Particle;
-import cs5625.deferred.physics.PenaltyForceSphere;
 import cs5625.deferred.scenegraph.Mesh;
 
 

@@ -6,6 +6,10 @@ import javax.media.opengl.GL2;
 import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
 import cs5625.deferred.materials.Texture2D;
+import cs5625.deferred.physics.Particle;
+import cs5625.deferred.physics.ParticleSystem;
+import cs5625.deferred.physics.SpringForce1Particle;
+import cs5625.deferred.physics.SpringForce2Particle;
 
 /**
  * PalmTree class provides a simple wrapper for the numerous pieces of geometry that compose our palm PalmTree. 
@@ -24,13 +28,16 @@ public class PalmTree extends PhysicsGeometry {
 	private int nLeavesPerFrond;
 	private int levelOfDetail; 
 	private Texture2D barkTexture;
+	public Branch trunk;
+	public SpringForce1Particle targetf;
+	public boolean alreadyAdd = false;
 
 	
 	private int nTrunkControlPoints = 10;
 	
 	/**
 	 * PalmTree constructor 
-	 * @param height Height of trunk (not includeing fronds)
+	 * @param height Height of trunk (not including fronds)
 	 * @param baseWidth 
 	 * @param topWidth
 	 * @param curviness Amount of non linearity in transition from  the basewidth to top width of the trunk
@@ -68,7 +75,7 @@ public class PalmTree extends PhysicsGeometry {
 		}
 		
         //ADD MAIN TRUNK
-        Branch trunk = new Branch(trunkList, baseWidth, topWidth);
+        trunk = new Branch(trunkList, baseWidth, topWidth);
 		trunk.setDiffuseTexture(barkTexture);
 		this.pinToPhysicsGeometry(trunk, new Point3f(0.0f, 0.0f, 0.0f));
                 
@@ -88,5 +95,24 @@ public class PalmTree extends PhysicsGeometry {
         	stem.setOrientation(rotY);
             trunk.pinToPhysicsGeometry(stem, topPoint);
         }	
+        
+	}
+	
+	public void addForce(Particle p, ParticleSystem PS){
+		if(!alreadyAdd){
+			System.out.println("add");
+			targetf = new SpringForce1Particle(trunk.topPoint(), p.x);
+			System.out.println(p.x);
+			targetf.setStiffness(10);
+			PS.addForce(targetf);
+			alreadyAdd = true;
+		}
+	}
+	
+	public void removeForce(Particle p, ParticleSystem PS){
+		System.out.println("remove");
+		PS.removeForce(targetf);
+		alreadyAdd = false;
+		//p.setPin(false);
 	}
 }

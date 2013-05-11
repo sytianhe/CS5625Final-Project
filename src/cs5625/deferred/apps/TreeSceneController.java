@@ -10,21 +10,19 @@ import java.util.ArrayList;
 import javax.media.opengl.GL2;
 import javax.media.opengl.glu.GLU;
 import javax.vecmath.AxisAngle4f;
+import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
 
 import cs5625.deferred.materials.ParallaxMapMaterial;
-
 import cs5625.deferred.materials.Texture2D;
 import cs5625.deferred.misc.OpenGLException;
 import cs5625.deferred.misc.ScenegraphException;
 import cs5625.deferred.misc.Util;
-import cs5625.deferred.physics.ParticleSystem;
-import cs5625.deferred.physicsGeometry.Branch;
+import cs5625.deferred.physics.Particle;
 import cs5625.deferred.physicsGeometry.Ground;
 import cs5625.deferred.physicsGeometry.PalmTree;
 import cs5625.deferred.physicsGeometry.Sphere;
-import cs5625.deferred.physicsGeometry.Stem;
 import cs5625.deferred.scenegraph.Geometry;
 import cs5625.deferred.scenegraph.PointLight;
 
@@ -41,6 +39,8 @@ public class TreeSceneController extends SceneController{
 	
 	/* Used to calculate mouse deltas to orbit the camera in mouseDragged(). */ 
 	private Point mLastMouseDrag;
+	public Sphere target;
+	public PalmTree tree;
 		
 	public void initializeScene() {
 		try {
@@ -72,54 +72,18 @@ public class TreeSceneController extends SceneController{
             plane.addInteractionWith(sphere);
             
             Texture2D barkTexture = Texture2D.load(gl, "textures/bark1.jpg",false);
-            PalmTree tree = new PalmTree(10f, 0.5f, 0.4f, 0f, 10f, 15, 15,3, barkTexture);
+            tree = new PalmTree(10f, 0.5f, 0.4f, 0f, 10f, 15, 15,3, barkTexture);
             tree.setPosition(new Point3f(0.0f, 0.0f, 0.0f));
             mSceneRoot.addChild(tree);
+            
+            PalmTree tree2 = new PalmTree(10f, 0.5f, 0.4f, 0f, 10f, 15, 15,3, barkTexture);
+            tree2.setPosition(new Point3f(5.0f, 0.0f, 0.0f));
+            mSceneRoot.addChild(tree2);
+            
+//            PalmTree tree3 = new PalmTree(10f, 0.5f, 0.4f, 0f, 10f, 15, 15,3, barkTexture);
+//            tree3.setPosition(new Point3f(0.0f, 0.0f, 5.0f));
+//            mSceneRoot.addChild(tree3);
 
-            
-//			//SETUP CONTROL POINT FOR LEAF AND STEM .... NEED TO BE SPACED OUT CURRENTLY
-//			ArrayList<Point3f>list = new ArrayList<Point3f>();
-//        	ArrayList<Point3f>list2 = new ArrayList<Point3f>();
-//
-//			for(int i=0; i< 10; i++){
-//				Point3f point = new Point3f();
-//				point.set(0f,1.5f*i,0f);
-//				list.add(new Point3f(point));
-//			}
-//			
-//			for(int i=0; i< 15; i++){
-//				Point3f point = new Point3f();
-//				point.set(0f,1.5f*i/5f,0f);
-//				list2.add(new Point3f(point));
-//			}
-//			
-//            //ADD MAIN TRUNK
-//            Branch branch = new Branch(list);
-//            branch.setPosition(new Point3f(0.0f, 0.0f, 0.0f));
-//            branch.setIsPinned(true);
-//			branch.setDiffuseTexture(Texture2D.load(gl, "textures/bark1.jpg",false));
-//
-//            mSceneRoot.addChild(branch);
-//            
-//            branch.addInteractionWith(sphere);
-//            
-//            Point3f topPoint = list.get(list.size()-1);
-//			
-//            //CREATE STEMS AND LEAVES
-//            for (int i = 0; i<15; i++){
-//                Stem stem = new Stem(list2);
-//                // FIND THE RIGHT QUATERNION TO MAINTAIN THE TREE LEAVES FACING UP
-//                float rand1 = (float) Math.random();
-//                float rand2 = (float) Math.random()*0.35f;
-//
-//                Quat4f rotY = new Quat4f(0,(float) Math.sin(rand1* Math.PI),0,(float) Math.cos(rand1* Math.PI));                
-//                Quat4f rotZ = new Quat4f(0,0,(float) Math.sin(rand2* Math.PI),(float) Math.cos(rand2* Math.PI));
-//
-//                rotY.mul(rotZ);
-//            	stem.setOrientation(rotY);
-//                branch.pinToPhysicsGeometry(stem, topPoint);
-//            }	
-            
             //TESTING PARALLAX MAPPING:
 		    ParallaxMapMaterial normalMaterial2 = new ParallaxMapMaterial();
 			Texture2D brickTexture = Texture2D.load(gl, "textures/lion.jpg");
@@ -139,11 +103,11 @@ public class TreeSceneController extends SceneController{
 			temp.get(0).calculateTangentVectorsForAllGeometry();
 			temp.get(0).getMeshes().get(0).setMaterial(normalMaterial2);
 			
-			Sphere sphere2 = new Sphere(new Point3f(0.0f,0.0f,0.0f));
-            sphere2.setIsPinned(true);
-            sphere2.setName("targetMark");
-            sphere2.getOriginParticle().v.set(0,0,0);
-            mSceneRoot.addChild(sphere2);
+			target = new Sphere(new Point3f(0.0f,0.0f,0.0f));
+			target.setIsPinned(true);
+			target.setName("targetMark");
+			target.getOriginParticle().v.set(0,0,0);
+            mSceneRoot.addChild(target);
 		}		 	
 		catch (ScenegraphException e) {
 			// TODO Auto-generated catch block
@@ -279,7 +243,7 @@ public class TreeSceneController extends SceneController{
 		}
 		else if (c == '/')
 		{
-			
+			tree.addForce(target.getOriginParticle(), PS);
 		}
 	}
 	
@@ -288,6 +252,9 @@ public class TreeSceneController extends SceneController{
 		if (c == 'j')
 		{
 			mCamera.keyUP = false;
+		}
+		else if (c == '/'){
+			tree.removeForce(target.getOriginParticle(), PS);
 		}
 //		else if (c == 'k')
 //		{
@@ -367,7 +334,7 @@ public class TreeSceneController extends SceneController{
 		mShadowCamera.getOrientation().mul(longitudeQuat, latitudeQuat);
 		
 		/* Set the camera's position so that it looks towards the origin. */
-		mShadowCamera.setPosition(new Point3f(0.0f, 0.0f, mShadowCameraRadius));
+		mShadowCamera.setPosition(new Point3f(0.0f, 0.0f, 1.6f*mShadowCameraRadius));
 		Util.rotateTuple(mShadowCamera.getOrientation(), mShadowCamera.getPosition());
 		
 		mSceneRoot.findDescendantByName("CameraLight").setPosition(mShadowCamera.getPosition());

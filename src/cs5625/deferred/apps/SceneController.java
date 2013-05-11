@@ -145,6 +145,7 @@ public abstract class SceneController implements MouseListener, MouseMotionListe
 		}
 		mSceneRoot.animate(DT);
 		requiresRender();
+		
 	}
 	
 	/**

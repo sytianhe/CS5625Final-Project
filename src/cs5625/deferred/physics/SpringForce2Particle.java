@@ -106,8 +106,8 @@ public class SpringForce2Particle implements Force
 		gl.glColor4f(color.x, color.y, color.z, color.w);
 
 		gl.glBegin(GL2.GL_LINES);
-		gl.glVertex2d(p1.x.x, p1.x.y);
-		gl.glVertex2d(p2.x.x, p2.x.y);
+		gl.glVertex3d(p1.x.x, p1.x.y, p1.x.z);
+		gl.glVertex3d(p2.x.x, p2.x.y, p1.x.z);
 		gl.glEnd();	
 	}
 

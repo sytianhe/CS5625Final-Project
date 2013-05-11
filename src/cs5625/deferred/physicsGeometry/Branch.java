@@ -1,18 +1,18 @@
 package cs5625.deferred.physicsGeometry;
 
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
 import javax.vecmath.Color3f;
+import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3d;
 
 import cs5625.deferred.materials.BlinnPhongMaterial;
-import cs5625.deferred.materials.Material;
 import cs5625.deferred.materials.Texture2D;
 import cs5625.deferred.physics.Particle;
 import cs5625.deferred.physics.ParticleSystem;
 import cs5625.deferred.physics.SpringForce2Particle;
+import cs5625.deferred.physics.SpringForceBending;
 import cs5625.deferred.physics.SpringForceBendingTheta;
 import cs5625.deferred.physics.SpringForceParticleEdge;
 import cs5625.deferred.scenegraph.Mesh;
@@ -27,6 +27,7 @@ public class Branch extends PhysicsGeometry
 	private BlinnPhongMaterial material = new BlinnPhongMaterial(new Color3f( 1f , 1f, 1f));
 	private float baseRadius  = 0.25f;
 	private float tipRadius = 0.1f;
+	public Particle topPoint;
 	
 	public Branch(ArrayList<Point3f>list,float baseRadius, float tipRadious ){
 		this.addControlPoints(list);
@@ -59,12 +60,19 @@ public class Branch extends PhysicsGeometry
 		
 		for (int i = 1; i<getControlParticles().size() - 1; i++){
 			SpringForceBendingTheta f = new SpringForceBendingTheta(getControlParticles().get(i-1), getControlParticles().get(i), getControlParticles().get(i+1), new Vector3d(-0.05 + Math.random()*0.1,-0.05 + Math.random()*0.1,-0.05 + Math.random()*0.1) );
+			//SpringForceBending f = new SpringForceBending(getControlParticles().get(i-1), getControlParticles().get(i), getControlParticles().get(i+1));
 			f.setStiffness(10000.0);
 			PS.addForce(f);
 		}
+		
+		topPoint = getControlParticles().get(getControlParticles().size() - 1);
+		
 	}
 	
-
+	public Particle topPoint(){
+		return topPoint;
+	}
+	
 	public Texture2D getDiffuseTexture()
 	{
 		return material.getDiffuseTexture();
@@ -85,6 +93,5 @@ public class Branch extends PhysicsGeometry
 		newtree.subdivide(numSubdivisions);
 		this.mMeshes.add( newtree );
 		((Mesh) this.mMeshes.get(0)).setMaterial(material);	
-		//((VertexLambertianMaterial) material).setPhi((float)Math.random());
 	}
 }

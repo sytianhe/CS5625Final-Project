@@ -41,7 +41,7 @@ public class Leaf2 extends PhysicsGeometry
 		
 		for (Particle p: this.getControlParticles()){
 			p.setPin(false);
-			p.setMass(0.25);
+			p.setMass(0.2);
 			p.setRadius(0.01);
 		}
 		

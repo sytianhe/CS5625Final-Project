@@ -11,7 +11,7 @@ public class Constants
 	public static double RESTITUTION_COEFF = 0.5;
 	
     /** Mass-proportional damping. */
-    public static double DAMPING_MASS      = 1.0; 
+    public static double DAMPING_MASS      = 0.5; // default 1.0
 
     /** Mass of a particle. */
     public static double PARTICLE_MASS     = 1.0;

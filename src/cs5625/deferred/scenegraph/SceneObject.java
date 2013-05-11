@@ -119,7 +119,6 @@ public class SceneObject implements OpenGLResourceObject
 	
 	public void addToParticleSystemHelper(ParticleSystem PS){ }
 	
-	
 	/**
 	 * Returns all direct child nodes of this node.
 	 */
@@ -671,5 +670,6 @@ public class SceneObject implements OpenGLResourceObject
 			child.releaseGPUResources(gl);
 		}
 	}
+
 
 }

@@ -194,15 +194,11 @@ public class Renderer
 		try
 		{
 			/* Reset lights array. It will be re-filled as the scene is traversed. */
-			mLights.clear();
 			
 			/* 0.5. Compute sand dune buffer */
 			for (int i=0; i<1; i++){
 				computeSandDuneBuffer(gl);
 			}
-			
-		
-			
 			
 			/* 1. Fill the gbuffer given this scene and camera. */ 
 			fillGBuffer(gl, sceneRoot, camera);
@@ -335,6 +331,8 @@ public class Renderer
 	 */
 	private void fillGBuffer(GL2 gl, SceneObject sceneRoot, Camera camera) throws OpenGLException
 	{
+		mLights.clear();
+
 		/* First, bind and clear the gbuffer. */
 		if (!camera.getIsShadowMapCamera()) 
 		{
