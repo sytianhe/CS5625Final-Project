@@ -33,7 +33,7 @@ const float shearVelocityNonLinear = 0.002; //  Nonlinear wind shearing coeffici
 const float erosionProb = 0.5;         	    // Probability that a grain of sand moves from it's current location
 const float depositionProbSoft = 0.6; 		// Probability that transported land lands at a neighboring point that is already sandy 
 const float depositionProbHard = 0.4; 		// Probability that transported land lands at a neighboring point that is bare
-const int maxHeight = 40;					//  Max allowed sand stack height.
+const float maxHeight = 40.0;					//  Max allowed sand stack height.
 
 /**
  * Cheap random numbers. Via Stefan Gustavson (Stack Overflow).
@@ -89,7 +89,7 @@ float rand(vec2 seed){
 		}
 	}
 	ha = ha / ( ( float(LN) +1.0 ) * ( float(LN) + 1.0) );
-	return int(round(ha));
+	return int(ha);
  }
  
 
@@ -110,7 +110,7 @@ float rand(vec2 seed){
 	}
 	hr = ha - hr/( (float(LN) +1.0 ) * ( float(LN) + 1.0) )/ 2.0;
 	
-	return int(round(hr));
+	return int(hr);
  }
  
   /**
@@ -222,7 +222,7 @@ void main()
 			}			
 			
 			// CHECK UPWIND NEIGHBOR FOR FREE SAND GRAINS
-			for(int i = 0; i < min( int(nSaltationGrainsComing) , MAX_RAND_SEED - 1)  ; i += 1 ){		
+			for(int i = 0; i < int (min( float(nSaltationGrainsComing) , float(MAX_RAND_SEED) - 1.0) ) ; i += 1 ){		
 				//EITHER ACCUMULATE THE FREE GRAINS AT THIS LOCATION OR PASS THEM ON 
 				if (rand(randSeed[i + 1]) > P ){
 					nSaltationGrainsGoing += 1;
@@ -260,7 +260,7 @@ void main()
 			
 		}
 
-		gl_FragData[0].x = float(max(min(h,maxHeight),0))  ;
+		gl_FragData[0].x = max(min(float(h),maxHeight),0.0)  ;
 		gl_FragData[0].y =  float(nSaltationGrainsGoing);		
 	}
 }
