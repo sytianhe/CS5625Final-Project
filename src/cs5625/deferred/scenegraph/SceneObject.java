@@ -1,6 +1,5 @@
 package cs5625.deferred.scenegraph;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +10,6 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
-
 
 import cs5625.deferred.misc.OpenGLResourceObject;
 import cs5625.deferred.misc.ScenegraphException;

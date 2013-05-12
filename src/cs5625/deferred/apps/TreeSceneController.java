@@ -10,12 +10,14 @@ import java.util.ArrayList;
 import javax.media.opengl.GL2;
 import javax.media.opengl.glu.GLU;
 import javax.vecmath.AxisAngle4f;
+import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
 
 import cs5625.deferred.materials.ParallaxMapMaterial;
 import cs5625.deferred.materials.Texture2D;
+import cs5625.deferred.materials.UnshadedMaterial;
 import cs5625.deferred.misc.OpenGLException;
 import cs5625.deferred.misc.ScenegraphException;
 import cs5625.deferred.misc.Util;
@@ -99,10 +101,10 @@ public class TreeSceneController extends SceneController{
 			ArrayList<Geometry> temp = new ArrayList <Geometry>();
 			temp.addAll( Geometry.load("models/cube.obj", true, true));
 			mSceneRoot.addChild(temp.get(0));
-			temp.get(0).setScale(300);
+			temp.get(0).setScale(100);
 			temp.get(0).setPosition(new Point3f(0, 0, 0));
 			temp.get(0).calculateTangentVectorsForAllGeometry();
-			temp.get(0).getMeshes().get(0).setMaterial(normalMaterial2);
+			temp.get(0).getMeshes().get(0).setMaterial(new UnshadedMaterial(new Color3f(102.0f/256f, 1f, 1f)));
 
 			target = new Sphere(new Point3f(1.0f,1.0f,0.0f));
 			target.setIsPinned(true);

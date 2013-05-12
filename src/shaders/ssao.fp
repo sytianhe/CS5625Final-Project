@@ -68,7 +68,7 @@ void main()
 			totcount = totcount + dotnormal;
 		}
 		
-		float brightness = 1.0-  count/totcount;
+		float brightness = 1.0 -  count/totcount;
 		gl_FragColor = vec4(brightness, brightness, brightness, 1.0);
 	}
 	else {
