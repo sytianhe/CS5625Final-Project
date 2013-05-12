@@ -18,11 +18,11 @@ public class Constants
     public static double DAMPING_MASS      = 0.5; // default 1.0
 
     /** Mass of a particle. */
-    public static double PARTICLE_MASS     = 2.0;
+    public static double PARTICLE_MASS     = 1.0;
 
     /** Spring stretching stiffness. */
     //public static double STIFFNESS_STRETCH = 10000.0; 
-    public static double STIFFNESS_STRETCH = 3000.0; 
+    public static double STIFFNESS_STRETCH = 1000.0; 
 
     /** Spring bending stiffness. */
     public static double STIFFNESS_BEND    = 100000.0;//10000.0; 

@@ -169,6 +169,8 @@ public class Renderer
 	private int mInitialize = 1; //tell shader to initialize a blank screen
 	private Texture2D noise;
 	private int mRandSeedSize = 50;
+	private int mSimulationSteps = 2;
+	private int mSandDuneShaderSizeLocation = -1;
 	
 	
 	/* The size of the light uniform arrays in the ubershader. */
@@ -196,7 +198,7 @@ public class Renderer
 			/* Reset lights array. It will be re-filled as the scene is traversed. */
 			
 			/* 0.5. Compute sand dune buffer */
-			for (int i=0; i<1; i++){
+			for (int i=0; i<mSimulationSteps; i++){
 				computeSandDuneBuffer(gl);
 			}
 			
@@ -521,7 +523,7 @@ public class Renderer
 		 * first. */
 		gl.glDisable(GL2.GL_DEPTH_TEST);
 		gl.glDisable(GL2.GL_BLEND);
-
+		gl.glEnable(GL2.GL_TEXTURE_RECTANGLE_ARB);
 		//Bind to from previous SandDune buffer for sampling. 
 		if (mInitialize == 0){
 			if (mWhichSandDune ) mSBufferFBO.getColorTexture(SBuffer_SandDune2Index).bind(gl,0);
@@ -537,6 +539,8 @@ public class Renderer
 		mSandDuneShader.bind(gl);
 		
 		gl.glUniform1i( mSandDuneShader.getUniformLocation(gl, "initialize"), mInitialize);
+		gl.glUniform2f( this.mSandDuneShaderSizeLocation, mViewportWidth, mViewportHeight);
+
 		gl.glUniform1i( mSandDuneShader.getUniformLocation(gl, "whichBuffer"), (mWhichSandDune ? 1 : 0));
 		gl.glUniform1i( mSandDuneShader.getUniformLocation(gl, "randSeedLength"), mRandSeedSize );
 		int mRandSeedUniformLocation = mSandDuneShader.getUniformLocation(gl, "randSeed");
@@ -1290,6 +1294,7 @@ public class Renderer
 			mSandDuneShader.unbind(gl);
 			
 
+			mSandDuneShaderSizeLocation = mSandDuneShader.getUniformLocation(gl, "ScreenSize");
 			
 			/* Load the bloom shader. */
 			mBloomShader = new ShaderProgram(gl, "shaders/bloom");
@@ -1380,7 +1385,7 @@ public class Renderer
 		{
 			mGBufferFBO = new FramebufferObject(gl, Format.RGBA, Datatype.FLOAT16, width, height, GBuffer_Count, true, true);
 			mShadowMapFBO = new FramebufferObject(gl, Format.RGBA, Datatype.FLOAT16, width, height, GBuffer_Count, true, false);
-			mSBufferFBO = new FramebufferObject(gl, Format.RGBA, Datatype.FLOAT32, width, height, GBuffer_Count, true, true);
+			mSBufferFBO = new FramebufferObject(gl, Format.RGBA, Datatype.FLOAT16, width, height, 2, false, true);
 		}
 		catch (OpenGLException err)
 		{

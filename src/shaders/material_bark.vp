@@ -15,27 +15,14 @@
 varying vec3 EyespacePosition;
 varying vec3 EyespaceNormal;
 varying vec2 TexCoord;
-uniform float phi;
-uniform float h;
 
 void main()
 {
-
-     vec3 normal = gl_NormalMatrix*gl_Normal;
-     vec3 normalunit = normalize(normal);
-     vec4 normal4v = vec4(normalunit.x, normalunit.y, normalunit.z, 0);
-    
-    gl_Position = gl_ModelViewMatrix * gl_Vertex;
-    
-    gl_Position = gl_Position + phi * normal4v;
-    EyespacePosition = vec3(gl_Position);
-    gl_Position = gl_ProjectionMatrix * gl_Position;
-    
 	/* Standard vertex transform. */
-	//gl_Position = ftransform();
+	gl_Position = ftransform();
 	
 	// TODO PA3 Prereq: Transform stuff into eye space and store in varyings.
-	//EyespacePosition = vec3(gl_ModelViewMatrix * gl_Vertex);
+	EyespacePosition = vec3(gl_ModelViewMatrix * gl_Vertex);
 	EyespaceNormal = normalize(gl_NormalMatrix * gl_Normal);	
 	TexCoord = vec2(gl_MultiTexCoord0);
 }

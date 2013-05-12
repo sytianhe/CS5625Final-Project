@@ -59,7 +59,9 @@ public abstract class SceneController implements MouseListener, MouseMotionListe
 	protected static Timer timer;
 	protected boolean isAnimate = false;
 	private static int N_STEPS_PER_FRAME = 60;
-	public static final float DT = 0.03f;
+	public static  float DT = 0.03f;
+	public static float dt = 2 *  DT /  N_STEPS_PER_FRAME ;
+	
 	public ParticleSystem PS;
 	
 	/**
@@ -139,7 +141,7 @@ public abstract class SceneController implements MouseListener, MouseMotionListe
 		}
 
 		//Perform several small time steps per iteration
-		float dt = DT / N_STEPS_PER_FRAME ;
+		//float dt = DT / N_STEPS_PER_FRAME ;
 		for(int i =0; i< N_STEPS_PER_FRAME; i++){
 			PS.advanceTime(dt);
 		}

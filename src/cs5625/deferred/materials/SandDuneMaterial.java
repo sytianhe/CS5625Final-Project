@@ -29,7 +29,7 @@ public class SandDuneMaterial extends Material{
 	private int mTextureHeightLocation = -1;
 	
 	/* Either use or dont use the SandDune simulation for shading. */
-	private boolean mUseSandDuneSimulation = false;
+	private boolean mUseSandDuneSimulation = true;
 
 	
 	public SandDuneMaterial()
