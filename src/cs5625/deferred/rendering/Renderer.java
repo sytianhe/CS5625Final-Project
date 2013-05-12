@@ -110,6 +110,11 @@ public class Renderer
 	private int mKernelWidth = 3;
 	private float mThreshold = 0.80f;
 	
+	/* Used to control the fog post-processing stage. */
+	private ShaderProgram mFogShader = null;
+	private boolean mEnableFog = false;
+	private float mFogThreshold = 0.80f;
+	
 	/* Used to control gbuffer data vizualization. */
 	private ShaderProgram mVisShader = null;
 	
@@ -229,6 +234,7 @@ public class Renderer
 			{			
 				finalPass(gl);					 								 
 			}
+
 		}
 		catch (Exception err)
 		{
@@ -246,7 +252,42 @@ public class Renderer
 	 */
 	protected void finalPass(GL2 gl) throws OpenGLException
 	{
-		if(mEnableBloom)
+		if (mEnableFog){
+			/* Save state before we disable depth testing for blitting. */
+			gl.glPushAttrib(GL2.GL_ENABLE_BIT);
+			
+			/* Disable depth test and blend, since we just want to replace the contents of the framebuffer.
+			 * Since we are rendering an opaque fullscreen quad here, we don't bother clearing the buffer
+			 * first. */
+			gl.glDisable(GL2.GL_DEPTH_TEST);
+			gl.glDisable(GL2.GL_BLEND);
+			
+			/* Bind the final scene texture for post-processing. */
+			mGBufferFBO.getColorTexture(GBuffer_FinalSceneIndex).bind(gl, 0);
+			/* Bind the depth texture for post-processing. */
+			mGBufferFBO.getDepthTexture().bind(gl, 1);
+			
+			/* Set all fog shader uniforms. */
+			mFogShader.bind(gl);
+			gl.glUniform1f(mFogShader.getUniformLocation(gl, "Threshold"), mFogThreshold);
+			
+			/* Draw a full-screen quad to the framebuffer. */
+			Util.drawFullscreenQuad(gl, mViewportWidth, mViewportHeight);
+			
+			/* Unbind everything. */
+			mFogShader.unbind(gl);
+			mGBufferFBO.getColorTexture(GBuffer_FinalSceneIndex).unbind(gl);
+			mGBufferFBO.getDepthTexture().unbind(gl);
+			
+			/* Restore attributes (blending and depth-testing) to as they were before. */
+			gl.glPopAttrib();
+			
+			/* Make sure nothing went wrong. */
+			OpenGLException.checkOpenGLError(gl);
+			
+
+		}
+		else if(mEnableBloom)
 		{
 			/* Save state before we disable depth testing for blitting. */
 			gl.glPushAttrib(GL2.GL_ENABLE_BIT);
@@ -761,10 +802,7 @@ public class Renderer
 							gl.glScaled(p.getRadius(), p.getRadius(), p.getRadius());
 							renderMesh(gl, sphereMesh);
 							gl.glPopMatrix();							
-						}
-
-						
-						
+						}	
 					}
 				}
 				//else {
@@ -1067,6 +1105,38 @@ public class Renderer
 	}
 	
 	/**
+	 * Enables or disables bloom.
+	 */
+	public void setFog(boolean Fog)
+	{
+		mEnableFog = Fog;
+	}
+	
+	/**
+	 * Returns true if bloom is enabled.
+	 */
+	public boolean getFog()
+	{
+		return mEnableFog;
+	}
+	
+	/**
+	 * Sets the cut-off threshold for the bloom algorithm.
+	 */
+	public void setFogThreshold(float threshold)
+	{
+		mFogThreshold = threshold;
+	}
+	
+	/**
+	 * Gets the cut-off threshold for the bloom algorithm.
+	 */
+	public float getFogThreshold()
+	{
+		return mFogThreshold;
+	}
+	
+	/**
 	 * Sets the shadow map bias
 	 */
 	public void setShadowMapBias(float bias)
@@ -1303,6 +1373,14 @@ public class Renderer
 			gl.glUniform1i(mBloomShader.getUniformLocation(gl, "FinalSceneBuffer"), 0);
 			mBloomShader.unbind(gl);
 			
+			/* Load the fog shader. */
+			mFogShader = new ShaderProgram(gl, "shaders/fog");
+			
+			mFogShader.bind(gl);
+			gl.glUniform1i(mFogShader.getUniformLocation(gl, "FinalSceneBuffer"), 0);
+			gl.glUniform1i(mFogShader.getUniformLocation(gl, "DepthSceneBuffer"), 1);
+			mFogShader.unbind(gl);
+			
 			/* Load the visualization shader. */
 			mVisShader = new ShaderProgram(gl, "shaders/visualize");
 			
@@ -1404,6 +1482,7 @@ public class Renderer
 		mUberShader.releaseGPUResources(gl);
 		mSilhouetteShader.releaseGPUResources(gl);
 		mBloomShader.releaseGPUResources(gl);
+		mFogShader.releaseGPUResources(gl);
 		mVisShader.releaseGPUResources(gl);
 		mShadowMapFBO.releaseGPUResources(gl);
 		mSandDuneShader.releaseGPUResources(gl);

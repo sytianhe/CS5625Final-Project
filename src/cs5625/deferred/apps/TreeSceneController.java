@@ -95,24 +95,25 @@ public class TreeSceneController extends SceneController{
 //            mSceneRoot.addChild(tree3);
 
             //TESTING PARALLAX MAPPING:
-//		    ParallaxMapMaterial normalMaterial2 = new ParallaxMapMaterial();
-//			Texture2D brickTexture = Texture2D.load(gl, "textures/lion.jpg");
-//			Texture2D brickSpecularTexture = Texture2D.load(gl, "textures/Specular_example.jpg");
-//			Texture2D brickNormalTexture = Texture2D.load(gl, "textures/stoneBrickNormal.jpg");
-//			Texture2D brickHeightTexture = Texture2D.load(gl, "textures/lion_bump.jpg");
-//			normalMaterial2.setDiffuseTexture(brickTexture);
-//			normalMaterial2.setSpecularTexture(brickSpecularTexture);
-//			normalMaterial2.setNormalTexture(brickNormalTexture);
-//			normalMaterial2.setHeightTexture(brickHeightTexture);
-//			
-//			//mSceneRoot.addGeometry(Geometry.load("models/default-scene.obj", true, true));
-//			ArrayList<Geometry> temp = new ArrayList <Geometry>();
-//			temp.addAll( Geometry.load("models/cube.obj", true, true));
-//			mSceneRoot.addChild(temp.get(0));
-//			temp.get(0).setPosition(new Point3f(0, 5f, -5f));
-//			temp.get(0).calculateTangentVectorsForAllGeometry();
-//			temp.get(0).getMeshes().get(0).setMaterial(normalMaterial2);
-			
+		    ParallaxMapMaterial normalMaterial2 = new ParallaxMapMaterial();
+			Texture2D brickTexture = Texture2D.load(gl, "textures/lion.jpg");
+			Texture2D brickSpecularTexture = Texture2D.load(gl, "textures/Specular_example.jpg");
+			Texture2D brickNormalTexture = Texture2D.load(gl, "textures/stoneBrickNormal.jpg");
+			Texture2D brickHeightTexture = Texture2D.load(gl, "textures/lion_bump.jpg");
+			normalMaterial2.setDiffuseTexture(brickTexture);
+			normalMaterial2.setSpecularTexture(brickSpecularTexture);
+			normalMaterial2.setNormalTexture(brickNormalTexture);
+			normalMaterial2.setHeightTexture(brickHeightTexture);
+
+			//mSceneRoot.addGeometry(Geometry.load("models/default-scene.obj", true, true));
+			ArrayList<Geometry> temp = new ArrayList <Geometry>();
+			temp.addAll( Geometry.load("models/cube.obj", true, true));
+			mSceneRoot.addChild(temp.get(0));
+			temp.get(0).setScale(300);
+			temp.get(0).setPosition(new Point3f(0, 0, 0));
+			temp.get(0).calculateTangentVectorsForAllGeometry();
+			temp.get(0).getMeshes().get(0).setMaterial(normalMaterial2);
+
 			target = new Sphere(new Point3f(1.0f,1.0f,0.0f));
 			target.setIsPinned(true);
 			target.setName("targetMark");
