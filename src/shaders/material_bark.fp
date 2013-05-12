@@ -13,7 +13,7 @@
 
 /* ID of Lambertian material, so the lighting shader knows what material
  * this pixel is. */
-const int VERTEXLAMBERTIAN_MATERIAL_ID = 2;
+const int LAMBERTIAN_MATERIAL_ID = 2;
 
 /* Material properties passed from the application. */
 uniform vec3 DiffuseColor;
@@ -21,7 +21,6 @@ uniform vec3 DiffuseColor;
 /* Textures and flags for whether they exist. */
 uniform sampler2D DiffuseTexture;
 uniform bool HasDiffuseTexture;
-uniform float phi;
 
 /* Fragment position, normal, and texcoord passed from the vertex shader. */
 varying vec3 EyespacePosition;
@@ -47,6 +46,6 @@ void main()
 		gl_FragData[0] = vec4(DiffuseColor, enc.x);
 	}
 	gl_FragData[1] = vec4(EyespacePosition, enc.y);
-	gl_FragData[2] = vec4(float(VERTEXLAMBERTIAN_MATERIAL_ID), 0.0, 0.0, 0.0);
+	gl_FragData[2] = vec4(float(LAMBERTIAN_MATERIAL_ID), 0.0, 0.0, 0.0);
 	gl_FragData[3] = vec4(0.0);
 }

@@ -42,15 +42,23 @@ void main()
 	
 	if (HasSandDuneHeightMap) {
 	
-		float h11 = texture2DRect(SandDuneHeightMap, TexCoord).x;
+		float h11 = texture2DRect(SandDuneHeightMap, TexCoord).x;		
     	float h01 = texture2DRect(SandDuneHeightMap, TexCoord + vec2(-1,0) ).x;
-    	float h21 = texture2DRect(SandDuneHeightMap, TexCoord + vec2(1,0) ).x;
     	float h10 = texture2DRect(SandDuneHeightMap, TexCoord + vec2(0,-1) ).x;
+    	float h21 = texture2DRect(SandDuneHeightMap, TexCoord + vec2(1,0) ).x;
     	float h12 = texture2DRect(SandDuneHeightMap, TexCoord + vec2(0,1) ).x;
-    	vec3 va = normalize(vec3(2.0,h21-h11,0.0));
-    	vec3 vb = normalize(vec3(0.0,h12-h11,-2.0));
+    	
+    	
+    	float h00 = texture2DRect(SandDuneHeightMap, TexCoord + vec2(-1,-1) ).x;
+    	float h20 = texture2DRect(SandDuneHeightMap, TexCoord + vec2(1,-1) ).x;
+    	float h02 = texture2DRect(SandDuneHeightMap, TexCoord + vec2(-1,1) ).x;
+    	float h22 = texture2DRect(SandDuneHeightMap, TexCoord + vec2(1,1) ).x;    	
+    	
+    	
+    	vec3 va = normalize(vec3(2.0,h21-h01,0.0));
+    	vec3 vb = normalize(vec3(0.0,h12-h10,2.0));
     	vec3 bump = cross(va,vb);
-    	enc = encode(normalize(gl_NormalMatrix * bump));
+    	//enc = encode(normalize(gl_NormalMatrix * bump));
 
 	}
 	gl_FragData[0] = vec4(DiffuseColor, enc.x);

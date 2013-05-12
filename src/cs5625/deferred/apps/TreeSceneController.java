@@ -61,7 +61,16 @@ public class TreeSceneController extends SceneController{
 			light.setPosition(new Point3f(mShadowCamera.getPosition()));
 			light.setName("CameraLight");
 			mSceneRoot.addChild(light);	
-
+			
+			PointLight light2 = new PointLight();
+			
+			light2.setColor(new Color3f(1f,0f,0f));
+			light2.setConstantAttenuation(1.0f);
+			light2.setLinearAttenuation(0.0f);
+			light2.setQuadraticAttenuation(0.0f);
+			light2.setPosition(new Point3f(0f,50f,0f));
+			mSceneRoot.addChild(light2);
+			
 			//ADD GROUND
 			Ground plane = new Ground(mRenderer);
 			mSceneRoot.addChild(plane);
@@ -74,7 +83,7 @@ public class TreeSceneController extends SceneController{
             plane.addInteractionWith(sphere);
             
             Texture2D barkTexture = Texture2D.load(gl, "textures/bark1.jpg",false);
-            tree = new PalmTree(10f, 0.7f, 0.4f, 0f, 10f, 10, 10,2, barkTexture);
+            tree = new PalmTree(10f, 0.7f, 0.4f, 0f, 10f, 3, 10,2, barkTexture);
             tree.setPosition(new Point3f(0.0f, 0.0f, 0.0f));
             mSceneRoot.addChild(tree);
             
@@ -187,6 +196,21 @@ public class TreeSceneController extends SceneController{
 	public void keyPressed(KeyEvent key)
 	{
 		char c = key.getKeyChar();
+		//int kk = key.getKeyCode();
+		//System.out.println(kk);
+//		if (kk == 38){
+////			mCameraRadius -= 1.5;
+//			mCamera.getPosition().x += 1;
+//
+//			updateCamera();
+//			requiresRender();
+//		}
+//		else if (kk == 37){
+//			mCamera.getPosition().x += 1;
+//			updateCamera();
+//			requiresRender();
+//		}		
+//		
 		if (c == 'j')
 		{
 			System.out.println("pressing " + c);

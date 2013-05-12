@@ -126,7 +126,16 @@ public class Camera extends SceneObject
 	@Override
 	public void animateHelper(float dt){
 		if(keyUP == true){
-			this.mPosition.add(new Vector3f(0,0,1.5f));			
+			this.mPosition.add(new Vector3f(0,0,1f));			
+		}
+		else if(keyDOWN == true){
+			this.mPosition.add(new Vector3f(0,0,-1f));			
+		}
+		else if(keyLEFT == true){
+			this.mPosition.add(new Vector3f(-1f,0,0f));			
+		}
+		else if(keyRIGHT == true){
+			this.mPosition.add(new Vector3f(1f,0,0));			
 		}
 	}	
 }
