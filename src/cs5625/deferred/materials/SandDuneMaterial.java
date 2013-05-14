@@ -21,12 +21,14 @@ public class SandDuneMaterial extends Material{
 
 	/* Lambertian material properties. */
 	private Color3f mDiffuseColor = new Color3f(1.00f, 1.00f, 0.00f);
+	private float mHeightFactor = 0.01f;
 	
 	/* Uniform locations for the shader. */
 	private int mDiffuseUniformLocation = -1;
 	private int mHasSandDuneFBOUniformLocation = -1;
 	private int mTextureWidthLocation = -1; 
 	private int mTextureHeightLocation = -1;
+	private int mHeightFactorLocation = -1;
 	
 	/* Either use or dont use the SandDune simulation for shading. */
 	private boolean mUseSandDuneSimulation = true;
@@ -85,7 +87,7 @@ public class SandDuneMaterial extends Material{
 		getShaderProgram().bind(gl);
 					
 		gl.glUniform3f(mDiffuseUniformLocation, mDiffuseColor.x, mDiffuseColor.y, mDiffuseColor.z);
-
+		gl.glUniform1f(mHeightFactorLocation, mHeightFactor);
 		if (!mUseSandDuneSimulation ||  mSBufferFBO == null) {
 			gl.glUniform1i(mHasSandDuneFBOUniformLocation, 0);
 		}
@@ -105,6 +107,7 @@ public class SandDuneMaterial extends Material{
 		mDiffuseUniformLocation = shader.getUniformLocation(gl, "DiffuseColor");
 		mTextureWidthLocation = shader.getUniformLocation(gl, "SamplerWidth");
 		mTextureHeightLocation = shader.getUniformLocation(gl, "SamplerHeight");
+		mHeightFactorLocation = shader.getUniformLocation(gl, "HeightFactor");
 
 		mHasSandDuneFBOUniformLocation = shader.getUniformLocation(gl, "HasSandDuneHeightMap");
 		

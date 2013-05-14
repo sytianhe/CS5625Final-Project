@@ -25,24 +25,18 @@ public class Stem extends PhysicsGeometry
 	private float topWidth = 0.01f;
 	private int nLeavesPerFrond;
 	
-	public Stem(int nLeavesPerFrond){
+	public Stem(int nLeavesPerFrond, int numSubdivisions){
 		
 		this.nLeavesPerFrond = nLeavesPerFrond;
+		this.numSubdivisions = numSubdivisions;
 		
 		//GENERATE CONTROL POINT FOR THE FRONDS 
-    	//ArrayList<Point3f>frondsList = new ArrayList<Point3f>();
 		for(int i=0; i< nLeavesPerFrond; i++){
 			Point3f point = new Point3f();
 			point.set(0f,1.5f*i/5f,0f);
-			//frondsList.add(new Point3f(point));
 			this.addControlPoint(new Point3f(point));
 		}
 		
-		//ArrayList<Point3f>newList = new ArrayList<Point3f>();
-		//for (Point3f p: frondsList){
-		//	newList.add(new Point3f(p.x, p.y, p.z));
-		//}
-		//.addControlPoints(newList);
 		Branchmesh branchmesh = new Branchmesh(this.getControlPoints(), bottomtopWidth, topWidth);
 		branchmesh.subdivide(numSubdivisions);
 		this.mMeshes.add( branchmesh );

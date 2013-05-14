@@ -21,6 +21,8 @@ uniform vec3 DiffuseColor;
 /* Textures and flags for whether they exist. */
 uniform float SamplerWidth;
 uniform float SamplerHeight;
+uniform float HeightFactor;
+
 uniform sampler2DRect SandDuneHeightMap;
 uniform bool HasSandDuneHeightMap;
 
@@ -53,12 +55,12 @@ void main()
     	float h20 = texture2DRect(SandDuneHeightMap, TexCoord + vec2(1,-1) ).x;
     	float h02 = texture2DRect(SandDuneHeightMap, TexCoord + vec2(-1,1) ).x;
     	float h22 = texture2DRect(SandDuneHeightMap, TexCoord + vec2(1,1) ).x;    	
-    	
-    	float h = 0.01;
-    	vec3 va = normalize(vec3(2.0,(h21-h01)*h,0.0));
-    	vec3 vb = normalize(vec3(0.0,(h12-h10)*h,-2.0));
+
+    	vec3 va = normalize(vec3(2.0,HeightFactor*(h21-h01 + h22-h02 + h20-h00 )/3.0,0.0));
+    	vec3 vb = normalize(vec3(0.0,HeightFactor*(h12-h10 + h22 - h20 + h02 - h00 )/ 3.0, -2.0));
+
     	vec3 bump = cross(va,vb);
-    	//enc = encode(normalize(gl_NormalMatrix * bump));
+    	enc = encode(normalize(gl_NormalMatrix * bump));
 
 	}
 	gl_FragData[0] = vec4(DiffuseColor, enc.x);

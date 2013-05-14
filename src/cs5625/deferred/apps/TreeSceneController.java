@@ -71,7 +71,7 @@ public class TreeSceneController extends SceneController{
 			light2.setLinearAttenuation(0.0f);
 			light2.setQuadraticAttenuation(0.0f);
 			light2.setPosition(new Point3f(0f,50f,0f));
-			mSceneRoot.addChild(light2);
+			//mSceneRoot.addChild(light2);
 			
 			//ADD GROUND
 			Ground plane = new Ground(mRenderer);

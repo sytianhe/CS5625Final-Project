@@ -6,6 +6,7 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3d;
 
+import cs5625.deferred.materials.BarkMaterial;
 import cs5625.deferred.materials.BlinnPhongMaterial;
 import cs5625.deferred.materials.Texture2D;
 import cs5625.deferred.physics.Particle;
@@ -22,17 +23,20 @@ public class Branch extends PhysicsGeometry
 	private int numSubdivisions = 1;
 
 	//private BlinnPhongMaterial material = new BlinnPhongMaterial(new Color3f( 205f/255f , 133f/255f, 63f/255f));
-	private BlinnPhongMaterial material = new BlinnPhongMaterial(new Color3f( 1f , 1f, 1f));
+	//private BlinnPhongMaterial material = new BlinnPhongMaterial(new Color3f( 1f , 1f, 1f));
+	private BarkMaterial material = new BarkMaterial(new Color3f( 1f , 1f, 1f));
 	private float baseRadius  = 0.25f;
 	private float tipRadius = 0.1f;
 	public Particle topPoint;
 	
-	public Branch(ArrayList<Point3f>list,float baseRadius, float tipRadious ){
+	public Branch(ArrayList<Point3f>list,float baseRadius, float tipRadious, int numSubdivisions ){
 		this.addControlPoints(list);
 		this.baseRadius = baseRadius;
 		this.tipRadius = tipRadius;
+		this.numSubdivisions = numSubdivisions;
 		Branchmesh branchmesh = new Branchmesh(list, baseRadius, tipRadius);		
 		branchmesh.subdivide(numSubdivisions);
+		branchmesh.calculateTangentVectors();
 		this.mMeshes.add( branchmesh );
 		((Mesh) this.mMeshes.get(0)).setMaterial(material);
 	}
@@ -86,9 +90,10 @@ public class Branch extends PhysicsGeometry
 		super.animateHelper(dt);
 
 		this.mMeshes.clear();
-		Branchmesh newtree = new Branchmesh(this.getControlPoints(), baseRadius, tipRadius);
-		newtree.subdivide(numSubdivisions);
-		this.mMeshes.add( newtree );
+		Branchmesh newMesh = new Branchmesh(this.getControlPoints(), baseRadius, tipRadius);
+		newMesh.subdivide(numSubdivisions);
+		newMesh.calculateTangentVectors();
+		this.mMeshes.add( newMesh );
 		((Mesh) this.mMeshes.get(0)).setMaterial(material);	
 	}
 }

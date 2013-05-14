@@ -66,7 +66,7 @@ public class PalmTree extends PhysicsGeometry {
 
 		
         //ADD MAIN TRUNK
-        trunk = new Branch(trunkList, baseWidth, topWidth);
+        trunk = new Branch(trunkList, baseWidth, topWidth, levelOfDetail);
 		trunk.setDiffuseTexture(barkTexture);
 		this.pinToPhysicsGeometry(trunk, new Point3f(0.0f, 0.0f, 0.0f));
                 
@@ -74,7 +74,7 @@ public class PalmTree extends PhysicsGeometry {
 		
         //CREATE FRONDS
         for (int i = 0; i<nFronds; i++){
-            Stem stem = new Stem(nLeavesPerFrond);
+            Stem stem = new Stem(nLeavesPerFrond, levelOfDetail);
             // FIND THE RIGHT QUATERNION TO MAINTAIN THE PalmTree LEAVES FACING UP
             float rand1 = (float) Math.random();
             float rand2 = (float) Math.random()*0.35f;

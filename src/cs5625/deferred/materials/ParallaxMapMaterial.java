@@ -49,6 +49,11 @@ public class ParallaxMapMaterial extends Material{
 		
 	}
 	
+	public ParallaxMapMaterial(Color3f diffuseColor) {
+		mDiffuseColor = diffuseColor;
+	}
+	
+	
 	public ParallaxMapMaterial(Color3f diffuseColor, Texture2D normalTexture, Texture2D heightTexture) {
 		mDiffuseColor = diffuseColor;
 		mNormalTexture = normalTexture;
