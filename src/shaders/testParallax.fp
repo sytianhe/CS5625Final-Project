@@ -61,6 +61,13 @@ void main()
 		texCoord = TexCoord - 2.0*normalize(EyespacePosition).xy*v;
 		//texCoord = vec2(height,0);
 	}
+	else if (HasDiffuseTexture){
+		//Compute height from diffuse texture intensity
+		vec3 sample = texture2D(DiffuseTexture, TexCoord).xyz
+		float height = sqrt(sample.x + sample.y + sample.z);
+		float v = height * 0.04 - 0.02;
+		texCoord = TexCoord - 2.0*normalize(EyespacePosition).xy*v;
+	}
 	
 	vec2 enc;
 	
@@ -84,6 +91,9 @@ void main()
 		
 	}
 	else {	
+		//compute normal from heightmap
+		//and since we dont expect to see a height map compute height map from diffuse texture.
+	
 		enc = encode(normalize(EyespaceNormal));
 	}
 	

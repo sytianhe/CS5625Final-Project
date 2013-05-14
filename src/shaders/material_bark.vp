@@ -1,28 +1,33 @@
 /**
- * material_lambertian.vp
+ * material_bark.vp
  * 
- * Vertex shader shader which writes material information needed for Lambertian shading to
+ * Vertex shader shader which writes material information needed for bark shading to
  * the gbuffer.
  * 
- * Written for Cornell CS 5625 (Interactive Computer Graphics).
- * Copyright (c) 2012, Computer Science Department, Cornell University.
  * 
- * @author Asher Dunn (ad488)
- * @date 2012-03-27
+ * @author homoflashmanicus, tianhe
  */
 
-/* Pass eyespace position and normal, and texcoord, to the fragment shader. */
+attribute vec4 VertexTangent;
+
 varying vec3 EyespacePosition;
 varying vec3 EyespaceNormal;
 varying vec2 TexCoord;
 
-void main()
-{
-	/* Standard vertex transform. */
+varying vec3 EyespaceTangent;
+varying vec3 EyespaceBiTangent;
+varying float handedness;
+
+void main() {
+	/* Standard vertex transform */
 	gl_Position = ftransform();
 	
-	// TODO PA3 Prereq: Transform stuff into eye space and store in varyings.
 	EyespacePosition = vec3(gl_ModelViewMatrix * gl_Vertex);
-	EyespaceNormal = normalize(gl_NormalMatrix * gl_Normal);	
+	EyespaceNormal = normalize(gl_NormalMatrix * gl_Normal);
+	
+	EyespaceTangent = normalize(gl_NormalMatrix * VertexTangent.xyz);
+	EyespaceBiTangent = normalize(VertexTangent.w*cross(EyespaceNormal, EyespaceTangent));
+	handedness = VertexTangent.w;
+	
 	TexCoord = vec2(gl_MultiTexCoord0);
 }
