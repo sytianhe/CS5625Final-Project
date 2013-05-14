@@ -1,0 +1,21 @@
+/**
+ * material_sky.vp
+ * 
+ * @author Tianhe Zhang (tz249)
+ */
+
+/* Pass eyespace position and normal, and texcoord, to the fragment shader. */
+varying vec3 EyespacePosition;
+varying vec3 EyespaceNormal;
+varying vec2 TexCoord;
+
+void main()
+{
+	/* Standard vertex transform. */
+	gl_Position = ftransform();
+	
+	// TODO PA3 Prereq: Transform stuff into eye space and store in varyings.
+	EyespacePosition = vec3(gl_ModelViewMatrix * gl_Vertex);
+	EyespaceNormal = normalize(gl_NormalMatrix * gl_Normal);	
+	TexCoord = vec2(gl_MultiTexCoord0);
+}

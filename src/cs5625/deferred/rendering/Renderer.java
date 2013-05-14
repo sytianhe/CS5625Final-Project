@@ -1176,7 +1176,9 @@ public class Renderer
 	 */
 	public void incrementShadowMode()
 	{
-		mShadowMode = (mShadowMode + 1) % 3;
+		//mShadowMode = (mShadowMode + 1) % 3;
+		//ignore PCSS because it crashes!!!
+		mShadowMode = (mShadowMode + 1) % 2;
 	}
 	
 	public int getShadowMode() {
@@ -1314,7 +1316,7 @@ public class Renderer
 			gl.glUniform1i(mUberShader.getUniformLocation(gl, "SandDune1Buffer"), 4);
 			gl.glUniform1i(mUberShader.getUniformLocation(gl, "SandDune2Buffer"), 7);
 
-			gl.glUniform3f(mUberShader.getUniformLocation(gl, "SkyColor"), 102.0f/256f, 1f, 1f);
+			gl.glUniform3f(mUberShader.getUniformLocation(gl, "SkyColor"), 1f, 1f, 1f);
 			gl.glUniform1i(mUberShader.getUniformLocation(gl, "ShadowMap"), mShadowTextureLocation);
 			mUberShader.unbind(gl);			
 			

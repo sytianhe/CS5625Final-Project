@@ -54,9 +54,9 @@ void main()
     	float h02 = texture2DRect(SandDuneHeightMap, TexCoord + vec2(-1,1) ).x;
     	float h22 = texture2DRect(SandDuneHeightMap, TexCoord + vec2(1,1) ).x;    	
     	
-    	
-    	vec3 va = normalize(vec3(2.0,h21-h01,0.0));
-    	vec3 vb = normalize(vec3(0.0,h12-h10,2.0));
+    	float h = 0.01;
+    	vec3 va = normalize(vec3(2.0,(h21-h01)*h,0.0));
+    	vec3 vb = normalize(vec3(0.0,(h12-h10)*h,-2.0));
     	vec3 bump = cross(va,vb);
     	//enc = encode(normalize(gl_NormalMatrix * bump));
 

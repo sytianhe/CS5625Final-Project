@@ -30,14 +30,14 @@ void main()
     // default fog color
     vec4 colorF = vec4(1.0,1.0,1.0,1.0);
     // default fog height
-    float height = 5.0;
+    float height = 2.0;
     
     float depth = texture2DRect(DepthSceneBuffer, center).x;
     vec4 WorldSpacePos = O2WMatrix*vec4(EyespacePosition, 1.0);
     vec4 eyeWorldSpacePos = O2WMatrix * vec4(0.0,0.0,0.0,1.0);
     
     float noisePerlin = texture2D(PerlinNoise, vec2((WorldSpacePos.x + 100.0)/200.0, (WorldSpacePos.z + 100.0)/200.0)).x;
-    height = height + 10.0*noisePerlin;
+    height = height + 5.0*noisePerlin;
     
    	float near = 0.1;
 	float far = 100.0;

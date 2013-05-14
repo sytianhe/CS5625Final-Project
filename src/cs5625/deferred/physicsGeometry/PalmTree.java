@@ -2,13 +2,11 @@ package cs5625.deferred.physicsGeometry;
 
 import java.util.ArrayList;
 
-import javax.media.opengl.GL2;
 import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
 import cs5625.deferred.materials.Texture2D;
 import cs5625.deferred.physics.Particle;
 import cs5625.deferred.physics.ParticleSystem;
-import cs5625.deferred.physics.SpringForce1Particle;
 import cs5625.deferred.physics.SpringForce2Particle;
 
 /**

@@ -16,6 +16,7 @@
 const int UNSHADED_MATERIAL_ID = 1;
 const int LAMBERTIAN_MATERIAL_ID = 2;
 const int BLINNPHONG_MATERIAL_ID = 3;
+const int SKY_MATERIAL_ID = 4;
 
 /* Some constant maximum number of lights which GLSL and Java have to agree on. */
 #define MAX_LIGHTS 40
@@ -319,6 +320,70 @@ vec3 shadeBlinnPhong(vec3 diffuse, vec3 specular, float exponent, vec3 position,
 	return lightColor * attenuation * (diffuse * ndotl + specular * pow_ndoth);
 }
 
+/**
+ * Performs Blinn-Phong shading on the passed fragment data (color, normal, etc.) for a single light.
+ *  
+ * @param diffuse The diffuse color of the material at this fragment.
+ * @param position of the sun
+ * @param daytime
+ * @return The shaded fragment color.
+ */
+vec3 shadeSky(vec3 diffuse, vec3 sunPosition, float daytime)
+{
+	// Apply the idea of skybox in paper of Braun and Cohen
+	
+	// SETUP min and max luminance for each channel
+	float lmin_R = 75.0;
+	float lmax_R = 228.0;
+	float lmin_G = 35.0;
+	float lmax_G = 192.0;
+	float lmin_B = 75.0;
+	float lmax_B = 256.0;
+	
+	// SETUP start time of sunrise and sunset
+	float sunRiseSt = 5.0; // 5:00 AM
+	float sunSetSt = 17.0; // 5:00 PM
+	
+	// SETUP the interval of sunrise and sunset (in hours);
+	float sunRiseLength = 3.0;
+	float sunSetLength = 4.0;
+	
+	// CALCULATE sunrise and sunset luminance changing rate.
+	float sunRiseRate_R = (lmax_R-lmin_R)/sunRiseLength;
+	float sunRiseRate_G = (lmax_G-lmin_G)/sunRiseLength;
+	float sunRiseRate_B = (lmax_B-lmin_B)/sunRiseLength;
+	
+	float sunSetRate_R = (lmax_R-lmin_R)/sunSetLength;
+	float sunSetRate_G = (lmax_G-lmin_G)/sunSetLength;
+	float sunSetRate_B = (lmax_B-lmin_B)/sunSetLength;
+	
+	vec3 color;
+	if ((daytime > sunRiseSt) && (daytime <= sunRiseSt + sunRiseLength))
+	{
+		color = vec3(diffuse.x * (lmin_R + (daytime - sunRiseSt)*sunRiseRate_R)/256.0, 
+					 diffuse.y * (lmin_G + (daytime - sunRiseSt)*sunRiseRate_G)/256.0,
+					 diffuse.z * (lmin_B + (daytime - sunRiseSt)*sunRiseRate_B)/256.0);
+	}
+	else if ((daytime > sunRiseSt + sunRiseLength) && (daytime <= sunSetSt))
+	{
+		color = vec3(diffuse.x * lmax_R /256.0, 
+					 diffuse.y * lmax_G /256.0, 
+					 diffuse.z * lmax_B /256.0);
+	}
+	else if ((daytime > sunSetSt) && (daytime <= sunSetSt + sunSetLength))
+	{
+		color = vec3(diffuse.x * (lmax_R - (daytime - sunSetSt)*sunSetRate_R)/256.0, 
+					 diffuse.y * (lmax_G - (daytime - sunSetSt)*sunSetRate_G)/256.0,
+					 diffuse.z * (lmax_B - (daytime - sunSetSt)*sunSetRate_B)/256.0);
+	}
+	else {
+		color = vec3(diffuse.x * lmin_R /256.0, 
+					 diffuse.y * lmin_G /256.0, 
+					 diffuse.z * lmin_B /256.0);	
+	}
+	return color;
+}
+
 void main()
 {
 	/* Sample gbuffer. */
@@ -361,6 +426,10 @@ void main()
 			gl_FragColor.rgb += shadeBlinnPhong(diffuse, materialParams2.rgb, materialParams2.a,
 				position, normal, LightPositions[i], LightColors[i], LightAttenuations[i]);
 		}
+	}
+	else if (materialID == SKY_MATERIAL_ID)
+	{
+		gl_FragColor.rgb = shadeSky(diffuse, materialParams2.xyz, materialParams2.w);
 	}
 	else
 	{

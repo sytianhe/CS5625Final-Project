@@ -15,7 +15,9 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
 
+import cs5625.deferred.materials.LambertianMaterial;
 import cs5625.deferred.materials.ParallaxMapMaterial;
+import cs5625.deferred.materials.SkyMaterial;
 import cs5625.deferred.materials.Texture2D;
 import cs5625.deferred.materials.UnshadedMaterial;
 import cs5625.deferred.misc.OpenGLException;
@@ -24,6 +26,7 @@ import cs5625.deferred.misc.Util;
 import cs5625.deferred.physics.Particle;
 import cs5625.deferred.physicsGeometry.Ground;
 import cs5625.deferred.physicsGeometry.PalmTree;
+import cs5625.deferred.physicsGeometry.SkyBox;
 import cs5625.deferred.physicsGeometry.Sphere;
 import cs5625.deferred.scenegraph.Geometry;
 import cs5625.deferred.scenegraph.PointLight;
@@ -56,8 +59,7 @@ public class TreeSceneController extends SceneController{
 			light.setConstantAttenuation(1.0f);
 			light.setLinearAttenuation(0.0f);
 			light.setQuadraticAttenuation(0.0f);
-
-			
+			System.out.println(mShadowCamera.getPosition());
 			light.setPosition(new Point3f(mShadowCamera.getPosition()));
 			light.setName("CameraLight");
 			mSceneRoot.addChild(light);	
@@ -86,34 +88,12 @@ public class TreeSceneController extends SceneController{
             tree = new PalmTree(10f, 0.7f, 0.4f, 0f, 10f, 3, 10,2, barkTexture);
             tree.setPosition(new Point3f(0.0f, 0.0f, 0.0f));
             mSceneRoot.addChild(tree);
-            
-//            PalmTree tree2 = new PalmTree(10f, 0.5f, 0.4f, 0f, 10f, 15, 15,3, barkTexture);
-//            tree2.setPosition(new Point3f(5.0f, 0.0f, 0.0f));
-//            mSceneRoot.addChild(tree2);
-            
-//            PalmTree tree3 = new PalmTree(10f, 0.5f, 0.4f, 0f, 10f, 15, 15,3, barkTexture);
-//            tree3.setPosition(new Point3f(0.0f, 0.0f, 5.0f));
-//            mSceneRoot.addChild(tree3);
 
-            //TESTING PARALLAX MAPPING:
-		    ParallaxMapMaterial normalMaterial2 = new ParallaxMapMaterial();
-			Texture2D brickTexture = Texture2D.load(gl, "textures/lion.jpg");
-			Texture2D brickSpecularTexture = Texture2D.load(gl, "textures/Specular_example.jpg");
-			Texture2D brickNormalTexture = Texture2D.load(gl, "textures/stoneBrickNormal.jpg");
-			Texture2D brickHeightTexture = Texture2D.load(gl, "textures/lion_bump.jpg");
-			normalMaterial2.setDiffuseTexture(brickTexture);
-			normalMaterial2.setSpecularTexture(brickSpecularTexture);
-			normalMaterial2.setNormalTexture(brickNormalTexture);
-			normalMaterial2.setHeightTexture(brickHeightTexture);
-
-			//mSceneRoot.addGeometry(Geometry.load("models/default-scene.obj", true, true));
-			ArrayList<Geometry> temp = new ArrayList <Geometry>();
-			temp.addAll( Geometry.load("models/cube.obj", true, true));
-			mSceneRoot.addChild(temp.get(0));
-			temp.get(0).setScale(100);
-			temp.get(0).setPosition(new Point3f(0, 0, 0));
-			temp.get(0).calculateTangentVectorsForAllGeometry();
-			temp.get(0).getMeshes().get(0).setMaterial(new UnshadedMaterial(new Color3f(102.0f/256f, 1f, 1f)));
+			Texture2D skyTexture = Texture2D.load(gl, "textures/skybox.jpg",false);
+			SkyBox skybox = new SkyBox(new Color3f(102.0f/256f, 1f, 1f), new Point3f(), skyTexture);
+			skybox.setPosition(new Point3f(0f, 0f, 0f));
+			skybox.setScale(200);
+			mSceneRoot.addChild(skybox);
 
 			target = new Sphere(new Point3f(1.0f,1.0f,0.0f));
 			target.setIsPinned(true);

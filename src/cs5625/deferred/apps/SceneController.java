@@ -395,13 +395,13 @@ public abstract class SceneController implements MouseListener, MouseMotionListe
 		
 		else if (c == 'q')
 		{
-			mRenderer.setFogThreshold(Math.max(0.0f, mRenderer.getFogThreshold() - 0.025f));
+			mRenderer.setFogThreshold(Math.max(0.0f, mRenderer.getFogThreshold() - 0.25f));
 			System.out.println("Fog Threshold: " + mRenderer.getFogThreshold());
 			requiresRender();
 		}
 		else if (c == 'Q')
 		{
-			mRenderer.setFogThreshold(mRenderer.getFogThreshold() + 0.025f);
+			mRenderer.setFogThreshold(mRenderer.getFogThreshold() + 0.25f);
 			System.out.println("Fog Threshold: " + mRenderer.getFogThreshold());
 			requiresRender();
 		}
