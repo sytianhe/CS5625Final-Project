@@ -1,7 +1,5 @@
 package cs5625.deferred.physicsGeometry;
 
-import java.util.ArrayList;
-
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;

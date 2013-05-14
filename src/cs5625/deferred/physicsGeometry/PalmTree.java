@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
+
 import cs5625.deferred.materials.Texture2D;
 import cs5625.deferred.physics.Particle;
 import cs5625.deferred.physics.ParticleSystem;
