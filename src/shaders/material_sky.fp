@@ -13,7 +13,9 @@ const int SKY_MATERIAL_ID = 4;
 /* Material properties passed from the application. */
 uniform vec3 DiffuseColor;
 uniform sampler2D DiffuseTexture;
+uniform sampler2D StarTexture;
 uniform bool HasDiffuseTexture;
+uniform bool HasStarTexture;
 uniform vec3 SunPosition;
 uniform float DayTime;
 
@@ -44,6 +46,11 @@ void main()
 		gl_FragData[0] = vec4(DiffuseColor, enc.x);
 	}
 	gl_FragData[1] = vec4(EyespacePosition, enc.y);
-	gl_FragData[2] = vec4(float(SKY_MATERIAL_ID), 0.0, 0.0, 0.0);
+	if (HasStarTexture){
+		gl_FragData[2] = vec4(float(SKY_MATERIAL_ID), texture2D(StarTexture, TexCoord).xyz );//* DiffuseColor);	
+	}
+	else{
+		gl_FragData[2] = vec4(float(SKY_MATERIAL_ID), 0.0, 0.0, 0.0);
+	}
 	gl_FragData[3] = vec4(SunPosition, DayTime);
 }

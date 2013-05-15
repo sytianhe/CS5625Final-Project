@@ -18,13 +18,15 @@ public class SkyBox extends PhysicsGeometry {
 	public SkyMaterial skyMaterial;
 	public float dayTime = 0f;
 	
-	public SkyBox(Color3f diffuseColor, Point3f SunPosition, Texture2D skyTexture){
+	public SkyBox(Color3f diffuseColor, Point3f SunPosition, Texture2D skyTexture, Texture2D starTexture){
 		skyMaterial = new SkyMaterial(new Color3f(102.0f/256f, 1f, 1f));
+		skyMaterial.setSunPosition(SunPosition);
 		if (skyTexture != null){
 			skyMaterial.setDiffuseTexture(skyTexture);
 		}
-		skyMaterial.setSunPosition(SunPosition);
-		
+		if (starTexture != null){
+			skyMaterial.setStarTexture(starTexture);
+		}
 		Sphere skySphere = new Sphere(new Point3f(0.0f,0.0f,0.0f));
 		this.mMeshes.add( skySphere.getMeshes().get(0));
 		((Mesh) this.mMeshes.get(0)).setMaterial(skyMaterial);

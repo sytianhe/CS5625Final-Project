@@ -44,7 +44,6 @@ void main()
 	
 	// Converts the depth buffer value to a linear value
 	depth = (2.0 * near) / (far + near - depth * (far - near));
-	
 	if (eyeWorldSpacePos.y > height){
 		if(WorldSpacePos.y > height){
 			 depth = 0.0;
@@ -58,6 +57,7 @@ void main()
 			depth = depth * (height - eyeWorldSpacePos.y) / ( WorldSpacePos.y - eyeWorldSpacePos.y);
 		}
 	}
+
 
     // exponentail fog:
     float factor = exp(- (Threshold+2.0) * depth);

@@ -23,12 +23,14 @@ public class SkyMaterial extends Material
 	/* Lambertian material properties. */
 	private Color3f mDiffuseColor = new Color3f(1.0f, 1.0f, 1.0f);
 	private Texture2D mDiffuseTexture = null;
+	private Texture2D mStarTexture = null;
 	private Point3f mSunPosition = new Point3f(); // sun location
 	private float mDayTime =5f; // time during the day
 
 	/* Uniform locations. */
 	private int mDiffuseUniformLocation = -1;
 	private int mHasDiffuseTextureUniformLocation = -1;
+	private int mHasStarTextureUniformLocation = -1;
 	private int mDayTimeUniformLocation = -1;
 	private int mSunPositionUniformLocation = -1;
 	
@@ -60,6 +62,16 @@ public class SkyMaterial extends Material
 	public void setDiffuseTexture(Texture2D texture)
 	{
 		mDiffuseTexture = texture;
+	}
+	
+	public Texture2D getStarTexture()
+	{
+		return mStarTexture;
+	}
+	
+	public void setStarTexture(Texture2D texture)
+	{
+		mStarTexture = texture;
 	}
 	
 	public Point3f getSunPostion()
@@ -98,6 +110,14 @@ public class SkyMaterial extends Material
 			gl.glUniform1i(mHasDiffuseTextureUniformLocation, 1);
 			mDiffuseTexture.bind(gl, 0);
 		}
+		
+		if (mStarTexture == null) {
+			gl.glUniform1i(mHasStarTextureUniformLocation, 0);
+		}
+		else {
+			gl.glUniform1i(mHasStarTextureUniformLocation, 1);
+			mStarTexture.bind(gl, 1);
+		}
 	}
 
 	@Override
@@ -108,6 +128,7 @@ public class SkyMaterial extends Material
 
 		// TODO PA3 Prereq: Unbind any used textures.
 		if (mDiffuseTexture != null) mDiffuseTexture.unbind(gl);
+		if (mStarTexture != null) mStarTexture.unbind(gl);
 	}
 	
 	@Override
@@ -116,12 +137,14 @@ public class SkyMaterial extends Material
 		/* Get locations of uniforms in this shader. */
 		mDiffuseUniformLocation = shader.getUniformLocation(gl, "DiffuseColor");
 		mHasDiffuseTextureUniformLocation = shader.getUniformLocation(gl, "HasDiffuseTexture");
+		mHasStarTextureUniformLocation = shader.getUniformLocation(gl, "HasStarTexture");
 		mSunPositionUniformLocation = shader.getUniformLocation(gl, "SunPosition");
 		mDayTimeUniformLocation = shader.getUniformLocation(gl, "DayTime");
 
 		/* This uniform won't ever change, so just set it here. */
 		shader.bind(gl);
 		gl.glUniform1i(shader.getUniformLocation(gl, "DiffuseTexture"), 0);
+		gl.glUniform1i(shader.getUniformLocation(gl, "StarTexture"), 1);
 		shader.unbind(gl);
 	}
 

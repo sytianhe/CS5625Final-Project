@@ -89,10 +89,12 @@ public class TreeSceneController extends SceneController{
             tree.setPosition(new Point3f(0.0f, 0.0f, 0.0f));
             mSceneRoot.addChild(tree);
 
-			Texture2D skyTexture = Texture2D.load(gl, "textures/skybox.jpg",false);
-			SkyBox skybox = new SkyBox(new Color3f(102.0f/256f, 1f, 1f), new Point3f(), skyTexture);
+			Texture2D skyTexture = Texture2D.load(gl, "textures/sky2.jpg",false);
+			Texture2D starTexture = Texture2D.load(gl, "textures/star3.jpg",false);
+			SkyBox skybox = new SkyBox(new Color3f(102.0f/256f, 1f, 1f), new Point3f(), skyTexture, starTexture);
 			skybox.setPosition(new Point3f(0f, 0f, 0f));
-			skybox.setScale(200);
+			//skybox.setOrientation(new Quat4f(0f,0f,(float) Math.sin(Math.PI/4.0),(float) Math.cos(Math.PI/4.0)));
+			skybox.setScale(205);
 			mSceneRoot.addChild(skybox);
 
 			target = new Sphere(new Point3f(1.0f,1.0f,0.0f));

@@ -328,7 +328,7 @@ vec3 shadeBlinnPhong(vec3 diffuse, vec3 specular, float exponent, vec3 position,
  * @param daytime
  * @return The shaded fragment color.
  */
-vec3 shadeSky(vec3 diffuse, vec3 sunPosition, float daytime)
+vec3 shadeSky(vec3 diffuse, vec3 sunPosition, vec3 starDiffuse, float daytime)
 {
 	// Apply the idea of skybox in paper of Braun and Cohen
 	
@@ -357,6 +357,9 @@ vec3 shadeSky(vec3 diffuse, vec3 sunPosition, float daytime)
 	float sunSetRate_G = (lmax_G-lmin_G)/sunSetLength;
 	float sunSetRate_B = (lmax_B-lmin_B)/sunSetLength;
 	
+	// CALCULATE night length.
+	float nightLength = 24.0 - (sunSetSt + sunSetLength) + sunRiseSt;
+	
 	vec3 color;
 	if ((daytime > sunRiseSt) && (daytime <= sunRiseSt + sunRiseLength))
 	{
@@ -377,9 +380,19 @@ vec3 shadeSky(vec3 diffuse, vec3 sunPosition, float daytime)
 					 diffuse.z * (lmax_B - (daytime - sunSetSt)*sunSetRate_B)/256.0);
 	}
 	else {
-		color = vec3(diffuse.x * lmin_R /256.0, 
-					 diffuse.y * lmin_G /256.0, 
-					 diffuse.z * lmin_B /256.0);	
+		vec3 tempColor = vec3(diffuse.x * lmin_R /256.0, 
+					 	diffuse.y * lmin_G /256.0, 
+					 	diffuse.z * lmin_B /256.0);
+	    float coeff = 0.0;
+		if ((daytime > sunSetSt + sunSetLength) && (daytime <= 24.0)) // before midnight
+		{
+			coeff = (abs(daytime-(sunSetSt + sunSetLength) - (nightLength/2.0)))/(nightLength/2.0);
+		}
+		else
+		{
+			coeff = (abs(daytime + 24.0- (sunSetSt + sunSetLength) - (nightLength/2.0)))/(nightLength/2.0);
+		}
+		color = tempColor * coeff + starDiffuse * (1.0 - coeff);	
 	}
 	return color;
 }
@@ -429,7 +442,7 @@ void main()
 	}
 	else if (materialID == SKY_MATERIAL_ID)
 	{
-		gl_FragColor.rgb = shadeSky(diffuse, materialParams2.xyz, materialParams2.w);
+		gl_FragColor.rgb = shadeSky(diffuse, materialParams2.xyz, materialParams1.yzw, materialParams2.w);
 	}
 	else
 	{
@@ -442,7 +455,7 @@ void main()
 		gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.0), silhouetteStrength()); 
 	}
 	
-	if (HasShadowMaps == 1 && materialID != 0) {	
+	if (HasShadowMaps == 1 && materialID != 0 && materialID !=4) {	
 		gl_FragColor.rgb *= getShadowStrength(position);
 	}
 	

@@ -88,14 +88,13 @@ public class BarkMaterial extends Material{
 		/* Get locations of uniforms in this shader. */
 		mDiffuseUniformLocation = shader.getUniformLocation(gl, "DiffuseColor");
 		mTextureSizeLocation = shader.getUniformLocation(gl, "TextureSize");
-		
 		mHasDiffuseTextureUniformLocation = shader.getUniformLocation(gl, "HasDiffuseTexture");
 		
 		/* These are only set once, so set them here. */
 		shader.bind(gl);
 		gl.glUniform1i(shader.getUniformLocation(gl, "DiffuseTexture"), 0);
-		gl.glUniform1i(shader.getUniformLocation(gl, "SpecularTexture"), 1);
-		gl.glUniform1i(shader.getUniformLocation(gl, "ExponentTexture"), 2);
+//		gl.glUniform1i(shader.getUniformLocation(gl, "SpecularTexture"), 1);
+//		gl.glUniform1i(shader.getUniformLocation(gl, "ExponentTexture"), 2);
 		shader.unbind(gl);
 	}
 	

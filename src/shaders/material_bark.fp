@@ -11,7 +11,7 @@
  * @date 2013-02-2012
  */
  
- #version 110
+ //#version 110
 
 /** A lambertian like material. */ 
 const int LAMBERTIAN_MATERIAL_ID = 2;
@@ -92,8 +92,9 @@ void main()
 		vec3 res = normalize(tbn*bump);
 		
 		enc = encode(res);
+		enc = encode(normalize(EyespaceNormal));
 		
-		gl_FragData[0] = vec4(texture2D(DiffuseTexture, texCoord).xyz * DiffuseColor, enc.x);
+		gl_FragData[0] = vec4(texture2D(DiffuseTexture, TexCoord).xyz * DiffuseColor, enc.x);
 		
 	}
 	else {	
