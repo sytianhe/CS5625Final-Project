@@ -54,27 +54,19 @@ public class PalmTree extends PhysicsGeometry {
 		this.nLeavesPerFrond = nLeavesPerFrond ;
 		this.levelOfDetail = levelOfDetail ; 
 		
-		//SETUP CONTROL POINT FOR LEAF AND STEM .... NEED TO BE SPACED OUT CURRENTLY
-		ArrayList<Point3f>trunkList = new ArrayList<Point3f>();
-
-    	//GENERATE CONTROL POINTS FOR THE TRUNK 
-		for(int i=0; i< nTrunkControlPoints; i++){
-			Point3f point = new Point3f();
-			point.set(0f,1.5f*i,0f);
-			trunkList.add(new Point3f(point));
-		}
 
 		
         //ADD MAIN TRUNK
-        trunk = new Branch(trunkList, baseWidth, topWidth, levelOfDetail);
+        trunk = new Branch(nLeavesPerFrond, baseWidth, topWidth, levelOfDetail);
 		trunk.setDiffuseTexture(barkTexture);
 		this.pinToPhysicsGeometry(trunk, new Point3f(0.0f, 0.0f, 0.0f));
                 
-        Point3f topPoint = trunkList.get(trunkList.size()-1);
+        Point3f topPoint = trunk.topPoint();
 		
         //CREATE FRONDS
+        
         for (int i = 0; i<nFronds; i++){
-            Stem stem = new Stem(nLeavesPerFrond, levelOfDetail);
+            Frond stem = new Frond(nLeavesPerFrond, levelOfDetail-1);
             // FIND THE RIGHT QUATERNION TO MAINTAIN THE PalmTree LEAVES FACING UP
             float rand1 = (float) Math.random();
             float rand2 = (float) Math.random()*0.35f;
@@ -91,9 +83,7 @@ public class PalmTree extends PhysicsGeometry {
 	
 	public void addForce(Particle p, ParticleSystem PS){
 		if(!alreadyAdd){
-			System.out.println("add");
-			targetf = new SpringForce2Particle(trunk.topPoint(), p, 3.0, PS);
-			System.out.println(p.x);
+			targetf = new SpringForce2Particle(trunk.topParticle(), p, 3.0, PS);
 			targetf.setStiffness(100);
 			PS.addForce(targetf);
 			alreadyAdd = true;
@@ -102,10 +92,14 @@ public class PalmTree extends PhysicsGeometry {
 	
 	public void removeForce(Particle p, ParticleSystem PS){
 		if (alreadyAdd){
-			System.out.println("remove");
 			PS.removeForce(targetf);
-			alreadyAdd = false;
+			alreadyAdd = false;			
 		}
-		//p.setPin(false);
 	}
+	
+//	@Override 
+//	public void animateHelper(){
+//		
+//	}
+	
 }

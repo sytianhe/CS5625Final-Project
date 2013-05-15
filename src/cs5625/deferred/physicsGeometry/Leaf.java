@@ -1,44 +1,39 @@
 package cs5625.deferred.physicsGeometry;
 
-import java.util.ArrayList;
-
 import javax.vecmath.Color3f;
-import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
-
-import cs5625.deferred.materials.BlinnPhongMaterial;
+import javax.vecmath.Vector3d;
 import cs5625.deferred.materials.LambertianMaterial;
 import cs5625.deferred.materials.Material;
-import cs5625.deferred.materials.UnshadedMaterial;
 import cs5625.deferred.physics.Particle;
 import cs5625.deferred.physics.ParticleSystem;
-import cs5625.deferred.physics.PenaltyForceSphere;
 import cs5625.deferred.physics.SpringForce2Particle;
-import cs5625.deferred.physics.SpringForceBending;
+import cs5625.deferred.physics.SpringForceBendingTheta;
 import cs5625.deferred.scenegraph.Mesh;
 ;
 
-
 public class Leaf extends PhysicsGeometry
 {
-	private int numSubdivisions = 0;
-	private float height = 0f;
+	private int numSubdivisions = 1;
 	private float width = 0f;
+	private float height = 0f;
 	private Material material = new LambertianMaterial(new Color3f(0.10f, 0.70f, 0.10f)) ;
 	
-	public Leaf(float height, float width){
-		this.height = height;
+	public Leaf(float height, float width, int lod){
 		this.width = width;
-		
+		this.height = height;
+		this.numSubdivisions = lod;
+		// ADDING THREE CONTROL POINTS (ALONG THE STEM)
+		// Bottom point
 		this.addControlPoint(new Point3f(0f,0f,0f));
-		this.addControlPoint(new Point3f(width/2f,0f,height/4f));
+		// Top point
 		this.addControlPoint(new Point3f(0f,0f,height));
-		this.addControlPoint(new Point3f(-width/2f,0f,height/4f));
+		// Middle point
 		this.addControlPoint(new Point3f(0f,-height*width/10f,height/4f));
 		
-		Leafmesh newtree = new Leafmesh(getControlPoints());
-		newtree.subdivide(numSubdivisions);
-		this.mMeshes.add( newtree );
+		Leafmesh2 newleaf = new Leafmesh2(getControlPoints(), width);
+		newleaf.subdivide(numSubdivisions);
+		this.mMeshes.add( newleaf );
 		((Mesh) this.mMeshes.get(0)).setMaterial(material);
 	}
 
@@ -47,39 +42,24 @@ public class Leaf extends PhysicsGeometry
 		super.addToParticleSystemHelper(PS);
 		
 		for (Particle p: this.getControlParticles()){
-			//p.setPin(false);
-			//p.setMass(0.25);
+			p.setPin(false);
+			//p.setMass(0.2);
 			p.setRadius(0.01);
 		}
 		
+		// Pin the bottom and middle points. 
 		getControlParticles().get(0).setPin(true);
-		getControlParticles().get(4).setPin(true);
+		getControlParticles().get(2).setPin(true);
 		
-		for (int i = 0; i<4; i++){
-			int j = (i+1)%4;
-			SpringForce2Particle f = new SpringForce2Particle(getControlParticles().get(i), getControlParticles().get(j), PS);
-			PS.addForce(f);
-		}
-		SpringForce2Particle f = new SpringForce2Particle(getControlParticles().get(0), getControlParticles().get(4), PS);
+		// Adding spring force bottom -> middle, middle -> top
+		SpringForce2Particle f = new SpringForce2Particle(getControlParticles().get(0), getControlParticles().get(2), PS);
+		PS.addForce(f);
+		f = new SpringForce2Particle(getControlParticles().get(2), getControlParticles().get(1), PS);
 		PS.addForce(f);
 		
-		f = new SpringForce2Particle(getControlParticles().get(2), getControlParticles().get(4), PS);
-		PS.addForce(f);
-		
-		f = new SpringForce2Particle(getControlParticles().get(1), getControlParticles().get(3), PS);
-		PS.addForce(f);
-		
-		
-		
-
-
-		//bending?
-		SpringForceBending ff = new SpringForceBending(getControlParticles().get(0), getControlParticles().get(4), getControlParticles().get(2));
+		//Bending on the stem. Angle can be changed
+		SpringForceBendingTheta ff = new SpringForceBendingTheta(getControlParticles().get(0), getControlParticles().get(2), getControlParticles().get(1), new Vector3d(0,1,0));
 		PS.addForce(ff);
-		
-	//	ff = new SpringForceBending(getControlParticles().get(1), getControlParticles().get(4), getControlParticles().get(3));
-	//	PS.addForce(ff);
-		
 	}
 	
 	@Override
@@ -87,10 +67,10 @@ public class Leaf extends PhysicsGeometry
 	{
 		super.animateHelper(dt);
 		this.mMeshes.clear();
-		Leafmesh newtree = new Leafmesh(getControlPoints());
+		Leafmesh2 newtree = new Leafmesh2(getControlPoints(), width);
+
 		newtree.subdivide(numSubdivisions);
 		this.mMeshes.add( newtree );
 		((Mesh) this.mMeshes.get(0)).setMaterial(material);
-//		
 	}
 }

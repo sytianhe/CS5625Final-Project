@@ -36,6 +36,8 @@ public class TreeSceneController extends SceneController{
 	private float mShadowCameraLongitude = -50.0f, mShadowCameraLatitude = -40.0f;
 	private float mShadowCameraRadius = 40.f;
 	
+	private boolean mArbitraryMovement = true;
+	
 	public PalmTree tree;
 	private ArrayList<Sphere> balls = new ArrayList<Sphere>();
 	public Sphere target;
@@ -49,6 +51,9 @@ public class TreeSceneController extends SceneController{
 		try {
 			
 			GL2 gl = GLU.getCurrentGL().getGL2();
+			
+			mCamera.setPosition(new Point3f(10.0f, 8.0f,10.0f));
+
 
 			//ADD LIGHT
 			/* Add an unattenuated point light to provide overall illumination. */
@@ -67,8 +72,8 @@ public class TreeSceneController extends SceneController{
 			light2.setConstantAttenuation(1.0f);
 			light2.setLinearAttenuation(0.0f);
 			light2.setQuadraticAttenuation(0.0f);
-			light2.setPosition(new Point3f(0f,50f,0f));
-			mSceneRoot.addChild(light2);
+			light2.setPosition(new Point3f(25f,50f,0f));
+			//mSceneRoot.addChild(light2);
 			
 			//ADD GROUND
 			Ground plane = new Ground(mRenderer);
@@ -93,12 +98,13 @@ public class TreeSceneController extends SceneController{
 			//ADD TARGET
 			target = new Sphere(new Point3f(10.0f,10.0f,10.0f));
 			target.setIsPinned(false);
+			target.setIsSelected(true);
 
 			mSceneRoot.addChild(target);
             balls.add(target);
 
             //INITIALIZE REPULSIVE GROUND
-            plane.addInteractionWith(target);      
+            plane.addInteraction(target,PS);      
 
 			
          ;
@@ -142,9 +148,11 @@ public class TreeSceneController extends SceneController{
 
 		mCamera.getOrientation().mul(longitudeQuat, latitudeQuat);
 		
+		if (mArbitraryMovement){
 		/* Set the camera's position so that it looks towards the origin. */
-		mCamera.setPosition(new Point3f(0.0f, 0.0f, mCameraRadius));
-		Util.rotateTuple(mCamera.getOrientation(), mCamera.getPosition());
+			mCamera.setPosition(new Point3f(0.0f, 0.0f, mCameraRadius));
+			Util.rotateTuple(mCamera.getOrientation(), mCamera.getPosition());
+		}
 	}
 	
 	@Override
@@ -174,86 +182,25 @@ public class TreeSceneController extends SceneController{
 	public void keyPressed(KeyEvent key)
 	{
 		char c = key.getKeyChar();
-		System.out.println(c);
-//		if (kk == 38){
-////			mCameraRadius -= 1.5;
-//			mCamera.getPosition().x += 1;
-//
-//			updateCamera();
-//			requiresRender();
-//		}
-//		else if (kk == 37){
-//			mCamera.getPosition().x += 1;
-//			updateCamera();
-//			requiresRender();
-//		}		
-//		
-		if (c == 'j')
-		{
-			System.out.println("pressing " + c);
+		int k = key.getKeyCode();
+
+		if (k == KeyEvent.VK_UP){
 			mCamera.keyUP = true;
 		}
-		else if (c == 'k')
-		{
-			mCameraRadius -= 1.5;
-			updateCamera();
-			requiresRender();
+		else if (k == KeyEvent.VK_DOWN){
+			mCamera.keyDOWN = true;
 		}
-		else if (c == 'h')
-		{
-			/* Zoom in and out by the scroll wheel. */
-			mCameraLongitude += 1.5;
-			updateCamera();
-			requiresRender();
+		else if (k == KeyEvent.VK_LEFT){
+			mCamera.keyLEFT = true;
 		}
-		else if (c == 'l')
-		{
-			/* Zoom in and out by the scroll wheel. */
-			mCameraLongitude -= 1.5;
-			updateCamera();
-			requiresRender();
-		}
-		else if (c == 'u')
-		{
-			// move the target to the left
-			Point3f currentPos = new Point3f(((Geometry)mSceneRoot.findDescendantByName("targetMark")).getPosition());
-			currentPos.add(new Point3f(-1.5f, 0, 0));
-			((Geometry)mSceneRoot.findDescendantByName("targetMark")).setPosition(currentPos);
-			updateCamera();
-			requiresRender();
-		}
-		else if (c == 'p')
-		{
-			// move the target to the right
-			Point3f currentPos = new Point3f(((Geometry)mSceneRoot.findDescendantByName("targetMark")).getPosition());
-			currentPos.add(new Point3f(1.5f, 0, 0));
-			((Geometry)mSceneRoot.findDescendantByName("targetMark")).setPosition(currentPos);
-			updateCamera();
-			requiresRender();
-		}
-		else if (c == 'i')
-		{
-			// move the target to the down
-			Point3f currentPos = new Point3f(((Geometry)mSceneRoot.findDescendantByName("targetMark")).getPosition());
-			currentPos.add(new Point3f(0, 0, -1.5f));
-			((Geometry)mSceneRoot.findDescendantByName("targetMark")).setPosition(currentPos);
-			updateCamera();
-			requiresRender();
-		}
-		else if (c == 'o')
-		{
-			// move the target to the up
-			Point3f currentPos = new Point3f(((Geometry)mSceneRoot.findDescendantByName("targetMark")).getPosition());
-			currentPos.add(new Point3f(0, 0, 1.5f));
-			((Geometry)mSceneRoot.findDescendantByName("targetMark")).setPosition(currentPos);
-			updateCamera();
-			requiresRender();
+		else if (k == KeyEvent.VK_RIGHT){
+			mCamera.keyRIGHT = true;
 		}
 		else if (c == '/')
 		{
 			tree.addForce(target.getOriginParticle(), PS);
 		}	
-		else if (c == '!')
+		else if (c == 'n')
 		{
 			if (target.isPinned())
 			{
@@ -264,7 +211,8 @@ public class TreeSceneController extends SceneController{
 		else if (c == 'b'){
 			//ADD SPHERE
             try {
-            	Sphere sphere = new Sphere(new Point3f( 50f* (float)Math.random()- 50f, 100f ,50f*(float)Math.random()- 50f));
+            	//Sphere sphere = new Sphere(new Point3f( 50f* (float)Math.random()- 50f, 100f ,50f*(float)Math.random()- 50f));
+            	Sphere sphere = new Sphere(new Point3f( (float)Math.random(), 80f , (float)Math.random() ));
 				mSceneRoot.addChild(sphere);
             	sphere.setIsPinned(false);
             	sphere.addToParticleSystem(PS);
@@ -277,41 +225,39 @@ public class TreeSceneController extends SceneController{
 		}
 		else if (c =='B'){
 			//TOGGLE THROUGH SPHERES
-			targetIndex += 1 % balls.size();
-			target = balls.get(targetIndex);
+			target.setIsSelected(false);
+			targetIndex = (targetIndex + 1) % balls.size();
+			target=balls.get(targetIndex);
+			target.setIsSelected(true);
 		}
+		
+		updateCamera();
+		requiresRender();
 	}
 	
 	public void keyReleased(KeyEvent key) {
 		char c = key.getKeyChar();
-		if (c == 'j')
-		{
+		int k = key.getKeyCode();
+
+		if (k == KeyEvent.VK_UP){
 			mCamera.keyUP = false;
+		}
+		else if (k == KeyEvent.VK_DOWN){
+			mCamera.keyDOWN = false;
+		}
+		else if (k == KeyEvent.VK_LEFT){
+			mCamera.keyLEFT = false;
+		}
+		else if (k == KeyEvent.VK_RIGHT){
+			mCamera.keyRIGHT = false;
 		}
 		else if (c == '/'){
 			tree.removeForce(target.getOriginParticle(), PS);
 		}
-//		else if (c == 'k')
-//		{
-//			/* Zoom in and out by the scroll wheel. */
-//			mCameraRadius -= 0.5;
-//			updateCamera();
-//			requiresRender();
-//		}
-//		else if (c == 'h')
-//		{
-//			/* Zoom in and out by the scroll wheel. */
-//			mCameraLongitude += 0.5;
-//			updateCamera();
-//			requiresRender();
-//		}
-//		else if (c == 'l')
-//		{
-//			/* Zoom in and out by the scroll wheel. */
-//			mCameraLongitude -= 0.5;
-//			updateCamera();
-//			requiresRender();
-//		}
+		
+		updateCamera();
+		requiresRender();
+
 	}
 
 	@Override

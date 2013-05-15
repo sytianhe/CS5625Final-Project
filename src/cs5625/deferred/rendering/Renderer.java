@@ -178,7 +178,7 @@ public class Renderer
 	private Texture2D noise2;
 	private int mRandSeedSize = 50;
 	private int mSimulationSteps = 1;
-	private int mSimulationSetupSteps = 1000;
+	private int mSimulationSetupSteps = 10;
 	private int mSandDuneShaderSizeLocation = -1;
 	
 	
@@ -259,59 +259,8 @@ public class Renderer
 	 */
 	protected void finalPass(GL2 gl, Camera camera) throws OpenGLException
 	{
-		if (mEnableFog){
-			/* Save state before we disable depth testing for blitting. */
-			gl.glPushAttrib(GL2.GL_ENABLE_BIT);
-			
-			/* Disable depth test and blend, since we just want to replace the contents of the framebuffer.
-			 * Since we are rendering an opaque fullscreen quad here, we don't bother clearing the buffer
-			 * first. */
-			gl.glDisable(GL2.GL_DEPTH_TEST);
-			gl.glDisable(GL2.GL_BLEND);
-			
-			/* Bind the final scene texture for post-processing. */
-			mGBufferFBO.getColorTexture(GBuffer_FinalSceneIndex).bind(gl, 0);
-			mGBufferFBO.getColorTexture(GBuffer_PositionIndex).bind(gl, 1);
-
-			/* Bind the depth texture for post-processing. */
-			mGBufferFBO.getDepthTexture().bind(gl, 2);
-			
-			try {
-				noise2 = Texture2D.load(gl, "textures/perlin_noise.png", false);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			noise2.bind(gl, 3);
-
-			/* Set all fog shader uniforms. */
-			mFogShader.bind(gl);
-			
-			float[] projMatrix = Util.fromMatrix4f(camera.getWorldSpaceTransformationMatrix4f());
-			gl.glUniformMatrix4fv(mObject2WorldUniformLocation, 1, false, projMatrix, 0);
-			gl.glUniform1f(mFogShader.getUniformLocation(gl, "ViewportWidth"), mViewportWidth);
-			gl.glUniform1f(mFogShader.getUniformLocation(gl, "ViewportHeight"), mViewportHeight);
-			gl.glUniform1f(mFogShader.getUniformLocation(gl, "Threshold"), mFogThreshold);
-			
-			/* Draw a full-screen quad to the framebuffer. */
-			Util.drawFullscreenQuad(gl, mViewportWidth, mViewportHeight);
-			
-			/* Unbind everything. */
-			mFogShader.unbind(gl);
-			noise2.unbind(gl);
-			mGBufferFBO.getDepthTexture().unbind(gl);
-			mGBufferFBO.getColorTexture(GBuffer_PositionIndex).unbind(gl);
-			mGBufferFBO.getColorTexture(GBuffer_FinalSceneIndex).unbind(gl);
-			
-			/* Restore attributes (blending and depth-testing) to as they were before. */
-			gl.glPopAttrib();
-			
-			/* Make sure nothing went wrong. */
-			OpenGLException.checkOpenGLError(gl);
-			
-
-		}
-		else if(mEnableBloom)
+		
+		if(mEnableBloom)
 		{
 			/* Save state before we disable depth testing for blitting. */
 			gl.glPushAttrib(GL2.GL_ENABLE_BIT);
@@ -376,6 +325,56 @@ public class Renderer
 			mGBufferFBO.getColorTexture(GBuffer_MaterialIndex1).unbind(gl);
 			mGBufferFBO.getColorTexture(GBuffer_MaterialIndex2).unbind(gl);
 
+			/* Restore attributes (blending and depth-testing) to as they were before. */
+			gl.glPopAttrib();
+			
+			/* Make sure nothing went wrong. */
+			OpenGLException.checkOpenGLError(gl);
+		}
+		else if (mEnableFog){
+			/* Save state before we disable depth testing for blitting. */
+			gl.glPushAttrib(GL2.GL_ENABLE_BIT);
+			
+			/* Disable depth test and blend, since we just want to replace the contents of the framebuffer.
+			 * Since we are rendering an opaque fullscreen quad here, we don't bother clearing the buffer
+			 * first. */
+			gl.glDisable(GL2.GL_DEPTH_TEST);
+			gl.glDisable(GL2.GL_BLEND);
+			
+			/* Bind the final scene texture for post-processing. */
+			mGBufferFBO.getColorTexture(GBuffer_FinalSceneIndex).bind(gl, 0);
+			mGBufferFBO.getColorTexture(GBuffer_PositionIndex).bind(gl, 1);
+
+			/* Bind the depth texture for post-processing. */
+			mGBufferFBO.getDepthTexture().bind(gl, 2);
+			
+			try {
+				noise2 = Texture2D.load(gl, "textures/perlin_noise.png", false);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			noise2.bind(gl, 3);
+
+			/* Set all fog shader uniforms. */
+			mFogShader.bind(gl);
+			
+			float[] projMatrix = Util.fromMatrix4f(camera.getWorldSpaceTransformationMatrix4f());
+			gl.glUniformMatrix4fv(mObject2WorldUniformLocation, 1, false, projMatrix, 0);
+			gl.glUniform1f(mFogShader.getUniformLocation(gl, "ViewportWidth"), mViewportWidth);
+			gl.glUniform1f(mFogShader.getUniformLocation(gl, "ViewportHeight"), mViewportHeight);
+			gl.glUniform1f(mFogShader.getUniformLocation(gl, "Threshold"), mFogThreshold);
+			
+			/* Draw a full-screen quad to the framebuffer. */
+			Util.drawFullscreenQuad(gl, mViewportWidth, mViewportHeight);
+			
+			/* Unbind everything. */
+			mFogShader.unbind(gl);
+			noise2.unbind(gl);
+			mGBufferFBO.getDepthTexture().unbind(gl);
+			mGBufferFBO.getColorTexture(GBuffer_PositionIndex).unbind(gl);
+			mGBufferFBO.getColorTexture(GBuffer_FinalSceneIndex).unbind(gl);
+			
 			/* Restore attributes (blending and depth-testing) to as they were before. */
 			gl.glPopAttrib();
 			

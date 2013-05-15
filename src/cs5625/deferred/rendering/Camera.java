@@ -1,6 +1,8 @@
 package cs5625.deferred.rendering;
 
 import javax.vecmath.Matrix4f;
+import javax.vecmath.Point3f;
+import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
 import cs5625.deferred.scenegraph.SceneObject;
@@ -125,17 +127,18 @@ public class Camera extends SceneObject
 	}
 	@Override
 	public void animateHelper(float dt){
+
 		if(keyUP == true){
-			this.mPosition.add(new Vector3f(0,0,1f));			
+			this.mPosition.add(new Vector3f(0,0,0.5f));			
 		}
 		else if(keyDOWN == true){
-			this.mPosition.add(new Vector3f(0,0,-1f));			
+			this.mPosition.add(new Vector3f(0,0,-0.5f));			
 		}
 		else if(keyLEFT == true){
-			this.mPosition.add(new Vector3f(-1f,0,0f));			
+			this.mPosition.add(new Vector3f(0.5f,0,0f));			
 		}
 		else if(keyRIGHT == true){
-			this.mPosition.add(new Vector3f(1f,0,0));			
+			this.mPosition.add(new Vector3f(-0.5f,0,0));			
 		}
 	}	
 }

@@ -47,6 +47,7 @@ public class Ground extends PhysicsGeometry {
 				PS.addForce(new PenaltyForceParticlePlane3(p, getControlParticles().get(0), getControlParticles().get(1), getControlParticles().get(2), PS )  );
 				PS.addForce(new PenaltyForceParticlePlane3(p, getControlParticles().get(2), getControlParticles().get(3), getControlParticles().get(0), PS )  );
 			}
+			//Initialize global face particle forces
 			PS.addForce(new PenaltyForceParticlePlane3(pg.getOriginParticle(), getControlParticles().get(0), getControlParticles().get(1), getControlParticles().get(2), PS ) );
 			PS.addForce(new PenaltyForceParticlePlane3(pg.getOriginParticle(), getControlParticles().get(2), getControlParticles().get(3), getControlParticles().get(0), PS ) );
 		}

@@ -42,10 +42,15 @@ public class PhysicsGeometry extends Geometry {
 	}
 
 	
-	public void addInteractionWith(PhysicsGeometry pg){
+	public void addInteraction(PhysicsGeometry pg, ParticleSystem PS){
 		getInteractsWith().add(pg);
+		addInteractionHelper(PS);
 	}
 	 
+	public void addInteractionHelper(ParticleSystem PS){
+		//FILL ME IN
+	}
+	
 	public void addToParticleSystemHelper(ParticleSystem PS){
 		super.addToParticleSystemHelper(PS);
 		for (Point3f cp : controlPoints){
