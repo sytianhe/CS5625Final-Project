@@ -48,7 +48,6 @@ float rand(vec2 seed){
  */
  vec2 mod2Screen(vec2 coord)
  {
- 	//return coord;
  	vec2 newCoord = coord;
  	if(coord.x <= 0.0){
  		newCoord.x += float(ScreenSize.x); 
@@ -63,7 +62,6 @@ float rand(vec2 seed){
  		newCoord.y -= float(ScreenSize.y); 
  	}
  	return newCoord; 
- 
  }
 
 

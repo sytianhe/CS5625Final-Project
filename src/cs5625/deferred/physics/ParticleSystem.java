@@ -187,6 +187,7 @@ public class ParticleSystem
 			// ADD SOME MASS-PROPORTIONAL DAMPING (DEFAULT IS ZERO)
 			for(Particle p : P){ 
 				p.f.y -= Constants.GRAVITY * p.m;
+				p.f.x += Constants.WIND_STRENGTH * Math.random() * Math.max(p.x.y,20);
 				Utils.acc(p.f,  -Constants.DAMPING_MASS * p.m, p.v);
 				//if (p.p2 != null){
 				//	p.p2.f.add(p.f);

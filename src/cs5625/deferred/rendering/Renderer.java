@@ -180,9 +180,14 @@ public class Renderer
 	private Texture2D noise2;
 	private int mRandSeedSize = 50;
 	private int mSimulationSteps = 1;
-	private int mSimulationSetupSteps = 10;
+	private int mSimulationSetupSteps = 100;
 	private int mSandDuneShaderSizeLocation = -1;
 	
+	
+	/**Fog time. */
+	private int mFogTimeLocation = -1;
+	private float time = 0f;
+	private float dt = 0.01f;
 	
 	/* The size of the light uniform arrays in the ubershader. */
 	private int mMaxLightsInUberShader = 40;
@@ -219,7 +224,7 @@ public class Renderer
 			/* 1. Fill the gbuffer given this scene and camera. */ 
 			fillGBuffer(gl, sceneRoot, camera);
 			
-			if (shadowCamera != null) {
+			if (shadowCamera != null && shadowCamera.getEnableShadowMap()) {
 				fillGBuffer(gl, sceneRoot, shadowCamera);
 			}
 
@@ -365,6 +370,8 @@ public class Renderer
 			gl.glUniform1f(mFogShader.getUniformLocation(gl, "ViewportWidth"), mViewportWidth);
 			gl.glUniform1f(mFogShader.getUniformLocation(gl, "ViewportHeight"), mViewportHeight);
 			gl.glUniform1f(mFogShader.getUniformLocation(gl, "Threshold"), mFogThreshold);
+			time += dt;
+			gl.glUniform1f(mFogTimeLocation, time);
 			
 			/* Draw a full-screen quad to the framebuffer. */
 			Util.drawFullscreenQuad(gl, mViewportWidth, mViewportHeight);
@@ -1433,6 +1440,7 @@ public class Renderer
 			mFogShader.unbind(gl);
 			
 			mObject2WorldUniformLocation = mFogShader.getUniformLocation(gl, "O2WMatrix");
+			mFogTimeLocation = mFogShader.getUniformLocation(gl, "time");
 			
 			/* Load the visualization shader. */
 			mVisShader = new ShaderProgram(gl, "shaders/visualize");

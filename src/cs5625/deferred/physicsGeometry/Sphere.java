@@ -14,7 +14,7 @@ import cs5625.deferred.scenegraph.Mesh;
 public class Sphere extends PhysicsGeometry {
 	
 	private Color3f color = new Color3f(1.00f, 0.00f, 0.00f);
-	private Color3f selectColor = new Color3f(0.00f, 0.0f, 1f);
+	private Color3f selectColor = new Color3f(1.00f, 1.0f, 1f);
 	private float timeScale = 25f;
 	private float time = 0;
 	private LambertianMaterial material = new LambertianMaterial(color);
