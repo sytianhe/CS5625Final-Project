@@ -1,7 +1,7 @@
 package cs5625.deferred.physics;
 
-import javax.vecmath.*;
-import javax.media.opengl.*;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 
 
 

@@ -22,7 +22,6 @@ import cs5625.deferred.physicsGeometry.Ground;
 import cs5625.deferred.physicsGeometry.PalmTree;
 import cs5625.deferred.physicsGeometry.SkyBox;
 import cs5625.deferred.physicsGeometry.Sphere;
-import cs5625.deferred.scenegraph.Geometry;
 import cs5625.deferred.scenegraph.PointLight;
 
 public class TreeSceneController extends SceneController{
@@ -31,8 +30,6 @@ public class TreeSceneController extends SceneController{
 	/* Keeps track of camera's orbit position. Latitude and longitude are in degrees. */
 	private float mCameraLongitude = 50.0f, mCameraLatitude = -40.0f;
 	private float mCameraRadius = 15.0f;
-	
-
 	
 	private boolean mArbitraryMovement = false;
 	
@@ -63,7 +60,7 @@ public class TreeSceneController extends SceneController{
 			light.setConstantAttenuation(1.0f);
 			light.setLinearAttenuation(0.0f);
 			light.setQuadraticAttenuation(0.0f);
-			light.setPosition(new Point3f(50f, 50f,0f ));
+			light.setPosition(new Point3f(0f, 5f,0f ));
 			mSceneRoot.addChild(light);	
 
 			//ADD GROUND

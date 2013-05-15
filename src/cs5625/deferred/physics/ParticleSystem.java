@@ -1,9 +1,9 @@
 package cs5625.deferred.physics;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
 
-import javax.vecmath.*;
-import javax.media.opengl.*;
+import javax.vecmath.Point3d;
 
 
 /**

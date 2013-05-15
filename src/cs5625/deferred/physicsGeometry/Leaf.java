@@ -3,6 +3,7 @@ package cs5625.deferred.physicsGeometry;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3d;
+
 import cs5625.deferred.materials.LambertianMaterial;
 import cs5625.deferred.materials.Material;
 import cs5625.deferred.physics.Particle;
@@ -16,12 +17,10 @@ public class Leaf extends PhysicsGeometry
 {
 	private int numSubdivisions = 1;
 	private float width = 0f;
-	private float height = 0f;
 	private Material material = new LambertianMaterial(new Color3f(0.10f, 0.70f, 0.10f)) ;
 	
 	public Leaf(float height, float width, int lod){
 		this.width = width;
-		this.height = height;
 		this.numSubdivisions = lod;
 		// ADDING THREE CONTROL POINTS (ALONG THE STEM)
 		// Bottom point
@@ -31,7 +30,7 @@ public class Leaf extends PhysicsGeometry
 		// Middle point
 		this.addControlPoint(new Point3f(0f,-height*width/10f,height/4f));
 		
-		Leafmesh2 newleaf = new Leafmesh2(getControlPoints(), width);
+		Leafmesh newleaf = new Leafmesh(getControlPoints(), width);
 		newleaf.subdivide(numSubdivisions);
 		this.mMeshes.add( newleaf );
 		((Mesh) this.mMeshes.get(0)).setMaterial(material);
@@ -67,7 +66,7 @@ public class Leaf extends PhysicsGeometry
 	{
 		super.animateHelper(dt);
 		this.mMeshes.clear();
-		Leafmesh2 newtree = new Leafmesh2(getControlPoints(), width);
+		Leafmesh newtree = new Leafmesh(getControlPoints(), width);
 
 		newtree.subdivide(numSubdivisions);
 		this.mMeshes.add( newtree );

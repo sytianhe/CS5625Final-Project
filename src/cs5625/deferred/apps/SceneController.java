@@ -9,12 +9,10 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.sql.Time;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.swing.Timer;
-
 
 import cs5625.deferred.physics.ParticleSystem;
 import cs5625.deferred.rendering.Camera;
