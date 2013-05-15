@@ -1,7 +1,5 @@
 package cs5625.deferred.physicsGeometry;
 
-import java.util.ArrayList;
-
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
@@ -24,11 +22,8 @@ public class Frond extends PhysicsGeometry
 	private Material material = new LambertianMaterial(new Color3f(110f/255f , 139f/255f, 61f/255f));
 	private float bottomtopWidth  = 0.1f;
 	private float topWidth = 0.01f;
-	private int nLeavesPerFrond;
-	
 	public Frond(int nLeavesPerFrond, int numSubdivisions){
 		
-		this.nLeavesPerFrond = nLeavesPerFrond;
 		this.numSubdivisions = numSubdivisions;
 		
 		//GENERATE CONTROL POINT FOR THE FRONDS 

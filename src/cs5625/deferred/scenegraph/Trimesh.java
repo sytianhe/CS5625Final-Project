@@ -3,9 +3,6 @@ package cs5625.deferred.scenegraph;
 import java.nio.FloatBuffer;
 import java.util.HashMap;
 
-import jogamp.graph.curve.tess.Loop;
-
-import cs5625.deferred.catmullclark.CCSubdiv;
 import cs5625.deferred.datastruct.EdgeDS;
 import cs5625.deferred.loop.LoopSubdiv;
 import cs5625.deferred.misc.OpenGLResourceObject;

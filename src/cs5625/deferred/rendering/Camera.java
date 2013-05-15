@@ -1,8 +1,6 @@
 package cs5625.deferred.rendering;
 
 import javax.vecmath.Matrix4f;
-import javax.vecmath.Point3f;
-import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
 import cs5625.deferred.misc.Util;

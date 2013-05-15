@@ -466,6 +466,7 @@ public class Renderer
 	 * Computes position and normal gradients based on the position and normal textures of the GBuffer, for 
 	 * use in edge detection (e.g. toon rendering). 
 	 */
+	@SuppressWarnings("unused")
 	private void computeGradientBuffer(GL2 gl) throws OpenGLException
 	{
 		/* Bind silhouette buffer as output. */

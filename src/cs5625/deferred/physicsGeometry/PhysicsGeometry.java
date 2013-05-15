@@ -8,7 +8,6 @@ import javax.vecmath.Point3f;
 import cs5625.deferred.misc.ScenegraphException;
 import cs5625.deferred.physics.Particle;
 import cs5625.deferred.physics.ParticleSystem;
-import cs5625.deferred.physics.PenaltyForce2Particle;
 import cs5625.deferred.scenegraph.Geometry;
 
 public class PhysicsGeometry extends Geometry {

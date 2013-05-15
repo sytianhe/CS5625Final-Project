@@ -2,7 +2,6 @@ package cs5625.deferred.datastruct;
 
 import javax.vecmath.Point2f;
 import javax.vecmath.Point3f;
-import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
 

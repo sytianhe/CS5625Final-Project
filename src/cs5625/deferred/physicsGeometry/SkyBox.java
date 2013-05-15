@@ -9,7 +9,6 @@ import cs5625.deferred.materials.SkyMaterial;
 import cs5625.deferred.materials.Texture2D;
 import cs5625.deferred.misc.ScenegraphException;
 import cs5625.deferred.misc.Util;
-import cs5625.deferred.physics.ParticleSystem;
 import cs5625.deferred.rendering.Camera;
 import cs5625.deferred.scenegraph.Mesh;
 import cs5625.deferred.scenegraph.PointLight;

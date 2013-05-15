@@ -7,7 +7,6 @@ import java.util.HashMap;
 import javax.media.opengl.GL2;
 import javax.vecmath.GMatrix;
 import javax.vecmath.GVector;
-import javax.vecmath.Tuple3f;
 import javax.vecmath.Vector3f;
 
 import com.jogamp.common.nio.Buffers;
