@@ -31,6 +31,7 @@ public class TreeSceneController extends SceneController{
 	private float mCameraLongitude = 50.0f, mCameraLatitude = -40.0f;
 	private float mCameraRadius = 15.0f;
 	
+	@SuppressWarnings("unused")
 	private boolean mArbitraryMovement = false;
 	
 	public PalmTree tree;

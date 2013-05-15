@@ -39,7 +39,6 @@ public class Branch extends PhysicsGeometry
 		}
 		
 		this.baseRadius = baseRadius;
-		this.tipRadius = tipRadius;
 		this.nControlPoints = nControlPoints;
 		this.numSubdivisions = numSubdivisions;
 		Branchmesh branchmesh = new Branchmesh(getControlPoints(), baseRadius, tipRadius);		

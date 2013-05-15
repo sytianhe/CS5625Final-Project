@@ -16,15 +16,15 @@ import cs5625.deferred.physics.SpringForce2Particle;
  */
 public class PalmTree extends PhysicsGeometry {
 
-	private float height;
-	private float baseWidth;
-	private float topWidth;
-	private float curviness;
-	private float nFronds;
-	private float frondLength;
-	private int nLeavesPerFrond;
-	private int levelOfDetail; 
-	private Texture2D barkTexture;
+//	private float height;
+//	private float baseWidth;
+//	private float topWidth;
+//	private float curviness;
+//	private float nFronds;
+//	private float frondLength;
+//	private int nLeavesPerFrond;
+//	private int levelOfDetail; 
+//	private Texture2D barkTexture;
 	public Branch trunk;
 	public SpringForce2Particle targetf;
 	public boolean alreadyAdd = false;
@@ -41,14 +41,14 @@ public class PalmTree extends PhysicsGeometry {
 	 */
 	public PalmTree(float height, float baseWidth,  float topWidth, float curviness, float frondLength, int nFronds,  int nLeavesPerFrond, int levelOfDetail, Texture2D barkTexture){
 		
-		this.height = height;
-		this.baseWidth = baseWidth;
-		this.topWidth = topWidth;
-		this.curviness = curviness ;
-		this.nFronds = nFronds ;
-		this.frondLength = frondLength ;
-		this.nLeavesPerFrond = nLeavesPerFrond ;
-		this.levelOfDetail = levelOfDetail ; 
+//		this.height = height;
+//		this.baseWidth = baseWidth;
+//		this.topWidth = topWidth;
+//		this.curviness = curviness ;
+//		this.nFronds = nFronds ;
+//		this.frondLength = frondLength ;
+//		this.nLeavesPerFrond = nLeavesPerFrond ;
+//		this.levelOfDetail = levelOfDetail ; 
 		
 
 		

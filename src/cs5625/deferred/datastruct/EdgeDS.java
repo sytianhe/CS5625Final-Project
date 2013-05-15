@@ -54,6 +54,7 @@ public class EdgeDS {
 	//map from triangle ID to triangle data
 	private TreeMap<Integer,PolygonData> polygonMap;
 	//map from vertexID to it's attributes, for new vertices only
+	@SuppressWarnings("unused")
 	private TreeMap<Integer,VertexAttributeData> newVertexMap;
 	//map from edgeID to crease info 
 	private TreeSet<Integer> creaseSet;
