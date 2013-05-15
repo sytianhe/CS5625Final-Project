@@ -31,6 +31,8 @@ public class ParticleSystem
 	/** List of Force objects. */
 	public ArrayList<Force>      F = new ArrayList<Force>();
 	
+	/** List of Particle objects considered for particle particle penalty force. */
+	public ArrayList<Particle>   PP = new ArrayList<Particle>();
 	
 	/** Number of edges (springs). */
 	int nEdges = 0;
@@ -171,14 +173,14 @@ public class ParticleSystem
 				force.applyForce();
 			
 			
-//			//APPLY ALL PARTICLE PARICLE SEPERATION FORCES
-//			for (Particle p1 : P){
-//				for (Particle p2 : P){
-//					if (! p1.equals(p2) );
-//					PenaltyForce2Particle f = new PenaltyForce2Particle(p1,p2);
-//					f.applyForce();
-//				}
-//			}
+			//APPLY ALL PARTICLE PARICLE SEPERATION FORCES
+			for (Particle p1 : PP){
+				for (Particle p2 : PP){
+					if (! p1.equals(p2) );
+					PenaltyForce2Particle f = new PenaltyForce2Particle(p1,p2);
+					f.applyForce();
+				}
+			}
 
 
 
@@ -208,6 +210,10 @@ public class ParticleSystem
 			}
 			else {
 				p.v.scaleAdd(dt/p.m, p.f, p.v); // v += dt * f/m;
+				//Impose hard speed limit to stabilize integration
+				if(p.v.length()>50){
+					p.v.scale(50/p.v.length());
+				}
 			}
 
 			/// CLEAR FORCE ACCUMULATOR
@@ -227,6 +233,31 @@ public class ParticleSystem
 //				}
 //			}
 //		}
+		//PERFORM GAUSS SEIDEL LIKE UPDATE TO ENFORCE SEPERATION CONSTRAINTS
+//		double tolerence =1; 
+//		double totError = 100;
+//		int nIterations = 0;
+//		while (totError>tolerence && nIterations < 5 ){
+//			totError = 0;
+//			for(Force f: F){
+//				if( f instanceof SpringForce2Particle ){
+//					SpringForce2Particle ff = (SpringForce2Particle) f ;
+//					Vector3d sep = new Vector3d(ff.p2.x);
+//					sep.sub(ff.p1.x);
+//					double d = sep.length();
+//					totError += (d - ff.L0);
+//					if(d > 2*ff.L0){
+//						ff.p1.x.scaleAdd(0.2,sep,ff.p1.x);
+//						ff.p2.x.scaleAdd(-0.2,sep,ff.p2.x);
+//					}
+//				}
+//			}
+//			nIterations+=1;
+//			System.out.println(totError);
+//		}
+//			
+		
+		
 
 
 		//////////////////////////////////////////////////////////

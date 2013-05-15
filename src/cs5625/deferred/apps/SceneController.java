@@ -254,11 +254,6 @@ public abstract class SceneController implements MouseListener, MouseMotionListe
 			mRenderer.setRenderWireframes(!mRenderer.getRenderWireframes());
 			requiresRender();
 		}
-		else if (c == 'b')
-		{
-			mRenderer.setBloom(!mRenderer.getBloom());
-			requiresRender();
-		}
 		else if (c == 'v')
 		{
 			mRenderer.setBloomVariance(Math.max(0.1f, mRenderer.getBloomVariance() - 0.1f));

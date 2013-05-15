@@ -110,7 +110,7 @@ public class SceneObject implements OpenGLResourceObject
 	
 	public void setIsSelected(boolean p)
 	{
-		mIsSelected = true;
+		mIsSelected = p;
 	}
 	public boolean isSelected()
 	{

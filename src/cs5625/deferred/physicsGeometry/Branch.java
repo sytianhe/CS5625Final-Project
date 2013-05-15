@@ -27,18 +27,36 @@ public class Branch extends PhysicsGeometry
 	private BarkMaterial material = new BarkMaterial(new Color3f( 1f , 1f, 1f));
 	private float baseRadius  = 0.25f;
 	private float tipRadius = 0.1f;
-	public Particle topPoint;
+	private int nControlPoints;
+	public Particle topParticle;
+	private boolean addLeaves = false;
 	
-	public Branch(ArrayList<Point3f>list,float baseRadius, float tipRadious, int numSubdivisions ){
-		this.addControlPoints(list);
+	public Branch(int nControlPoints,float baseRadius, float tipRadious, int numSubdivisions ){
+
+		
+    	//GENERATE CONTROL POINTS FOR THE TRUNK 
+		for(int i=0; i< nControlPoints; i++){
+			Point3f point = new Point3f();
+			point.set(0f,1.5f*i,0f);
+			addControlPoint(new Point3f(point));
+		}
+		
 		this.baseRadius = baseRadius;
 		this.tipRadius = tipRadius;
+		this.nControlPoints = nControlPoints;
 		this.numSubdivisions = numSubdivisions;
-		Branchmesh branchmesh = new Branchmesh(list, baseRadius, tipRadius);		
+		Branchmesh branchmesh = new Branchmesh(getControlPoints(), baseRadius, tipRadius);		
 		branchmesh.subdivide(numSubdivisions);
 		branchmesh.calculateTangentVectors();
 		this.mMeshes.add( branchmesh );
 		((Mesh) this.mMeshes.get(0)).setMaterial(material);
+		
+		//Optionally add leaves to the the branch 
+		//Currently handled by frond class
+		if(addLeaves){
+		
+			
+		}
 	}
 	
 	@Override
@@ -52,6 +70,7 @@ public class Branch extends PhysicsGeometry
 		getControlParticles().get(0).setPin(true);
 		getControlParticles().get(1).setPin(true);
 		
+		//Add edge forces
 		for (int i = 0; i<getControlParticles().size() - 1; i++){
 			SpringForce2Particle f = new SpringForce2Particle(getControlParticles().get(i), getControlParticles().get(i+1), PS);
 			PS.addForce(f);
@@ -60,18 +79,23 @@ public class Branch extends PhysicsGeometry
 			}
 		}
 		
+		//Add bend forces
 		for (int i = 1; i<getControlParticles().size() - 1; i++){
 			SpringForceBendingTheta f = new SpringForceBendingTheta(getControlParticles().get(i-1), getControlParticles().get(i), getControlParticles().get(i+1), new Vector3d(-0.05 + Math.random()*0.1,-0.05 + Math.random()*0.1,-0.05 + Math.random()*0.1) );
-			//SpringForceBending f = new SpringForceBending(getControlParticles().get(i-1), getControlParticles().get(i), getControlParticles().get(i+1));
 			PS.addForce(f);
 		}
 		
-		topPoint = getControlParticles().get(getControlParticles().size() - 1);
-		
+		//Store quick reference to top Particle
+		topParticle = getControlParticles().get(getControlParticles().size() - 1);	
 	}
 	
-	public Particle topPoint(){
-		return topPoint;
+	
+	public Particle topParticle(){
+		return topParticle;
+	}
+	
+	public Point3f topPoint(){
+		return getControlPoints().get(nControlPoints-1);
 	}
 	
 	public Texture2D getDiffuseTexture()
