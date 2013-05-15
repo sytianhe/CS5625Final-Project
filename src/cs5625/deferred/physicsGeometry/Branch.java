@@ -24,7 +24,7 @@ public class Branch extends PhysicsGeometry
 
 	//private BlinnPhongMaterial material = new BlinnPhongMaterial(new Color3f( 205f/255f , 133f/255f, 63f/255f));
 	//private BlinnPhongMaterial material = new BlinnPhongMaterial(new Color3f( 1f , 1f, 1f));
-	private BarkMaterial material = new BarkMaterial(new Color3f( 1f , 1f, 1f));
+	private BarkMaterial material = new BarkMaterial(new Color3f( 0.5f , 0.5f, 0.5f));
 	private float baseRadius  = 0.25f;
 	private float tipRadius = 0.1f;
 	private int nControlPoints;

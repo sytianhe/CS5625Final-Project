@@ -32,9 +32,7 @@ public class TreeSceneController extends SceneController{
 	private float mCameraLongitude = 50.0f, mCameraLatitude = -40.0f;
 	private float mCameraRadius = 15.0f;
 	
-	/* Keeps track of shadow camera's orbit position. */
-	private float mShadowCameraLongitude = -50.0f, mShadowCameraLatitude = -40.0f;
-	private float mShadowCameraRadius = 40.f;
+
 	
 	private boolean mArbitraryMovement = true;
 	
@@ -52,18 +50,20 @@ public class TreeSceneController extends SceneController{
 			
 			GL2 gl = GLU.getCurrentGL().getGL2();
 			
-			mCamera.setPosition(new Point3f(10.0f, 8.0f,10.0f));
+			
+			//PUT THE VIEWER SOMEWHERE
+			mCamera.setPosition(new Point3f(20.0f, 6.0f,20.0f));
 
 
 			//ADD LIGHT
 			/* Add an unattenuated point light to provide overall illumination. */
 			PointLight light = new PointLight();
+			light.setColor(new Color3f(0.1f,0.1f,0.1f));
 
 			light.setConstantAttenuation(1.0f);
 			light.setLinearAttenuation(0.0f);
 			light.setQuadraticAttenuation(0.0f);
-			light.setPosition(new Point3f(mShadowCamera.getPosition()));
-			light.setName("CameraLight");
+			light.setPosition(new Point3f(50f, 50f,0f ));
 			mSceneRoot.addChild(light);	
 
 			//ADD GROUND
@@ -79,15 +79,14 @@ public class TreeSceneController extends SceneController{
             //ADD SKY BOX
 			Texture2D skyTexture = Texture2D.load(gl, "textures/skybox.jpg",false);
 			Texture2D starTexture = Texture2D.load(gl, "textures/star3.jpg",false);
-			SkyBox skybox = new SkyBox(new Color3f(102.0f/256f, 1f, 1f), 205f, skyTexture, starTexture);
+			SkyBox skybox = new SkyBox(new Color3f(102.0f/256f, 1f, 1f), 205f, skyTexture, starTexture, mShadowCamera);
 
 			skybox.setPosition(new Point3f(0f, 0f, 0f));
-			//skybox.setOrientation(new Quat4f(0f,0f,(float) Math.sin(Math.PI/4.0),(float) Math.cos(Math.PI/4.0)));
 			skybox.setScale(205);
 			mSceneRoot.addChild(skybox);
 
 			//ADD TARGET
-			target = new Sphere(new Point3f(10.0f,10.0f,10.0f));
+			target = new Sphere(new Point3f(-10.0f,10.0f,-10.0f));
 			target.setIsPinned(false);
 			target.setIsSelected(true);
 
@@ -121,7 +120,6 @@ public class TreeSceneController extends SceneController{
 		
 		/* Initialize camera position. */
 		updateCamera();
-		updateShadowCamera();
 	}
 
 	/**
@@ -139,11 +137,11 @@ public class TreeSceneController extends SceneController{
 
 		mCamera.getOrientation().mul(longitudeQuat, latitudeQuat);
 		
-		if (mArbitraryMovement){
 		/* Set the camera's position so that it looks towards the origin. */
-			mCamera.setPosition(new Point3f(0.0f, 0.0f, mCameraRadius));
+			Point3f offset = new Point3f(mCamera.getPosition());
+			mCamera.setPosition(new Point3f(0.0f, 0.0f, mCameraRadius));			
 			Util.rotateTuple(mCamera.getOrientation(), mCamera.getPosition());
-		}
+			mCamera.getPosition().set(offset);
 	}
 	
 	@Override
@@ -291,24 +289,5 @@ public class TreeSceneController extends SceneController{
 		updateCamera();
 		requiresRender();
 	}
-	/**
-	 * Updates the camera position and orientation based on orbit parameters.
-	 */
-	protected void updateShadowCamera()
-	{
-		/* Compose the "horizontal" and "vertical" rotations. */
-		Quat4f longitudeQuat = new Quat4f();
-		longitudeQuat.set(new AxisAngle4f(0.0f, 1.0f, 0.0f, mShadowCameraLongitude * (float)Math.PI / 180.0f));
-		
-		Quat4f latitudeQuat = new Quat4f();
-		latitudeQuat.set(new AxisAngle4f(1.0f, 0.0f, 0.0f, mShadowCameraLatitude * (float)Math.PI / 180.0f));
 
-		mShadowCamera.getOrientation().mul(longitudeQuat, latitudeQuat);
-		
-		/* Set the camera's position so that it looks towards the origin. */
-		mShadowCamera.setPosition(new Point3f(0.0f, 0.0f, 4f*mShadowCameraRadius));
-		Util.rotateTuple(mShadowCamera.getOrientation(), mShadowCamera.getPosition());
-		
-		mSceneRoot.findDescendantByName("CameraLight").setPosition(mShadowCamera.getPosition());
-	}
 }

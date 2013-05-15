@@ -5,6 +5,7 @@ import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
+import cs5625.deferred.misc.Util;
 import cs5625.deferred.scenegraph.SceneObject;
 
 /**
@@ -28,12 +29,15 @@ public class Camera extends SceneObject
 	private float mFar = 1000.0f;
 	
 	private boolean mIsShadowMapCamera = false;
+	private boolean mEnableShadowMap = true;
 	
 	/* Key controls */
 	public boolean keyUP;
 	public boolean keyDOWN;
 	public boolean keyLEFT;
 	public boolean keyRIGHT;
+	
+	public boolean mStickToPlain = true; 
 	
 	/**
 	 * Returns the camera field of view angle, in degrees.
@@ -106,6 +110,20 @@ public class Camera extends SceneObject
 	}
 	
 	
+	public void  setEnableShadowMap(boolean tf)
+	{
+		mEnableShadowMap = tf;
+	}
+
+	/**
+	 * Sets the camera's field of view.
+	 * @param fov Desired field of view, in degrees. Must be in the interval (0, 180).
+	 */
+	public boolean getEnableShadowMap()
+	{
+		return mEnableShadowMap;
+	}
+	
 	/**
 	 *  Get the view matrix that send points from world space into this camera local space 
 	 */
@@ -128,17 +146,26 @@ public class Camera extends SceneObject
 	@Override
 	public void animateHelper(float dt){
 
+		Vector3f forward = new Vector3f(0f,0f,-1f);
+		Vector3f side = new Vector3f(1f,0f,0f);
+		Util.rotateTuple(this.getOrientation(), forward);
+		Util.rotateTuple(this.getOrientation(), side);
+		
+		if (mStickToPlain){
+			forward.y=0;
+			side.y=0;
+		}
 		if(keyUP == true){
-			this.mPosition.add(new Vector3f(0,0,0.5f));			
+			this.mPosition.add(forward);			
 		}
 		else if(keyDOWN == true){
-			this.mPosition.add(new Vector3f(0,0,-0.5f));			
+			this.mPosition.sub(forward);			
 		}
 		else if(keyLEFT == true){
-			this.mPosition.add(new Vector3f(0.5f,0,0f));			
+			this.mPosition.sub(side);			
 		}
 		else if(keyRIGHT == true){
-			this.mPosition.add(new Vector3f(-0.5f,0,0));			
+			this.mPosition.add(side);			
 		}
 	}	
 }

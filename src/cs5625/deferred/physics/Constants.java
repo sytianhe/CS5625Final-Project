@@ -40,6 +40,8 @@ public class Constants
     public static final double KINETIC_FRICTION = 0.1;
 
 	public static final double REPULSION_COEFF = 100;
+
+	public static final double WIND_STRENGTH = 3;
     
     /** RESTITUTION_COEFF */
     public static void set_RESTITUTION_COEFF(double num){

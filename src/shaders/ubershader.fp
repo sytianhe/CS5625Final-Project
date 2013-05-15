@@ -343,11 +343,11 @@ vec3 shadeSky(vec3 diffuse, vec3 position, vec3 sunPosition, vec3 starDiffuse, f
 	float sunSetRadius = 30.0;
 	
 	// SETUP the color of the sun at sunrise and sunset;
-	vec3 sunRiseColor = vec3(1.0, 1.0, 1.0);
+	vec3 sunRiseColor = vec3(1.0, 0.2, 0.2);
 	vec3 sunSetColor = vec3(1.0, 0.1, 0.1);
 	
 	// SETUP the Gaussian blur range at sunrise and sunset;
-	float sunRiseGaussRange = 10.0;
+	float sunRiseGaussRange = 100.0;
 	float sunSetGaussRange = 120.0;
 	
 	// CALCULATE sunrise and sunset luminance changing rate.

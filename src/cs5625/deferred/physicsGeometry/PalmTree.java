@@ -29,9 +29,6 @@ public class PalmTree extends PhysicsGeometry {
 	public Branch trunk;
 	public SpringForce2Particle targetf;
 	public boolean alreadyAdd = false;
-
-	
-	private int nTrunkControlPoints = 10;
 	
 	/**
 	 * PalmTree constructor 
@@ -57,7 +54,7 @@ public class PalmTree extends PhysicsGeometry {
 
 		
         //ADD MAIN TRUNK
-        trunk = new Branch(nLeavesPerFrond, baseWidth, topWidth, levelOfDetail);
+        trunk = new Branch((int)height, baseWidth, topWidth, levelOfDetail);
 		trunk.setDiffuseTexture(barkTexture);
 		this.pinToPhysicsGeometry(trunk, new Point3f(0.0f, 0.0f, 0.0f));
                 

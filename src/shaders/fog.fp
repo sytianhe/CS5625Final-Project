@@ -1,13 +1,5 @@
 /**
  * fog.fp
- * 
- * Fragment shader for the bloom post-processing algorithm.
- * 
- * Written for Cornell CS 5625 (Interactive Computer Graphics).
- * Copyright (c) 2013, Computer Science Department, Cornell University.
- * 
- * @author Sean Ryan (ser99)
- * @date 2013-01-31
  */
 
 /* Sampler for the final scene in the GBuffer. */
@@ -19,11 +11,14 @@ uniform float ViewportWidth;
 uniform float ViewportHeight;
 uniform float Threshold;
 uniform mat4 O2WMatrix;
-uniform vec2 OffsetDirection;
+uniform float time;
 
-// TODO PA3 Prereq (Optional): Fill this in if you like bloom.
+const vec2 speed = vec2(-1.0,0.0);
+
 void main()
 {
+
+
 	vec3 EyespacePosition = texture2DRect(PositionBuffer, gl_FragCoord.xy).xyz;
     vec2 center = vec2(gl_FragCoord.xy);
     vec4 colorS = texture2DRect(FinalSceneBuffer, center);
@@ -35,14 +30,15 @@ void main()
     				   1.0);
     				   
     // default fog height
-    float height = 2.0;
+    float height = 1.5;
     
     float depth = texture2DRect(DepthSceneBuffer, center).x;
     vec4 WorldSpacePos = O2WMatrix*vec4(EyespacePosition, 1.0);
     vec4 eyeWorldSpacePos = O2WMatrix * vec4(0.0,0.0,0.0,1.0);
     
-    float noisePerlin = texture2D(PerlinNoise, vec2((WorldSpacePos.x + 100.0)/200.0, (WorldSpacePos.z + 100.0)/200.0)).x;
-    height = height + 5.0*noisePerlin;
+    vec2 shiftCoord = mod(vec2((WorldSpacePos.x + 75.0)/150.0, (WorldSpacePos.z +75.0)/150.0) + speed* time, 1.0 ); 
+    float noisePerlin = texture2D(PerlinNoise, shiftCoord).x;
+    height = height * noisePerlin;
     
    	float near = 0.1;
 	float far = 100.0;
