@@ -1,0 +1,84 @@
+\documentclass[annual]{acmsiggraph}
+%
+\usepackage{graphicx}
+\usepackage{pxfonts}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{epstopdf}
+\usepackage{fullpage}
+\usepackage{epic}
+\usepackage{eepic}
+
+
+\title{CS5625 Final Project}
+
+\author{Michael Flashman\thanks{e-mail:mtf53@cornell.edu}\\Cornell University \and Tianhe Zhang \thanks{e-mail:tz249@cornell.edu}\\Cornell University}
+
+\pdfauthor{Michael Flashman, Tianhe Zhang}
+
+\begin{document}
+
+
+\maketitle
+
+
+\section{What is the Goal}
+To create a palm tree shooting balls on a beautiful desert.
+
+\section{What did we Achieve}
+We created a method that procedurally generates a palm tree depends on the control points and parameters. The control points are wired into physics engine so our tree is physically interactive with the other objects in the scene. The parameters enable the user to create different models instead of one fixed tree. We also make a nice sand dune with fogging effect on top of it. To make the sky more interesting, we implemented a skybox with a simple daylight algorithm.
+
+\section{What are the Resources}
+What we got off the Web or from other sources? Mostly algorithms and ideas from technical papers and some graphics related websites such as GPU gems. We also found the textbook is useful as A comprehensive reference book. We got part of the physics engine from CS5643 class. Everything else we implemented ourselves. The TAs also help us a lot on various topics.The detailed references will be listed in the next section.
+
+\section{What are the Tasks}
+Below listed what we have done for this project in chronological order.
+\begin{itemize}
+\item{Base code setup}
+\item{Wired in physics: Skeleton of the tree represented by particles and spring forces. }
+\item{Procedurally generate the trunk, fronds and leaves of the palm tree.}
+\item{Expanded subdivision surfaces: implemented normals and texture.}
+\item{Penalty forces between particles and between particles and floor. This is used to simulate particle collision.}
+\item{Sand dune implementation.}
+\item{Parallax mapping implementation.}
+\item{Fog implementation.}
+\item{Day light and Sky box implementation.}
+\item{Game related implementation.}
+\end{itemize}
+
+Now for details on each of our components.
+\begin{enumerate}
+\item{\textbf{Base code}: We merge basically everything we learned so far in this class so that base code enables us to do shadow mapping, ssao, subdivision surfaces and etc.}
+\item{\textbf{Physics}: Skeleton of the tree represented by particles and spring forces. The base code is from CS5643 but we modify different forces such as bending and spring forces to make it work better for our model.}
+\item{\textbf{Tree generation}: Procedurally generate the trunk, fronds and leaves of the palm tree. Using the skeleton particles (control points) to generate the mesh at run time. We applied the same model for the trunk and fronds. The skeleton of the trunk and fronds is a string of control particles. We use their position to find the normals and binormals (same trick used for finding normals for bezier curve from last semester). The normals and binormals enable us to find 4 points around the control particle, and connecting them gives us a cylinder-ish mesh. We then use subdivision surface to make the mesh smoother. For the leaves, we use three control particles as the skeleton of the leave(the middle stem). We added two additional points into the mesh so that the leaf has width. Then, we use subdivision surface to make the leave smoother on the edge.}
+\item{\textbf{Expanded subdivision surfaces}: implemented normals and texture. Basically just interpolating values.}
+\item{\textbf{Penalty forces}: is a way to handle collision easily. Set up a penalty distance. Whenever two particles are close (the distance is smaller the penalty distance), the force is applied to the particles to push them apart.}
+\item{\textbf{Sand dune}: This is based on a mathematical model from ...}
+\item{\textbf{Parallax mapping}: To make our bark looks more realistic, we implemented parallax mapping which enables self shadowing according to the height map. The basic algorithm can be found from the textbook. We also implemented our own algorithm to find height map and normal map through diffuse map. The idea is easy: the brighter the pixel, the larger the height value. Normal map can then be found from the height map by looking around a pixel's surrounding values.}
+\item{\textbf{Fog}: To make our scene look nicer, we implementation fog. The basic idea is from the textbook. Using the depth buffer as an indicator of fog density. We also implemented our own idea about the fog so that it only has fogging effect for at certain height. The idea is that transform points back to world space and compare the y value with the thredhold.}
+\item{\textbf{Day light and Sky box}: The basic idea is from http://www.henrybraun.info/skyrendering.html. We also implemented a simple sun model using linear/gaussian blur/interpolation.}
+\item{\textbf{Game related}: Adding control and playability. }
+\end{enumerate}
+
+\section{What not Implement}
+We implemented everything we promised in the proposal. We also implemented features such as skybox and fogging for fun.
+
+\section{What we learned}
+\begin{enumerate}
+\item{\textbf{What was the best thing(s) you learned?} Making game is fun. We have a much better understanding about shaders (especially debugging glsl) after this project.}
+\item{\textbf{What were the gotchas?} In real time rending, actual physics doesn't matter. What matters is how it looks. Our way of modeling the palm tree is not as good as we expect and it takes longer time to configure. If we redo the project, we will choose other way to model the tree.}
+\end{enumerate}
+
+\section{What Effort We Make}
+\begin{enumerate}
+\item{Both of us work till the last minute.}
+\item{Schedule}: We basically follow the timeline and work division in the proposal. The last two weeks we work together to make our game sharp. 
+\end{enumerate}
+
+\nocite{*}
+\bibliographystyle{acmsiggraph}
+\bibliography{bibliography}
+
+
+
+\end{document}

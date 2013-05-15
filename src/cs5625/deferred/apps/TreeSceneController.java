@@ -36,7 +36,7 @@ public class TreeSceneController extends SceneController{
 	private float mShadowCameraLongitude = -50.0f, mShadowCameraLatitude = -40.0f;
 	private float mShadowCameraRadius = 40.f;
 	
-	private boolean mArbitraryMovement = true;
+	private boolean mArbitraryMovement = false;
 	
 	public PalmTree tree;
 	private ArrayList<Sphere> balls = new ArrayList<Sphere>();
