@@ -3,6 +3,7 @@ package cs5625.deferred.physicsGeometry;
 import java.util.ArrayList;
 
 import javax.vecmath.Point3f;
+import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
 import com.jogamp.common.nio.Buffers;

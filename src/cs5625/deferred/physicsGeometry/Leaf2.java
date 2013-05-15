@@ -3,7 +3,6 @@ package cs5625.deferred.physicsGeometry;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3d;
-
 import cs5625.deferred.materials.LambertianMaterial;
 import cs5625.deferred.materials.Material;
 import cs5625.deferred.physics.Particle;

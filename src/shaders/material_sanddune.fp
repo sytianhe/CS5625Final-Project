@@ -60,7 +60,7 @@ void main()
     	vec3 vb = normalize(vec3(0.0,HeightFactor*(h12-h10 + h22 - h20 + h02 - h00 )/ 3.0, -2.0));
 
     	vec3 bump = cross(va,vb);
-    	enc = encode(normalize(gl_NormalMatrix * bump));
+    	//enc = encode(normalize(gl_NormalMatrix * bump));
 
 	}
 	gl_FragData[0] = vec4(DiffuseColor, enc.x);

@@ -43,7 +43,7 @@ void main()
 			}
 		}
 		dv /= (sampleRadius+1.0) * (sampleRadius+1.0);
-		newVertexPos = vec4(0.0, HeightFactor * (dv.x) - 0.5 * HeightFactor , 0.0, 0.0) + gl_Vertex;	
+		newVertexPos = vec4(0.0, HeightFactor * (dv.x) - 50.0 * HeightFactor , 0.0, 0.0) + gl_Vertex;	
 	}
 	
 	

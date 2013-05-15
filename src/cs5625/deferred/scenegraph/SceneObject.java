@@ -39,6 +39,7 @@ public class SceneObject implements OpenGLResourceObject
 	private String mName = "";
 	private SceneObject mParent = null;
 	private boolean mIsVisible = true;
+	private boolean mIsSelected = false;
 	private Particle mParticle = new Particle(new Point3d(0,0,0) ); 
 		
 	/* List of child nodes. */
@@ -104,6 +105,16 @@ public class SceneObject implements OpenGLResourceObject
 	public boolean isPinned()
 	{
 		return this.mParticle.isPinned();
+	}
+	
+	
+	public void setIsSelected(boolean p)
+	{
+		mIsSelected = true;
+	}
+	public boolean isSelected()
+	{
+		return mIsSelected;
 	}
 	
 	/**

@@ -55,7 +55,7 @@ uniform float ShadowMapWidth;
 uniform float ShadowMapHeight;
 uniform float LightWidth;
 
-#define DEFAULT_SHADOW_MAP 0
+#define DEFAULT_SHADOW_MAP 1
 #define PCF_SHADOW_MAP 1
 #define PCSS SHADOW_MAP 2
 
@@ -220,18 +220,8 @@ float getShadowStrength(vec3 position) {
 	// Normalize by dividing w.
 	ShadowCoord = ShadowCoord/ShadowCoord.w;
 	
-	if (ShadowMode == DEFAULT_SHADOW_MAP)
-	{
-		return getDefaultShadowMapVal(ShadowCoord);
-	}
-	else if (ShadowMode == PCF_SHADOW_MAP)
-	{
-		return getPCFShadowMapVal(ShadowCoord);
-	}
-	else
-	{
-		return getPCSSShadowMapVal(ShadowCoord);
-	}
+	return getPCFShadowMapVal(ShadowCoord);
+	
 }
 
 /**
@@ -437,16 +427,12 @@ void main()
 		gl_FragColor.rgb = diffuse;
 	}
 
-	if (EnableToonShading)
-	{
-		gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.0), silhouetteStrength()); 
-	}
 	
-	if (HasShadowMaps == 1 && materialID != 0) {	
+	if (HasShadowMaps == 1 && materialID != 0 && materialID != 4) {	
 		gl_FragColor.rgb *= getShadowStrength(position);
 	}
 	
-	if (EnableSSAO)
+	if (EnableSSAO  && materialID != 4 )
 	{
 		gl_FragColor.rgb *= texture2DRect(SSAOBuffer, gl_FragCoord.xy).rgb;
 	}
