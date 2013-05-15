@@ -344,6 +344,7 @@ vec3 shadeSky(vec3 diffuse, vec3 position, vec3 sunPosition, vec3 starDiffuse, f
 	
 	// SETUP the color of the sun at sunrise and sunset;
 	vec3 sunRiseColor = vec3(1.0, 0.2, 0.2);
+	vec3 sunNoonColor = vec3(1.0, 1.0, 1.0);
 	vec3 sunSetColor = vec3(1.0, 0.1, 0.1);
 	
 	// SETUP the Gaussian blur range at sunrise and sunset;
@@ -367,7 +368,9 @@ vec3 shadeSky(vec3 diffuse, vec3 position, vec3 sunPosition, vec3 starDiffuse, f
 	float currentDist = distance(position, sunPosition);
 	float GaussianRange = sunRiseGaussRange + (daytime - sunRiseSt)/(sunSetSt - sunRiseSt + sunSetLength)*(sunSetGaussRange - sunRiseGaussRange);
 	vec3 currentSunColor = sunRiseColor + (daytime - sunRiseSt)/(sunSetSt - sunRiseSt + sunSetLength)*(sunSetColor - sunRiseColor);
-	//float tempCoef = exp(-pow((currentSunRaidus - currentDist), 2.0)/2.0/5.0);
+	vec3 morningSunColor = sunRiseColor + (daytime - sunRiseSt)/((sunSetSt - sunRiseSt + sunSetLength)/2.0) * (sunNoonColor - sunRiseColor);
+	vec3 afternoonSunColor = sunNoonColor + (daytime - (sunRiseSt + (sunSetSt - sunRiseSt + sunSetLength)/2.0))/((sunSetSt - sunRiseSt + sunSetLength)/2.0) * (sunSetColor - sunNoonColor);
+	//float tempCoef = exp(-pow((currentSunRaidus - currentDist), 2.0)/2.0/5.0); // Gaussian Blur
 	float tempCoef = (currentSunRaidus + GaussianRange - currentDist)/GaussianRange;
 	
 	vec3 color;
@@ -377,6 +380,7 @@ vec3 shadeSky(vec3 diffuse, vec3 position, vec3 sunPosition, vec3 starDiffuse, f
 					 diffuse.y * (lmin_G + (daytime - sunRiseSt)*sunRiseRate_G)/256.0,
 					 diffuse.z * (lmin_B + (daytime - sunRiseSt)*sunRiseRate_B)/256.0);
 		
+		currentSunColor = morningSunColor;
 		if (currentDist <= currentSunRaidus){
 			color = currentSunColor;
 		}
@@ -391,6 +395,13 @@ vec3 shadeSky(vec3 diffuse, vec3 position, vec3 sunPosition, vec3 starDiffuse, f
 					 diffuse.y * lmax_G /256.0, 
 					 diffuse.z * lmax_B /256.0);
 					 
+		if(daytime < (sunRiseSt + (sunSetSt - sunRiseSt + sunSetLength)/2.0)){
+			currentSunColor = morningSunColor;
+		}
+		else{
+			currentSunColor = afternoonSunColor;
+		}
+		
 		if (currentDist <= currentSunRaidus){
 			color = currentSunColor;
 		}
@@ -403,7 +414,8 @@ vec3 shadeSky(vec3 diffuse, vec3 position, vec3 sunPosition, vec3 starDiffuse, f
 		color = vec3(diffuse.x * (lmax_R - (daytime - sunSetSt)*sunSetRate_R)/256.0, 
 					 diffuse.y * (lmax_G - (daytime - sunSetSt)*sunSetRate_G)/256.0,
 					 diffuse.z * (lmax_B - (daytime - sunSetSt)*sunSetRate_B)/256.0);
-					 
+		
+		currentSunColor = afternoonSunColor;
 		if (currentDist <= currentSunRaidus){
 			color = currentSunColor;
 		}
