@@ -2,7 +2,6 @@ package cs5625.deferred.physicsGeometry;
 
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3f;
-
 import cs5625.deferred.materials.SkyMaterial;
 import cs5625.deferred.materials.Texture2D;
 import cs5625.deferred.scenegraph.Mesh;

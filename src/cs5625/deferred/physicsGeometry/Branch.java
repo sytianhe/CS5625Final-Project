@@ -7,6 +7,7 @@ import javax.vecmath.Point3f;
 import javax.vecmath.Vector3d;
 
 import cs5625.deferred.materials.BarkMaterial;
+import cs5625.deferred.materials.BlinnPhongMaterial;
 import cs5625.deferred.materials.Texture2D;
 import cs5625.deferred.physics.Particle;
 import cs5625.deferred.physics.ParticleSystem;

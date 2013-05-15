@@ -18,7 +18,6 @@ public class Sphere extends PhysicsGeometry {
 	public Sphere(Point3f p){
 		init();
 		this.setPosition(p);
-		//this.addControlPoint(new Point3f() );
 	}
 	private void init(){
         try {

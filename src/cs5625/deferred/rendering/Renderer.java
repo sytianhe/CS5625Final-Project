@@ -112,7 +112,7 @@ public class Renderer
 	
 	/* Used to control the fog post-processing stage. */
 	private ShaderProgram mFogShader = null;
-	private boolean mEnableFog = false;
+	private boolean mEnableFog = true;
 	private float mFogThreshold = 0.80f;
 	private int mObject2WorldUniformLocation = -1;
 	
@@ -158,25 +158,27 @@ public class Renderer
 	private float mSampleRadius = 0.1f;
 	
 	/* The current shadow mode */
-	private int mShadowMode = 0;
+	private int mShadowMode = 1;
 	
 	/* All of the shadow mapping parameters */
 	private float mBias =  0.000011f;
 	private int mBiasUniformLocation = -1;
 	
-	private int mShadowSampleWidth = 4;
+	private int mShadowSampleWidth = 10;
 	private int mShadowSampleWidthUniformLocation = -1;
 	
 	private int mLightWidth = 16;
 	private int mLightWidthUniformLocation = -1;
 	
 	/* The current sandDune texture */
+	private boolean simulateSandDune = true;
 	private boolean mWhichSandDune = true;  //true means render to 1
 	private int mInitialize = 1; //tell shader to initialize a blank screen
 	private Texture2D noise;
 	private Texture2D noise2;
 	private int mRandSeedSize = 50;
-	private int mSimulationSteps = 2;
+	private int mSimulationSteps = 1;
+	private int mSimulationSetupSteps = 1000;
 	private int mSandDuneShaderSizeLocation = -1;
 	
 	
@@ -205,8 +207,11 @@ public class Renderer
 			/* Reset lights array. It will be re-filled as the scene is traversed. */
 			
 			/* 0.5. Compute sand dune buffer */
-			for (int i=0; i<mSimulationSteps; i++){
-				computeSandDuneBuffer(gl);
+			if (simulateSandDune){
+				int steps = (mInitialize==1 ? mSimulationSetupSteps: mSimulationSteps);
+				for (int i=0; i < steps ; i++){
+					computeSandDuneBuffer(gl);
+				}
 			}
 			
 			/* 1. Fill the gbuffer given this scene and camera. */ 
@@ -1153,6 +1158,13 @@ public class Renderer
 	public float getFogThreshold()
 	{
 		return mFogThreshold;
+	}
+	
+	/**
+	 * Toggle sanddune simulation
+	 */
+	public void toggleSandDuneSimulation(){
+		simulateSandDune = !simulateSandDune;
 	}
 	
 	/**

@@ -92,9 +92,9 @@ void main()
 		vec3 res = normalize(tbn*bump);
 		
 		enc = encode(res);
-		enc = encode(normalize(EyespaceNormal));
+		//enc = encode(normalize(EyespaceNormal));
 		
-		gl_FragData[0] = vec4(texture2D(DiffuseTexture, TexCoord).xyz * DiffuseColor, enc.x);
+		gl_FragData[0] = vec4(texture2D(DiffuseTexture, texCoord).xyz * DiffuseColor, enc.x);
 		
 	}
 	else {	
