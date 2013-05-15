@@ -318,7 +318,7 @@ vec3 shadeBlinnPhong(vec3 diffuse, vec3 specular, float exponent, vec3 position,
  * @param daytime
  * @return The shaded fragment color.
  */
-vec3 shadeSky(vec3 diffuse, vec3 sunPosition, vec3 starDiffuse, float daytime)
+vec3 shadeSky(vec3 diffuse, vec3 position, vec3 sunPosition, vec3 starDiffuse, float daytime)
 {
 	// Apply the idea of skybox in paper of Braun and Cohen
 	
@@ -338,6 +338,18 @@ vec3 shadeSky(vec3 diffuse, vec3 sunPosition, vec3 starDiffuse, float daytime)
 	float sunRiseLength = 3.0;
 	float sunSetLength = 4.0;
 	
+	// SETUP the radius of the sun at sunrise and sunset;
+	float sunRiseRadius = 15.0;
+	float sunSetRadius = 30.0;
+	
+	// SETUP the color of the sun at sunrise and sunset;
+	vec3 sunRiseColor = vec3(1.0, 1.0, 1.0);
+	vec3 sunSetColor = vec3(1.0, 0.1, 0.1);
+	
+	// SETUP the Gaussian blur range at sunrise and sunset;
+	float sunRiseGaussRange = 10.0;
+	float sunSetGaussRange = 120.0;
+	
 	// CALCULATE sunrise and sunset luminance changing rate.
 	float sunRiseRate_R = (lmax_R-lmin_R)/sunRiseLength;
 	float sunRiseRate_G = (lmax_G-lmin_G)/sunRiseLength;
@@ -350,24 +362,54 @@ vec3 shadeSky(vec3 diffuse, vec3 sunPosition, vec3 starDiffuse, float daytime)
 	// CALCULATE night length.
 	float nightLength = 24.0 - (sunSetSt + sunSetLength) + sunRiseSt;
 	
+	// CALCULATE current sun radius, color, distance.
+	float currentSunRaidus = sunRiseRadius + (daytime - sunRiseSt)/(sunSetSt - sunRiseSt + sunSetLength)*(sunSetRadius - sunRiseRadius);
+	float currentDist = distance(position, sunPosition);
+	float GaussianRange = sunRiseGaussRange + (daytime - sunRiseSt)/(sunSetSt - sunRiseSt + sunSetLength)*(sunSetGaussRange - sunRiseGaussRange);
+	vec3 currentSunColor = sunRiseColor + (daytime - sunRiseSt)/(sunSetSt - sunRiseSt + sunSetLength)*(sunSetColor - sunRiseColor);
+	//float tempCoef = exp(-pow((currentSunRaidus - currentDist), 2.0)/2.0/5.0);
+	float tempCoef = (currentSunRaidus + GaussianRange - currentDist)/GaussianRange;
+	
 	vec3 color;
 	if ((daytime > sunRiseSt) && (daytime <= sunRiseSt + sunRiseLength))
 	{
 		color = vec3(diffuse.x * (lmin_R + (daytime - sunRiseSt)*sunRiseRate_R)/256.0, 
 					 diffuse.y * (lmin_G + (daytime - sunRiseSt)*sunRiseRate_G)/256.0,
 					 diffuse.z * (lmin_B + (daytime - sunRiseSt)*sunRiseRate_B)/256.0);
+		
+		if (currentDist <= currentSunRaidus){
+			color = currentSunColor;
+		}
+		else if ((currentDist  > currentSunRaidus) && (currentDist <currentSunRaidus + GaussianRange)){
+			color =  tempCoef * currentSunColor + (1.0-tempCoef)*color;
+		}
+		
 	}
 	else if ((daytime > sunRiseSt + sunRiseLength) && (daytime <= sunSetSt))
 	{
 		color = vec3(diffuse.x * lmax_R /256.0, 
 					 diffuse.y * lmax_G /256.0, 
 					 diffuse.z * lmax_B /256.0);
+					 
+		if (currentDist <= currentSunRaidus){
+			color = currentSunColor;
+		}
+		else if ((currentDist  > currentSunRaidus) && (currentDist <currentSunRaidus + GaussianRange)){
+			color =  tempCoef * currentSunColor + (1.0-tempCoef)*color;
+		}
 	}
 	else if ((daytime > sunSetSt) && (daytime <= sunSetSt + sunSetLength))
 	{
 		color = vec3(diffuse.x * (lmax_R - (daytime - sunSetSt)*sunSetRate_R)/256.0, 
 					 diffuse.y * (lmax_G - (daytime - sunSetSt)*sunSetRate_G)/256.0,
 					 diffuse.z * (lmax_B - (daytime - sunSetSt)*sunSetRate_B)/256.0);
+					 
+		if (currentDist <= currentSunRaidus){
+			color = currentSunColor;
+		}
+		else if ((currentDist  > currentSunRaidus) && (currentDist <currentSunRaidus + GaussianRange)){
+			color =  tempCoef * currentSunColor + (1.0-tempCoef)*color;
+		}
 	}
 	else {
 		vec3 tempColor = vec3(diffuse.x * lmin_R /256.0, 
@@ -432,7 +474,7 @@ void main()
 	}
 	else if (materialID == SKY_MATERIAL_ID)
 	{
-		gl_FragColor.rgb = shadeSky(diffuse, materialParams2.xyz, materialParams1.yzw, materialParams2.w);
+		gl_FragColor.rgb = shadeSky(diffuse, position, materialParams2.xyz, materialParams1.yzw, materialParams2.w);
 	}
 	else
 	{

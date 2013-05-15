@@ -25,7 +25,7 @@ public class SkyMaterial extends Material
 	private Texture2D mDiffuseTexture = null;
 	private Texture2D mStarTexture = null;
 	private Point3f mSunPosition = new Point3f(); // sun location
-	private float mDayTime =5f; // time during the day
+	private float mDayTime =0f; // time during the day
 
 	/* Uniform locations. */
 	private int mDiffuseUniformLocation = -1;

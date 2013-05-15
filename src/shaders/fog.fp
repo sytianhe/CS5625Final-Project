@@ -19,6 +19,7 @@ uniform float ViewportWidth;
 uniform float ViewportHeight;
 uniform float Threshold;
 uniform mat4 O2WMatrix;
+uniform vec2 OffsetDirection;
 
 // TODO PA3 Prereq (Optional): Fill this in if you like bloom.
 void main()
@@ -28,7 +29,11 @@ void main()
     vec4 colorS = texture2DRect(FinalSceneBuffer, center);
     
     // default fog color
-    vec4 colorF = vec4(1.0,1.0,1.0,1.0);
+    vec4 colorF = vec4(255.0/256.0,
+    				   250.0/256.0,
+    				   205.0/256.0,
+    				   1.0);
+    				   
     // default fog height
     float height = 2.0;
     

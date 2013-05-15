@@ -14,6 +14,7 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
+import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
 import cs5625.deferred.materials.LambertianMaterial;
@@ -115,6 +116,7 @@ public class Renderer
 	private boolean mEnableFog = true;
 	private float mFogThreshold = 0.80f;
 	private int mObject2WorldUniformLocation = -1;
+	private Vector2f mDirection = new Vector2f(1f,1f);
 	
 	/* Used to control gbuffer data vizualization. */
 	private ShaderProgram mVisShader = null;
@@ -178,7 +180,7 @@ public class Renderer
 	private Texture2D noise2;
 	private int mRandSeedSize = 50;
 	private int mSimulationSteps = 1;
-	private int mSimulationSetupSteps = 1000;
+	private int mSimulationSetupSteps = 10;
 	private int mSandDuneShaderSizeLocation = -1;
 	
 	
@@ -292,6 +294,7 @@ public class Renderer
 			gl.glUniform1f(mFogShader.getUniformLocation(gl, "ViewportWidth"), mViewportWidth);
 			gl.glUniform1f(mFogShader.getUniformLocation(gl, "ViewportHeight"), mViewportHeight);
 			gl.glUniform1f(mFogShader.getUniformLocation(gl, "Threshold"), mFogThreshold);
+			gl.glUniform2f(mFogShader.getUniformLocation(gl, "OffsetDirection"), mDirection.x, mDirection.y);
 			
 			/* Draw a full-screen quad to the framebuffer. */
 			Util.drawFullscreenQuad(gl, mViewportWidth, mViewportHeight);
@@ -1158,6 +1161,23 @@ public class Renderer
 	public float getFogThreshold()
 	{
 		return mFogThreshold;
+	}
+	
+	
+	/**
+	 * Sets the cut-off threshold for the bloom algorithm.
+	 */
+	public void setFogDirection(Vector2f direction)
+	{
+		mDirection = new Vector2f(direction);
+	}
+	
+	/**
+	 * Gets the cut-off threshold for the bloom algorithm.
+	 */
+	public Vector2f getFogDirection()
+	{
+		return mDirection;
 	}
 	
 	/**

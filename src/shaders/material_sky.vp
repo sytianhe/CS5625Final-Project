@@ -5,9 +5,11 @@
  */
 
 /* Pass eyespace position and normal, and texcoord, to the fragment shader. */
+uniform vec3 SunPosition;
 varying vec3 EyespacePosition;
 varying vec3 EyespaceNormal;
 varying vec2 TexCoord;
+varying vec3 EyespaceSunPosition;
 
 void main()
 {
@@ -17,5 +19,6 @@ void main()
 	// TODO PA3 Prereq: Transform stuff into eye space and store in varyings.
 	EyespacePosition = vec3(gl_ModelViewMatrix * gl_Vertex);
 	EyespaceNormal = normalize(gl_NormalMatrix * gl_Normal);	
+	EyespaceSunPosition = vec3(gl_ModelViewMatrix * vec4(SunPosition, 1.0));
 	TexCoord = vec2(gl_MultiTexCoord0);
 }

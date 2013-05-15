@@ -24,6 +24,7 @@ uniform float DayTime;
 varying vec3 EyespacePosition;
 varying vec3 EyespaceNormal;
 varying vec2 TexCoord;
+varying vec3 EyespaceSunPosition;
 
 /* Encodes a normalized vector as a vec2. See Renderer.java for more info. */
 vec2 encode(vec3 n)
@@ -52,5 +53,5 @@ void main()
 	else{
 		gl_FragData[2] = vec4(float(SKY_MATERIAL_ID), 0.0, 0.0, 0.0);
 	}
-	gl_FragData[3] = vec4(SunPosition, DayTime);
+	gl_FragData[3] = vec4(EyespaceSunPosition, DayTime);
 }

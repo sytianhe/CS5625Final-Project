@@ -61,15 +61,6 @@ public class TreeSceneController extends SceneController{
 			light.setName("CameraLight");
 			mSceneRoot.addChild(light);	
 			
-			PointLight light2 = new PointLight();
-			
-			light2.setColor(new Color3f(1f,0f,0f));
-			light2.setConstantAttenuation(1.0f);
-			light2.setLinearAttenuation(0.0f);
-			light2.setQuadraticAttenuation(0.0f);
-			light2.setPosition(new Point3f(0f,50f,0f));
-			mSceneRoot.addChild(light2);
-			
 			//ADD GROUND
 			Ground plane = new Ground(mRenderer);
 			mSceneRoot.addChild(plane);
@@ -83,7 +74,7 @@ public class TreeSceneController extends SceneController{
             //ADD SKY BOX
 			Texture2D skyTexture = Texture2D.load(gl, "textures/skybox.jpg",false);
 			Texture2D starTexture = Texture2D.load(gl, "textures/star3.jpg",false);
-			SkyBox skybox = new SkyBox(new Color3f(102.0f/256f, 1f, 1f), new Point3f(), skyTexture, starTexture);
+			SkyBox skybox = new SkyBox(new Color3f(102.0f/256f, 1f, 1f), 205f, skyTexture, starTexture);
 
 			skybox.setPosition(new Point3f(0f, 0f, 0f));
 			//skybox.setOrientation(new Quat4f(0f,0f,(float) Math.sin(Math.PI/4.0),(float) Math.cos(Math.PI/4.0)));
