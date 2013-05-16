@@ -1152,6 +1152,7 @@ public class Renderer
 		return mEnableFog;
 	}
 	
+	
 	/**
 	 * Sets the cut-off threshold for the bloom algorithm.
 	 */
@@ -1190,6 +1191,13 @@ public class Renderer
 	 */
 	public void toggleSandDuneSimulation(){
 		simulateSandDune = !simulateSandDune;
+	}
+	
+	/**
+	 * Set physicsDisplay
+	 */
+	public void togglePenaltyForceDisplay(){
+		mShowPenaltyForces = !mShowPenaltyForces;
 	}
 	
 	/**

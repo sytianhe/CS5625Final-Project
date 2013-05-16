@@ -41,7 +41,7 @@ public class Constants
 
 	public static final double REPULSION_COEFF = 100;
 
-	public static final double WIND_STRENGTH = 3;
+	public static double WIND_STRENGTH = 0;
     
     /** RESTITUTION_COEFF */
     public static void set_RESTITUTION_COEFF(double num){
@@ -66,5 +66,10 @@ public class Constants
     /** STIFFNESS_BEND */
     public static void set_STIFFNESS_BEND(double num){
     	STIFFNESS_BEND = num;
+    }
+    
+    /** WIND STRENGTH */
+    public static void set_WIND_STRENGTH(double num){
+    	WIND_STRENGTH = num;
     }
 }

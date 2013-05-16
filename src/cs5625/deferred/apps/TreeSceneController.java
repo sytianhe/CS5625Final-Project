@@ -18,6 +18,7 @@ import cs5625.deferred.materials.Texture2D;
 import cs5625.deferred.misc.OpenGLException;
 import cs5625.deferred.misc.ScenegraphException;
 import cs5625.deferred.misc.Util;
+import cs5625.deferred.physics.Constants;
 import cs5625.deferred.physicsGeometry.Ground;
 import cs5625.deferred.physicsGeometry.PalmTree;
 import cs5625.deferred.physicsGeometry.SkyBox;
@@ -70,7 +71,7 @@ public class TreeSceneController extends SceneController{
 			
 			//ADD TREE
             Texture2D barkTexture = Texture2D.load(gl, "textures/bark4.jpg",false);
-            tree = new PalmTree(10f, 0.7f, 0.4f, 0f, 10f, 10, 10,2, barkTexture);
+            tree = new PalmTree(10f, 0.7f, 0.4f, 0f, 10f, 1, 10,2, barkTexture);
             tree.setPosition(new Point3f(0.0f, 0.0f, 0.0f));
             mSceneRoot.addChild(tree);
 
@@ -158,12 +159,11 @@ public class TreeSceneController extends SceneController{
 	 * '8': Visualize the tangents, only works for anisotropic ward objects.
 	 * '9': Visualize the bitangents, only works for anisotropic ward objects.
 	 * '0': Stop displaying a gbuffer texture or visualization.
-	 * 't': Toggle toon shading.
+	 * 'p': Toggle physics display.
 	 * 'w': Toggle wireframes.
-	 * 'b': Toggle bloom post-processing.
-	 * 'v'/'V': Decrease/Increase the bloom variance.
-	 * 'c'/'C': Decrease/Increase the bloom threshold.
-	 * 'x'/'X': Decrease/Increase the bloom width.
+	 * 'b': add ball.
+	 * 'B': select ball
+	 * 'v'/'V': Decrease/Increase the wind velocity.
 	 */
 	@Override
 	public void keyPressed(KeyEvent key)
@@ -217,6 +217,17 @@ public class TreeSceneController extends SceneController{
 			target=balls.get(targetIndex);
 			target.setIsSelected(true);
 		}
+		else if (c == 'p')
+		{
+			mRenderer.togglePenaltyForceDisplay();
+		}	
+		else if (c == 'v'){
+			Constants.set_WIND_STRENGTH(Math.max(Constants.WIND_STRENGTH -0.1, 0));
+		}
+		else if (c == 'V'){
+			Constants.set_WIND_STRENGTH(Constants.WIND_STRENGTH +0.1);
+		}
+
 		
 		updateCamera();
 		requiresRender();
@@ -241,7 +252,6 @@ public class TreeSceneController extends SceneController{
 		else if (c == '/'){
 			tree.removeForce(target.getOriginParticle(), PS);
 		}
-		
 		updateCamera();
 		requiresRender();
 
